@@ -1,14 +1,12 @@
 package org.usfirst.frc.team2910.robot.subsystems;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import org.usfirst.frc.team2910.robot.input.XboxGamepad;
 
 public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 	private static final double WHEELBASE = 12.5;
 	private static final double TRACKWIDTH = 13.5;
-	private static final double RATIO = Math.sqrt(Math.pow(WHEELBASE, 2) + Math.pow(TRACKWIDTH, 2));
 
 	/*
 	 * 0 is Front Right
@@ -17,10 +15,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 	 * 3 is Back Right
 	 */
 	private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[] {
-		new SwerveDriveModule(0, new CANTalon(6), new CANTalon(5), 75.5),
-		new SwerveDriveModule(1, new CANTalon(3), new CANTalon(4), 13.7),
-		new SwerveDriveModule(2, new CANTalon(2), new CANTalon(1), 254),
-		new SwerveDriveModule(3, new CANTalon(7), new CANTalon(8), 157)
+		new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 75.5),
+		new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 13.7),
+		new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 254),
+		new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 157)
 	};
 
 	private AHRS mNavX = new AHRS(SPI.Port.kMXP, (byte) 200);

@@ -1,6 +1,9 @@
 package org.usfirst.frc.team2910.robot.subsystems;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team2910.robot.commands.SwerveModuleCommand;
 import org.usfirst.frc.team2910.robot.util.MotorStallException;
@@ -16,10 +19,10 @@ public class SwerveDriveModule extends Subsystem {
 
 	private final double mZeroOffset;
 
-	private final CANTalon mAngleMotor;
-	private final CANTalon mDriveMotor;
+	private final TalonSRX mAngleMotor;
+	private final TalonSRX mDriveMotor;
 
-	public SwerveDriveModule(int moduleNumber, CANTalon angleMotor, CANTalon driveMotor, double zeroOffset) {
+	public SwerveDriveModule(int moduleNumber, TalonSRX angleMotor, TalonSRX driveMotor, double zeroOffset) {
 		mModuleNumber = moduleNumber;
 
 		mAngleMotor = angleMotor;
@@ -27,21 +30,25 @@ public class SwerveDriveModule extends Subsystem {
 
 		mZeroOffset = zeroOffset;
 
-		angleMotor.changeControlMode(CANTalon.TalonControlMode.Position);
-		angleMotor.setFeedbackDevice(CANTalon.FeedbackDevice.AnalogEncoder);
-		angleMotor.reverseSensor(true);
-		angleMotor.setPID(20, 0, 200); // P: 20, I: 0, D: 200
-		angleMotor.set(0);
-		angleMotor.enableControl();
+		angleMotor.configSelectedFeedbackSensor(FeedbackDevice.Analog,0, 0);
+		angleMotor.setSensorPhase(true);
+		angleMotor.config_kP(0, 20, 0);
+		angleMotor.config_kI(0, 0, 0);
+		angleMotor.config_kD(0, 200, 0);
+		angleMotor.set(ControlMode.Position, 0);
 
-		driveMotor.enableBrakeMode(true);
+		driveMotor.setNeutralMode(NeutralMode.Brake);
 
 		// Set amperage limits
-		angleMotor.setCurrentLimit(50);
-		angleMotor.EnableCurrentLimit(true);
+		angleMotor.configContinuousCurrentLimit(30, 0);
+		angleMotor.configPeakCurrentLimit(50, 0);
+		angleMotor.configPeakCurrentDuration(100, 0);
+		angleMotor.enableCurrentLimit(true);
 
-		driveMotor.setCurrentLimit(50);
-		driveMotor.EnableCurrentLimit(true);
+		driveMotor.configContinuousCurrentLimit(30, 0);
+		driveMotor.configPeakCurrentLimit(50, 0);
+		driveMotor.configPeakCurrentDuration(100, 0);
+		driveMotor.enableCurrentLimit(true);
 	}
 
 	@Override
@@ -49,11 +56,11 @@ public class SwerveDriveModule extends Subsystem {
 		setDefaultCommand(new SwerveModuleCommand(this));
 	}
 
-	public CANTalon getAngleMotor() {
+	public TalonSRX getAngleMotor() {
 		return mAngleMotor;
 	}
 
-	public CANTalon getDriveMotor() {
+	public TalonSRX getDriveMotor() {
 		return mDriveMotor;
 	}
 
@@ -71,7 +78,7 @@ public class SwerveDriveModule extends Subsystem {
 		targetAngle %= 360;
 		targetAngle += mZeroOffset;
 
-		double currentAngle = mAngleMotor.getPosition() * (360.0 / 1024.0);
+		double currentAngle = mAngleMotor.getSelectedSensorPosition(0) * (360.0 / 1024.0);
 		double currentAngleMod = currentAngle % 360;
 		if (currentAngleMod < 0) currentAngleMod += 360;
 
@@ -96,7 +103,7 @@ public class SwerveDriveModule extends Subsystem {
 
 		targetAngle += currentAngle - currentAngleMod;
 
-		double currentError = mAngleMotor.getError();
+		double currentError = mAngleMotor.getClosedLoopError(0);
 		if (Math.abs(currentError - mLastError) < 7.5 &&
 				Math.abs(currentAngle - targetAngle) > 5) {
 			if (mStallTimeBegin == Long.MAX_VALUE) mStallTimeBegin = System.currentTimeMillis();
@@ -111,10 +118,10 @@ public class SwerveDriveModule extends Subsystem {
 
 
 		targetAngle *= 1024.0 / 360.0;
-		mAngleMotor.setSetpoint(targetAngle);
+		mAngleMotor.set(ControlMode.Position, targetAngle);
 	}
 
 	public void setTargetSpeed(double speed) {
-		mDriveMotor.setSetpoint(speed);
+		mDriveMotor.set(ControlMode.PercentOutput, speed);
 	}
 }

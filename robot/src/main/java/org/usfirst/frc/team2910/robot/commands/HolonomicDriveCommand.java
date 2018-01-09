@@ -35,10 +35,6 @@ public class HolonomicDriveCommand extends Command {
 		strafe = deadband(strafe);
 		rotation = deadband(rotation);
 
-		SmartDashboard.putNumber("Forward", forward);
-		SmartDashboard.putNumber("Strafe", strafe);
-		SmartDashboard.putNumber("Rotation", rotation);
-
 		mDrivetrain.holonomicDrive(forward, strafe, rotation);
 	}
 

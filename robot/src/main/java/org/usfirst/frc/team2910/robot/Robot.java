@@ -109,9 +109,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during test mode
 	 */
 	@Override
-	public void testPeriodic() {
-		LiveWindow.run();
-	}
+	public void testPeriodic() { }
 
 	public SwerveDriveSubsystem getDrivetrain() {
 		return swerveDriveSubsystem;
