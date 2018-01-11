@@ -15,10 +15,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 	 * 3 is Back Right
 	 */
 	private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[] {
-		new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 75.5),
-		new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 13.7),
-		new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 254),
-		new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 157)
+		new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), -178.45),
+		new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), -175.59),
+		new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), -297.93),
+		new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 146.09)
 	};
 
 	private AHRS mNavX = new AHRS(SPI.Port.kMXP, (byte) 200);
@@ -26,16 +26,12 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 	public SwerveDriveSubsystem() {
 		zeroGyro();
 
-		mSwerveModules[0].getDriveMotor().setInverted(true);
-		mSwerveModules[1].getDriveMotor().setInverted(true);
-		mSwerveModules[2].getDriveMotor().setInverted(true);
-		mSwerveModules[3].getDriveMotor().setInverted(true);
-
-		mSwerveModules[0].getAngleMotor().setInverted(true);
-		mSwerveModules[3].getAngleMotor().setInverted(true);
+		mSwerveModules[1].setDriveInverted(true);
+		mSwerveModules[2].setDriveInverted(true);
 
 		for (SwerveDriveModule module : mSwerveModules) {
 			module.setTargetAngle(0);
+			module.setDriveGearRatio(5.7777);
 		}
 	}
 

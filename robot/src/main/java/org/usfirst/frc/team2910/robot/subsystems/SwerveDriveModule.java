@@ -22,6 +22,10 @@ public class SwerveDriveModule extends Subsystem {
 	private final TalonSRX mAngleMotor;
 	private final TalonSRX mDriveMotor;
 
+	private boolean driveInverted = false;
+	private double driveGearRatio = 1;
+	private double driveWheelRadius = 4;
+
 	public SwerveDriveModule(int moduleNumber, TalonSRX angleMotor, TalonSRX driveMotor, double zeroOffset) {
 		mModuleNumber = moduleNumber;
 
@@ -36,6 +40,15 @@ public class SwerveDriveModule extends Subsystem {
 		angleMotor.config_kI(0, 0, 0);
 		angleMotor.config_kD(0, 200, 0);
 		angleMotor.set(ControlMode.Position, 0);
+
+		driveMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+		driveMotor.config_kP(0, 0.2, 0);
+		driveMotor.config_kI(0, 0, 0);
+		driveMotor.config_kD(0, 0, 0);
+		driveMotor.config_kF(0, 0.2, 0);
+
+		driveMotor.configMotionCruiseVelocity(10000, 0);
+		driveMotor.configMotionAcceleration(4000, 0);
 
 		driveMotor.setNeutralMode(NeutralMode.Brake);
 
@@ -60,6 +73,10 @@ public class SwerveDriveModule extends Subsystem {
 		return mAngleMotor;
 	}
 
+	public double getDriveDistance() {
+		return mDriveMotor.getSelectedSensorPosition(0) / (80 * driveGearRatio);
+	}
+
 	public TalonSRX getDriveMotor() {
 		return mDriveMotor;
 	}
@@ -70,6 +87,18 @@ public class SwerveDriveModule extends Subsystem {
 
 	public void robotDisabledInit() {
 		mStallTimeBegin = Long.MAX_VALUE;
+	}
+
+	public void setDriveGearRatio(double ratio) {
+		driveGearRatio = ratio;
+	}
+
+	public void setDriveInverted(boolean inverted) {
+		driveInverted = inverted;
+	}
+
+	public void setDriveWheelRadius(double radius) {
+		driveWheelRadius = radius;
 	}
 
 	public void setTargetAngle(double targetAngle) {
@@ -121,7 +150,23 @@ public class SwerveDriveModule extends Subsystem {
 		mAngleMotor.set(ControlMode.Position, targetAngle);
 	}
 
+	public void setTargetDistance(double distance) {
+		if (driveInverted) distance = -distance;
+
+//		distance /= driveWheelRadius; // to wheel rotations
+		distance *= driveGearRatio; // to encoder rotations
+		distance *= 80; // to encoder ticks
+
+		mDriveMotor.set(ControlMode.MotionMagic, distance);
+	}
+
 	public void setTargetSpeed(double speed) {
+		if (driveInverted) speed = -speed;
+
 		mDriveMotor.set(ControlMode.PercentOutput, speed);
+	}
+
+	public void zeroDistance() {
+		mDriveMotor.setSelectedSensorPosition(0, 0, 0);
 	}
 }

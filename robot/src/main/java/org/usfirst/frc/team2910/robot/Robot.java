@@ -2,9 +2,11 @@
 package org.usfirst.frc.team2910.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team2910.robot.commands.autonomous.DriveForDistanceCommand;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveModule;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
@@ -21,6 +23,8 @@ public class Robot extends IterativeRobot {
 	private static OI mOI;
 	private static SwerveDriveSubsystem swerveDriveSubsystem;
 
+	private Command autoCommand;
+
 	public static OI getOI() {
 		return mOI;
 	}
@@ -36,6 +40,8 @@ public class Robot extends IterativeRobot {
 		swerveDriveSubsystem = new SwerveDriveSubsystem();
 
 		mOI.registerControls();
+
+		autoCommand = new DriveForDistanceCommand(swerveDriveSubsystem, 5);
 	}
 
 	@Override
@@ -47,8 +53,7 @@ public class Robot extends IterativeRobot {
 
 
 		for (int i = 0; i < 4; i++) {
-			SmartDashboard.putNumber("Drive Current Draw " + i, swerveDriveSubsystem.getSwerveModule(i).getDriveMotor().getOutputCurrent());
-			SmartDashboard.putNumber("Angle Current Draw " + i, swerveDriveSubsystem.getSwerveModule(i).getAngleMotor().getOutputCurrent());
+			SmartDashboard.putNumber("Module Pos " + i, (swerveDriveSubsystem.getSwerveModule(i).getDriveDistance()));
 		}
 	}
 
@@ -82,6 +87,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		if (autoCommand != null) autoCommand.start();
 	}
 
 	/**
@@ -94,7 +100,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-
+		if (autoCommand != null) autoCommand.cancel();
 	}
 
 	/**
