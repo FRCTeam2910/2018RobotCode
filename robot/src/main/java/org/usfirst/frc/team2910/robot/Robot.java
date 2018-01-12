@@ -41,18 +41,13 @@ public class Robot extends IterativeRobot {
 
 		mOI.registerControls();
 
-		autoCommand = new DriveForDistanceCommand(swerveDriveSubsystem, 5);
+		autoCommand = new DriveForDistanceCommand(swerveDriveSubsystem, -24, 24);
 	}
 
 	@Override
 	public void robotPeriodic() {
-		SmartDashboard.putNumber("Adjusted Drivetrain Angle", swerveDriveSubsystem.getGyroAngle());
-		SmartDashboard.putNumber("Raw Drivetrain Angle", swerveDriveSubsystem.getRawGyroAngle());
-		SmartDashboard.putNumber("Drivetrain Rate", swerveDriveSubsystem.getGyroRate());
-		SmartDashboard.putNumber("Gyro Update Rate", swerveDriveSubsystem.getNavX().getActualUpdateRate());
-
-
 		for (int i = 0; i < 4; i++) {
+			SmartDashboard.putNumber("Module Angle " + i, swerveDriveSubsystem.getSwerveModule(i).getCurrentAngle());
 			SmartDashboard.putNumber("Module Pos " + i, (swerveDriveSubsystem.getSwerveModule(i).getDriveDistance()));
 		}
 	}

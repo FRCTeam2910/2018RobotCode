@@ -3,6 +3,7 @@ package org.usfirst.frc.team2910.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team2910.robot.commands.SwerveModuleCommand;
@@ -24,7 +25,7 @@ public class SwerveDriveModule extends Subsystem {
 
 	private boolean driveInverted = false;
 	private double driveGearRatio = 1;
-	private double driveWheelRadius = 4;
+	private double driveWheelRadius = 2;
 
 	public SwerveDriveModule(int moduleNumber, TalonSRX angleMotor, TalonSRX driveMotor, double zeroOffset) {
 		mModuleNumber = moduleNumber;
@@ -37,18 +38,22 @@ public class SwerveDriveModule extends Subsystem {
 		angleMotor.configSelectedFeedbackSensor(FeedbackDevice.Analog,0, 0);
 		angleMotor.setSensorPhase(true);
 		angleMotor.config_kP(0, 20, 0);
-		angleMotor.config_kI(0, 0, 0);
+		angleMotor.config_kI(0, 0.001, 0);
 		angleMotor.config_kD(0, 200, 0);
 		angleMotor.set(ControlMode.Position, 0);
 
 		driveMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
-		driveMotor.config_kP(0, 0.2, 0);
+
+		driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, 0);
+		driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
+
+		driveMotor.config_kP(0, 10, 0);
 		driveMotor.config_kI(0, 0, 0);
 		driveMotor.config_kD(0, 0, 0);
 		driveMotor.config_kF(0, 0.2, 0);
 
-		driveMotor.configMotionCruiseVelocity(10000, 0);
-		driveMotor.configMotionAcceleration(4000, 0);
+		driveMotor.configMotionCruiseVelocity(1000, 0);
+		driveMotor.configMotionAcceleration(500, 0);
 
 		driveMotor.setNeutralMode(NeutralMode.Brake);
 
@@ -73,8 +78,20 @@ public class SwerveDriveModule extends Subsystem {
 		return mAngleMotor;
 	}
 
+	/**
+	 * Get the current angle of the swerve module
+	 * @return An angle in the range [0, 360)
+	 */
+	public double getCurrentAngle() {
+		double angle = mAngleMotor.getSelectedSensorPosition(0) * (360.0 / 1024.0);
+		angle %= 360;
+		if (angle < 0) angle += 360;
+
+		return angle;
+	}
+
 	public double getDriveDistance() {
-		return mDriveMotor.getSelectedSensorPosition(0) / (80 * driveGearRatio);
+		return (mDriveMotor.getSelectedSensorPosition(0) / (80 * driveGearRatio)) * (2 * Math.PI * driveWheelRadius);
 	}
 
 	public TalonSRX getDriveMotor() {
@@ -153,7 +170,7 @@ public class SwerveDriveModule extends Subsystem {
 	public void setTargetDistance(double distance) {
 		if (driveInverted) distance = -distance;
 
-//		distance /= driveWheelRadius; // to wheel rotations
+		distance /= 2 * Math.PI * driveWheelRadius; // to wheel rotations
 		distance *= driveGearRatio; // to encoder rotations
 		distance *= 80; // to encoder ticks
 
