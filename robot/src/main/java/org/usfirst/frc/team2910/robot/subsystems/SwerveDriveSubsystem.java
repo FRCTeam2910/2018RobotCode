@@ -5,8 +5,9 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 
 public class SwerveDriveSubsystem extends HolonomicDrivetrain {
-	private static final double WHEELBASE = 12.5;
-	private static final double TRACKWIDTH = 13.5;
+	public static final double WHEELBASE = 12.5;
+	public static final double TRACKWIDTH = 13.5;
+	public static final double TURNING_RADIUS = Math.sqrt(Math.pow(WHEELBASE / 2, 2) + Math.pow(TRACKWIDTH / 2, 2));
 
 	/*
 	 * 0 is Front Right
@@ -40,7 +41,11 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 	}
 
 	public double getGyroAngle() {
-		return (mNavX.getAngle() - getAdjustmentAngle());
+		double angle = mNavX.getAngle() - getAdjustmentAngle();
+		angle %= 360;
+		if (angle < 0) angle += 360;
+
+		return angle;
 	}
 
 	public double getGyroRate() {

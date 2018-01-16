@@ -4,10 +4,8 @@ package org.usfirst.frc.team2910.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team2910.robot.commands.autonomous.DriveForDistanceCommand;
-import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveModule;
+import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
 /**
@@ -41,7 +39,7 @@ public class Robot extends IterativeRobot {
 
 		mOI.registerControls();
 
-		autoCommand = new DriveForDistanceCommand(swerveDriveSubsystem, -24, 24);
+		autoCommand = new SetDrivetrainAngleCommand(swerveDriveSubsystem, 180);
 	}
 
 	@Override
@@ -50,6 +48,8 @@ public class Robot extends IterativeRobot {
 			SmartDashboard.putNumber("Module Angle " + i, swerveDriveSubsystem.getSwerveModule(i).getCurrentAngle());
 			SmartDashboard.putNumber("Module Pos " + i, (swerveDriveSubsystem.getSwerveModule(i).getDriveDistance()));
 		}
+
+		SmartDashboard.putNumber("Drivetrain Angle", swerveDriveSubsystem.getGyroAngle());
 	}
 
 	/**

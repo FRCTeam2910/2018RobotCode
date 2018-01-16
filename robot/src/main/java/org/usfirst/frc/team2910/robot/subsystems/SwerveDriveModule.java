@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.commands.SwerveModuleCommand;
 import org.usfirst.frc.team2910.robot.util.MotorStallException;
 
@@ -59,7 +60,7 @@ public class SwerveDriveModule extends Subsystem {
 
 		// Set amperage limits
 		angleMotor.configContinuousCurrentLimit(30, 0);
-		angleMotor.configPeakCurrentLimit(50, 0);
+		angleMotor.configPeakCurrentLimit(30, 0);
 		angleMotor.configPeakCurrentDuration(100, 0);
 		angleMotor.enableCurrentLimit(true);
 
@@ -173,6 +174,8 @@ public class SwerveDriveModule extends Subsystem {
 		distance /= 2 * Math.PI * driveWheelRadius; // to wheel rotations
 		distance *= driveGearRatio; // to encoder rotations
 		distance *= 80; // to encoder ticks
+
+		SmartDashboard.putNumber("Module Ticks " + mModuleNumber, distance);
 
 		mDriveMotor.set(ControlMode.MotionMagic, distance);
 	}
