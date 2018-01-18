@@ -6,11 +6,11 @@ import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousConstants;
 import org.usfirst.frc.team2910.robot.commands.autonomous.DriveForDistanceCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
 
-public class Stage1SwitchAroundCommand extends CommandGroup {
+public class Stage1SwitchCommand extends CommandGroup {
 
     private final Robot robot;
 
-    public Stage1SwitchAroundCommand(Robot robot, StartingPosition startingPosition, char switchPosition) {
+    public Stage1SwitchCommand(Robot robot, StartingPosition startingPosition, char switchPosition) {
         this.robot = robot;
 
         // TODO: Move elevator to switch position

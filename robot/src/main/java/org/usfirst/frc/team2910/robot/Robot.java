@@ -5,8 +5,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchAroundCommand;
+import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
@@ -41,7 +40,7 @@ public class Robot extends IterativeRobot {
 
 		mOI.registerControls();
 
-		autoCommand = new Stage1SwitchAroundCommand(this, StartingPosition.LEFT, 'L');
+		autoCommand = new Stage1SwitchCommand(this, StartingPosition.LEFT, 'L');
 	}
 
 	@Override
