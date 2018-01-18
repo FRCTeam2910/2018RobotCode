@@ -1,13 +1,19 @@
 package org.usfirst.frc.team2910.robot.commands.autonomous;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
 public class SetDrivetrainAngleCommand extends Command {
+    private static final double ANGLE_CHECK_TIME = 0.5;
+    private static final double TARGET_ANGLE_BUFFER = 1.0;
+
 
     private final SwerveDriveSubsystem drivetrain;
     private final double targetAngle;
+    private final Timer finishTimer = new Timer();
+    private boolean isTimerStarted = false;
 
     public SetDrivetrainAngleCommand(SwerveDriveSubsystem drivetrain, double targetAngle) {
         this.drivetrain = drivetrain;
@@ -18,10 +24,12 @@ public class SetDrivetrainAngleCommand extends Command {
 
     @Override
     protected void initialize() {
-        double angleDiff = Math.toRadians(targetAngle - drivetrain.getGyroAngle());
-        double arcLength = SwerveDriveSubsystem.TURNING_RADIUS * angleDiff;
-        SmartDashboard.putNumber("Arc Length", arcLength);
+        finishTimer.stop();
+        finishTimer.reset();
+        isTimerStarted = false;
 
+        double angleDiff = Math.toRadians((targetAngle - drivetrain.getGyroAngle()) % 360);
+        double arcLength = SwerveDriveSubsystem.TURNING_RADIUS * angleDiff;
 
         double a = -(SwerveDriveSubsystem.WHEELBASE / SwerveDriveSubsystem.TRACKWIDTH);
         double b = (SwerveDriveSubsystem.WHEELBASE / SwerveDriveSubsystem.TRACKWIDTH);
@@ -44,6 +52,27 @@ public class SetDrivetrainAngleCommand extends Command {
 
     @Override
     protected boolean isFinished() {
-        return false;
+        if (Math.abs(targetAngle - drivetrain.getGyroAngle()) < TARGET_ANGLE_BUFFER) {
+            if (!isTimerStarted) {
+                finishTimer.start();
+                isTimerStarted = true;
+            }
+        } else {
+            finishTimer.stop();
+            finishTimer.reset();
+            isTimerStarted = false;
+        }
+
+        return finishTimer.hasPeriodPassed(ANGLE_CHECK_TIME);
+    }
+
+    @Override
+    protected void end() {
+        drivetrain.holonomicDrive(0, 0, 0);
+    }
+
+    @Override
+    protected void interrupted() {
+        end();
     }
 }
