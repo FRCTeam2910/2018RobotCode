@@ -7,6 +7,10 @@ public abstract class HolonomicDrivetrain extends Drivetrain {
 	private double mAdjustmentAngle = 0;
 	private boolean mFieldOriented = true;
 
+	public HolonomicDrivetrain(double width, double length) {
+		super(width, length);
+	}
+
 
 	public double getAdjustmentAngle() {
 		return mAdjustmentAngle;

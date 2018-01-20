@@ -6,6 +6,8 @@ import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousConstants;
 import org.usfirst.frc.team2910.robot.commands.autonomous.DriveForDistanceCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
 
+import static org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousConstants.*;
+
 public class Stage1SwitchCommand extends CommandGroup {
 
     private final Robot robot;
@@ -37,32 +39,36 @@ public class Stage1SwitchCommand extends CommandGroup {
         }
 
         // TODO: Score cube
+
+        addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
+                0,
+                WALL_TO_PLATFORM_ZONE - WALL_TO_SWITCH_SIDE_DISTANCE));
     }
 
     private void driveSideToFarSwitch(StartingPosition startPos) {
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 0,
-                AutonomousConstants.WALL_TO_PLATFORM_ZONE));
+                WALL_TO_PLATFORM_ZONE));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (startPos == StartingPosition.LEFT ? -1 : 1) * (AutonomousConstants.SWITCH_LENGTH + AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL * 2),
+                (startPos == StartingPosition.LEFT ? -1 : 1) * (SWITCH_LENGTH + 2*SWITCH_SCORE_TO_SWITCH_WALL),
                 0));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 0,
-                -AutonomousConstants.SWITCH_SIDE_TO_PLATFORM_ZONE));
+                -SWITCH_SIDE_TO_PLATFORM_ZONE));
         addSequential(new SetDrivetrainAngleCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? 270 : 90)));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (startPos == StartingPosition.LEFT ? -1 : 1) * AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL,
+                (startPos == StartingPosition.LEFT ? -1 : 1) * SWITCH_SCORE_TO_SWITCH_WALL,
                 0));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (startPos == StartingPosition.LEFT ? 1 : -1) * AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL,
+                (startPos == StartingPosition.LEFT ? 1 : -1) * SWITCH_SCORE_TO_SWITCH_WALL,
                 0));
     }
 
     private void driveSideToNearSwitch(StartingPosition startPos) {
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 0,
-                AutonomousConstants.WALL_TO_SWITCH_SIDE_DISTANCE));
+                WALL_TO_SWITCH_SIDE_DISTANCE));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? 1 : -1) * AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL,
                 0));

@@ -5,8 +5,11 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
+import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
+import org.usfirst.frc.team2910.robot.subsystems.MotorTesterSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
 /**
@@ -21,7 +24,9 @@ public class Robot extends IterativeRobot {
 
 	private static OI mOI;
 	private static SwerveDriveSubsystem swerveDriveSubsystem;
+	private static MotorTesterSubsystem motorTesterSubsystem;
 
+	private final AutonomousChooser autoChooser = new AutonomousChooser();
 	private Command autoCommand;
 
 	public static OI getOI() {
@@ -37,6 +42,7 @@ public class Robot extends IterativeRobot {
 		mOI = new OI(this);
 
 		swerveDriveSubsystem = new SwerveDriveSubsystem();
+		motorTesterSubsystem = new MotorTesterSubsystem();
 
 		mOI.registerControls();
 
@@ -83,7 +89,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		if (autoCommand != null) autoCommand.start();
+//		autoCommand = autoChooser.getCommand(this);
+		autoCommand = new SetDrivetrainAngleCommand(swerveDriveSubsystem, 225);
+		autoCommand.start();
 	}
 
 	/**

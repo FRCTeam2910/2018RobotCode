@@ -2,7 +2,6 @@ package org.usfirst.frc.team2910.robot.commands.autonomous.stage1;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team2910.robot.Robot;
-import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousConstants;
 import org.usfirst.frc.team2910.robot.commands.autonomous.DriveForDistanceCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
 
@@ -15,7 +14,7 @@ public class Stage1ScaleCommand extends CommandGroup {
     public Stage1ScaleCommand(Robot robot, StartingPosition startPos, char scalePos) {
         this.robot = robot;
 
-        // TODO: Move elevator to switch position
+        // TODO: Move elevator to scale position
 
         // Move to switch scoring position
         switch (startPos) {
@@ -58,6 +57,6 @@ public class Stage1ScaleCommand extends CommandGroup {
     private void driveSideToNearScale(StartingPosition startPos) {
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? -1 : 1) * START_POS_TO_SCALE_SCORE,
-                AutonomousConstants.WALL_TO_SCALE));
+                WALL_TO_SCALE));
     }
 }

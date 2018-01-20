@@ -21,19 +21,23 @@ public class HolonomicDriveCommand extends Command {
 
 	@Override
 	protected void execute() {
-		double forward = -Robot.getOI().getController().getLeftYValue();
-		double strafe = Robot.getOI().getController().getLeftXValue();
-		double rotation = Robot.getOI().getController().getRightXValue() * 0.5;
+		double forward = -Robot.getOI().getPrimaryController().getLeftYValue();
+		double strafe = Robot.getOI().getPrimaryController().getLeftXValue();
+		double rotation = Robot.getOI().getPrimaryController().getRightXValue() * 0.5;
 
-		if (Robot.getOI().getController().getLeftBumperButton().get()) {
+		if (Robot.getOI().getPrimaryController().getLeftBumperButton().get()) {
 			rotation = -1;
-		} else if (Robot.getOI().getController().getRightBumperButton().get()) {
+		} else if (Robot.getOI().getPrimaryController().getRightBumperButton().get()) {
 			rotation = 1;
 		}
 
 		forward = deadband(forward);
 		strafe = deadband(strafe);
 		rotation = deadband(rotation);
+
+		SmartDashboard.putNumber("Forward", forward);
+		SmartDashboard.putNumber("Strafe", strafe);
+		SmartDashboard.putNumber("Rotation", rotation);
 
 		mDrivetrain.holonomicDrive(forward, strafe, rotation);
 	}
