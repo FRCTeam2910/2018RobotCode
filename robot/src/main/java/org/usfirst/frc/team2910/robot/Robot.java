@@ -45,8 +45,6 @@ public class Robot extends IterativeRobot {
 		motorTesterSubsystem = new MotorTesterSubsystem();
 
 		mOI.registerControls();
-
-		autoCommand = new Stage1SwitchCommand(this, StartingPosition.LEFT, 'L');
 	}
 
 	@Override
@@ -54,6 +52,7 @@ public class Robot extends IterativeRobot {
 		for (int i = 0; i < 4; i++) {
 			SmartDashboard.putNumber("Module Angle " + i, swerveDriveSubsystem.getSwerveModule(i).getCurrentAngle());
 			SmartDashboard.putNumber("Module Pos " + i, (swerveDriveSubsystem.getSwerveModule(i).getDriveDistance()));
+			SmartDashboard.putNumber("Module Drive Speed " + i, swerveDriveSubsystem.getSwerveModule(i).getDriveMotor().getMotorOutputPercent());
 		}
 
 		SmartDashboard.putNumber("Drivetrain Angle", swerveDriveSubsystem.getGyroAngle());
@@ -89,8 +88,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-//		autoCommand = autoChooser.getCommand(this);
-		autoCommand = new SetDrivetrainAngleCommand(swerveDriveSubsystem, 225);
+		autoCommand = autoChooser.getCommand(this);
+//		autoCommand = new Stage1SwitchCommand(this, StartingPosition.RIGHT, 'R');
 		autoCommand.start();
 	}
 

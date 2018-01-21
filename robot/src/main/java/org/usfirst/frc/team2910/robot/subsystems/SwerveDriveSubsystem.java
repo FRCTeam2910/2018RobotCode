@@ -19,10 +19,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 	 * 3 is Back Right
 	 */
 	private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[] {
-			new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 189.492),
-			new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 194.414),
-			new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 71.718),
-			new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 155.390),
+			new SwerveDriveModule(0, new TalonSRX(3), new TalonSRX(4), 189.492),
+			new SwerveDriveModule(1, new TalonSRX(6), new TalonSRX(5), 194.414),
+			new SwerveDriveModule(2, new TalonSRX(7), new TalonSRX(8), 71.718),
+			new SwerveDriveModule(3, new TalonSRX(2), new TalonSRX(1), 155.390),
 	};
 
 	private AHRS mNavX = new AHRS(SPI.Port.kMXP, (byte) 200);
@@ -57,7 +57,11 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 	}
 
 	public double getRawGyroAngle() {
-		return mNavX.getAngle();
+		double angle = mNavX.getAngle();
+		angle %= 360;
+		if (angle < 0) angle += 360;
+		
+		return angle;
 	}
 
 	public SwerveDriveModule getSwerveModule(int i) {

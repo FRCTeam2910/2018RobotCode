@@ -30,6 +30,7 @@ public abstract class HolonomicDrivetrain extends Drivetrain {
 	}
 
 	public void setAdjustmentAngle(double adjustmentAngle) {
+		System.out.printf("New Adjustment Angle: % .3f\n", adjustmentAngle);
 		mAdjustmentAngle = adjustmentAngle;
 	}
 

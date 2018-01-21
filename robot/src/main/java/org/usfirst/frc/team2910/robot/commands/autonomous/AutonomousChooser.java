@@ -15,8 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AutonomousChooser {
+	public static final int CHOICE_COUNT = 4;
     private final SendableChooser<StartingPosition> startPosChooser = new SendableChooser<>();
-    private List<SendableChooser<AutonomousStageChoice>> priorityChoices = new ArrayList<>(4);
+    private List<SendableChooser<AutonomousStageChoice>> priorityChoices = new ArrayList<>();
 
     public AutonomousChooser() {
         startPosChooser.addDefault("Left", StartingPosition.LEFT);
@@ -25,7 +26,7 @@ public class AutonomousChooser {
 
         SmartDashboard.putData("StartingPosition", startPosChooser);
 
-        for (int i = 0; i < priorityChoices.size(); i++) {
+        for (int i = 0; i < CHOICE_COUNT; i++) {
             SendableChooser<AutonomousStageChoice> chooser = new SendableChooser<>();
 
             chooser.addDefault("None", AutonomousStageChoice.NONE);
@@ -78,6 +79,7 @@ public class AutonomousChooser {
             AutonomousStageChoice choice = priorityChoices.get(i).getSelected();
             if (isChoiceGood(choice, fieldConfiguration, startPos)) {
                 if (stageNumber == 1) {
+                	System.out.println(priorityChoices.get(i).getSelected());
                     switch (priorityChoices.get(i).getSelected()) {
                         case NONE:
                             return autoGroup;
@@ -93,6 +95,7 @@ public class AutonomousChooser {
                         case OPPOSITE_SIDE_SWITCH:
                             autoGroup.addSequential(new Stage1SwitchCommand(robot,
                                     startPos, fieldConfiguration.charAt(0)));
+                            break;
                     }
                 } else {
                     // TODO: Second stage
