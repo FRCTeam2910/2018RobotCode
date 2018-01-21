@@ -54,8 +54,8 @@ public class SwerveDriveModule extends Subsystem {
 		driveMotor.config_kD(0, 5, 0);
 		driveMotor.config_kF(0, 0.2, 0);
 
-		driveMotor.configMotionCruiseVelocity(480, 0);
-		driveMotor.configMotionAcceleration(320, 0);
+		driveMotor.configMotionCruiseVelocity(120, 0);
+		driveMotor.configMotionAcceleration(80, 0);
 
 		driveMotor.setNeutralMode(NeutralMode.Brake);
 
