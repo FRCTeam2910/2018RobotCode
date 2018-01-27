@@ -60,7 +60,7 @@ public class SetDrivetrainAngleCommand extends Command {
     	for (int i = 0; i < 4; i++) {
     		inBuffer &= Math.abs(arcLength - Math.abs(drivetrain.getSwerveModule(i).getDriveDistance())) < TARGET_ANGLE_BUFFER;
     	}
-    	
+
         if (inBuffer) {
             if (!isTimerStarted) {
                 finishTimer.start();

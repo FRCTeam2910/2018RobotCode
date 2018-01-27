@@ -17,43 +17,46 @@ public class Stage1SwitchCommand extends CommandGroup {
 
     private final Robot robot;
 
-    public Stage1SwitchCommand(Robot robot, StartingPosition startingPosition, char switchPosition) {
+    public Stage1SwitchCommand(Robot robot, StartingPosition startPos, char switchPosition) {
         this.robot = robot;
-        
+
         // TODO: Move elevator to switch position
 
         System.out.printf("Gyro angle: % .3f\n", robot.getDrivetrain().getRawGyroAngle());
-        addSequential(new SetFieldOrientedAngleCommand(robot.getDrivetrain(), robot.getDrivetrain().getRawGyroAngle() + 90));
-        
+        if (startPos == StartingPosition.LEFT)
+            addSequential(new SetFieldOrientedAngleCommand(robot.getDrivetrain(), robot.getDrivetrain().getRawGyroAngle() + 90));
+        else if (startPos == StartingPosition.RIGHT)
+            addSequential(new SetFieldOrientedAngleCommand(robot.getDrivetrain(), robot.getDrivetrain().getRawGyroAngle() - 90));
+
         // Move to switch scoring position
-        switch (startingPosition) {
+        switch (startPos) {
             case CENTER:
                 // TODO: Center Stage 1 Switch
                 break;
             case LEFT:
                 if (switchPosition == 'L') {
-                    driveSideToNearSwitch(startingPosition);
+                    driveSideToNearSwitch(startPos);
                 } else {
-                    driveSideToFarSwitch(startingPosition);
+                    driveSideToFarSwitch(startPos);
                 }
                 break;
             case RIGHT:
                 if (switchPosition == 'L') {
-                    driveSideToFarSwitch(startingPosition);
+                    driveSideToFarSwitch(startPos);
                 } else {
-                    driveSideToNearSwitch(startingPosition);
+                    driveSideToNearSwitch(startPos);
                 }
                 break;
         }
 
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (startingPosition == StartingPosition.LEFT ? -1 : 1) * SWITCH_SCORE_TO_SWITCH_WALL,
+                (startPos == StartingPosition.LEFT ? -1 : 1) * SWITCH_SCORE_TO_SWITCH_WALL,
                 0));
-        
+
         // TODO: Score cube
 
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (startingPosition == StartingPosition.LEFT ? 1 : -1) * SWITCH_SCORE_TO_SWITCH_WALL,
+                (startPos == StartingPosition.LEFT ? 1 : -1) * SWITCH_SCORE_TO_SWITCH_WALL,
                 0));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 0,
@@ -65,7 +68,7 @@ public class Stage1SwitchCommand extends CommandGroup {
                 0,
                 WALL_TO_PLATFORM_ZONE));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (startPos == StartingPosition.LEFT ? -1 : 1) * (SWITCH_LENGTH + 2*SWITCH_SCORE_TO_SWITCH_WALL),
+                (startPos == StartingPosition.LEFT ? -1 : 1) * (SWITCH_LENGTH + 2 * SWITCH_SCORE_TO_SWITCH_WALL),
                 0));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 0,

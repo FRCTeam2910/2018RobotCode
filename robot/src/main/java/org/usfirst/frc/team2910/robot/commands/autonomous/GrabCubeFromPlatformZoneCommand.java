@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2910.robot.commands.autonomous;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 import org.usfirst.frc.team2910.robot.util.Side;
 
@@ -10,7 +11,9 @@ import static org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousConst
 public class GrabCubeFromPlatformZoneCommand extends CommandGroup {
     private static boolean[] availableCubes = {true, true, true, true, true, true};
 
-    public GrabCubeFromPlatformZoneCommand(SwerveDriveSubsystem drivetrain, Side startSide, Side endSide) {
+    public GrabCubeFromPlatformZoneCommand(Robot robot, Side startSide, Side endSide) {
+        SwerveDriveSubsystem drivetrain = robot.getDrivetrain();
+
         int cubeToGrab = getFirstAvailableFromSide(startSide);
         int cubeRelativeToStart = getRelativeCubeForSide(cubeToGrab, startSide);
 
@@ -18,9 +21,9 @@ public class GrabCubeFromPlatformZoneCommand extends CommandGroup {
         addSequential(new SetDrivetrainAngleCommand(drivetrain, 180));
 
         double widthLengthDiff = (drivetrain.getWidth() - drivetrain.getLength()) / 2;
-        double distToSwitch = AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL - widthLengthDiff + drivetrain.getWidth()/2;
+        double distToSwitch = AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL - widthLengthDiff + drivetrain.getWidth() / 2;
 
-        double switchEdgeToCube = cubeRelativeToStart * (GAP_BETWEEN_PLATFORM_CUBES + CUBE_WIDTH) + CUBE_WIDTH/2;
+        double switchEdgeToCube = cubeRelativeToStart * (GAP_BETWEEN_PLATFORM_CUBES + CUBE_WIDTH) + CUBE_WIDTH / 2;
 
         // Drive to cube
         addSequential(new DriveForDistanceCommand(drivetrain,
@@ -30,7 +33,7 @@ public class GrabCubeFromPlatformZoneCommand extends CommandGroup {
         // TODO: Grab cube
 
         int cubeRelativeToEnd = getRelativeCubeForSide(cubeToGrab, endSide);
-        double cubeToSwitchEdge = cubeRelativeToEnd * (GAP_BETWEEN_PLATFORM_CUBES + CUBE_WIDTH) + CUBE_WIDTH/2;
+        double cubeToSwitchEdge = cubeRelativeToEnd * (GAP_BETWEEN_PLATFORM_CUBES + CUBE_WIDTH) + CUBE_WIDTH / 2;
 
         // Drive to end side
         addSequential(new DriveForDistanceCommand(drivetrain,

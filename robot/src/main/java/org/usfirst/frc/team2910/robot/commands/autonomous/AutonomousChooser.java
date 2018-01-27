@@ -9,13 +9,15 @@ import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1ScaleCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
+import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2ScaleCommand;
+import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2SwitchCommand;
 import org.usfirst.frc.team2910.robot.util.Side;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AutonomousChooser {
-	public static final int CHOICE_COUNT = 4;
+    public static final int CHOICE_COUNT = 4;
     private final SendableChooser<StartingPosition> startPosChooser = new SendableChooser<>();
     private List<SendableChooser<AutonomousStageChoice>> priorityChoices = new ArrayList<>();
 
@@ -24,7 +26,7 @@ public class AutonomousChooser {
         startPosChooser.addObject("Center", StartingPosition.CENTER);
         startPosChooser.addObject("Right", StartingPosition.RIGHT);
 
-        SmartDashboard.putData("StartingPosition", startPosChooser);
+        SmartDashboard.putData("Start Position", startPosChooser);
 
         for (int i = 0; i < CHOICE_COUNT; i++) {
             SendableChooser<AutonomousStageChoice> chooser = new SendableChooser<>();
@@ -74,12 +76,15 @@ public class AutonomousChooser {
 
         CommandGroup autoGroup = new CommandGroup();
 
+        Side lastSide = Side.LEFT;
+
         int stageNumber = 1;
         for (int i = 0; i < priorityChoices.size(); i++) {
             AutonomousStageChoice choice = priorityChoices.get(i).getSelected();
+            System.out.println(choice);
             if (isChoiceGood(choice, fieldConfiguration, startPos)) {
+//                System.out.printf("%d: %s\n", stageNumber, choice);
                 if (stageNumber == 1) {
-                	System.out.println(priorityChoices.get(i).getSelected());
                     switch (priorityChoices.get(i).getSelected()) {
                         case NONE:
                             return autoGroup;
@@ -90,15 +95,47 @@ public class AutonomousChooser {
                         case OPPOSITE_SIDE_SCALE:
                             autoGroup.addSequential(new Stage1ScaleCommand(robot,
                                     startPos, fieldConfiguration.charAt(1)));
+                            lastSide = Side.fromChar(fieldConfiguration.charAt(1));
                             break;
                         case SAME_SIDE_SWITCH:
                         case OPPOSITE_SIDE_SWITCH:
                             autoGroup.addSequential(new Stage1SwitchCommand(robot,
                                     startPos, fieldConfiguration.charAt(0)));
+                            lastSide = Side.fromChar(fieldConfiguration.charAt(0));
                             break;
                     }
                 } else {
-                    // TODO: Second stage
+                    // Grab Cube
+
+                    Side targetSide;
+                    Side startSide = (startPos == StartingPosition.LEFT ? Side.LEFT : Side.RIGHT);
+                    switch (priorityChoices.get(i).getSelected()) {
+                        case OPPOSITE_SIDE_SCALE:
+                        case OPPOSITE_SIDE_SWITCH:
+                            targetSide = startSide.opposite();
+                            break;
+                        case SAME_SIDE_SCALE:
+                        case SAME_SIDE_SWITCH:
+                            targetSide = startSide;
+                            break;
+                        default:
+                            continue;
+                    }
+
+                    autoGroup.addSequential(new GrabCubeFromPlatformZoneCommand(robot, lastSide, targetSide));
+
+                    switch (priorityChoices.get(i).getSelected()) {
+                        case SAME_SIDE_SCALE:
+                        case OPPOSITE_SIDE_SCALE:
+                            autoGroup.addSequential(new Stage2ScaleCommand(robot, targetSide));
+                            break;
+                        case SAME_SIDE_SWITCH:
+                        case OPPOSITE_SIDE_SWITCH:
+                            autoGroup.addSequential(new Stage2SwitchCommand(robot, targetSide));
+                            break;
+                    }
+
+                    lastSide = targetSide;
                 }
 
                 stageNumber++;

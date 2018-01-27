@@ -14,4 +14,8 @@ public enum Side {
 
         return null;
     }
+
+    public Side opposite() {
+        return values()[(ordinal() + 1) % 2];
+    }
 }

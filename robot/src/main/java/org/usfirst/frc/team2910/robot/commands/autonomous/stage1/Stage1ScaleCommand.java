@@ -2,6 +2,7 @@ package org.usfirst.frc.team2910.robot.commands.autonomous.stage1;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team2910.robot.Robot;
+import org.usfirst.frc.team2910.robot.commands.SetFieldOrientedAngleCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.DriveForDistanceCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
 
@@ -13,6 +14,11 @@ public class Stage1ScaleCommand extends CommandGroup {
 
     public Stage1ScaleCommand(Robot robot, StartingPosition startPos, char scalePos) {
         this.robot = robot;
+
+        if (startPos == StartingPosition.LEFT)
+            addSequential(new SetFieldOrientedAngleCommand(robot.getDrivetrain(), robot.getDrivetrain().getRawGyroAngle() + 90));
+        else if (startPos == StartingPosition.RIGHT)
+            addSequential(new SetFieldOrientedAngleCommand(robot.getDrivetrain(), robot.getDrivetrain().getRawGyroAngle() - 90));
 
         // TODO: Move elevator to scale position
 
@@ -45,7 +51,7 @@ public class Stage1ScaleCommand extends CommandGroup {
                 0,
                 WALL_TO_PLATFORM_ZONE));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (startPos == StartingPosition.LEFT ? 1 : -1) * (SWITCH_LENGTH + 2*SWITCH_SCORE_TO_SWITCH_WALL + START_POS_TO_SCALE_SCORE),
+                (startPos == StartingPosition.LEFT ? 1 : -1) * (SWITCH_LENGTH + 2 * SWITCH_SCORE_TO_SWITCH_WALL + START_POS_TO_SCALE_SCORE),
                 0));
         addSequential(new SetDrivetrainAngleCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? 270 : 90)));
