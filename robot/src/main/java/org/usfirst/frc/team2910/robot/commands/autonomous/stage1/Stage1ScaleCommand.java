@@ -44,14 +44,19 @@ public class Stage1ScaleCommand extends CommandGroup {
         }
 
         // TODO: Score cube
+
+        addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
+                0,
+                WALL_TO_PLATFORM_ZONE - WALL_TO_SCALE));
     }
 
     private void driveSideToFarScale(StartingPosition startPos) {
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 0,
                 WALL_TO_PLATFORM_ZONE));
+        addSequential(new SetDrivetrainAngleCommand(robot.getDrivetrain(), 180));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (startPos == StartingPosition.LEFT ? 1 : -1) * (SWITCH_LENGTH + 2 * SWITCH_SCORE_TO_SWITCH_WALL + START_POS_TO_SCALE_SCORE),
+                (startPos == StartingPosition.LEFT ? -1 : 1) * (SWITCH_LENGTH + 2 * SWITCH_SCORE_TO_SWITCH_WALL + START_POS_TO_SCALE_SCORE),
                 0));
         addSequential(new SetDrivetrainAngleCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? 270 : 90)));

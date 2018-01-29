@@ -38,6 +38,7 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
         for (SwerveDriveModule module : mSwerveModules) {
             module.setTargetAngle(0);
             module.setDriveGearRatio(5.7777);
+            module.setDriveWheelRadius(module.getDriveWheelRadius() * 1.05);
         }
     }
 

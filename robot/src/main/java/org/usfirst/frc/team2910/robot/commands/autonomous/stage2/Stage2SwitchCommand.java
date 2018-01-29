@@ -13,21 +13,21 @@ public class Stage2SwitchCommand extends CommandGroup{
 	
 	public Stage2SwitchCommand(Robot robot, Side side) {
 		this.robot = robot;
-		addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), 0, -(AutonomousConstants.WALL_TO_PLATFORM_ZONE - AutonomousConstants.WALL_TO_SWITCH_SIDE_DISTANCE)));
+		addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), 0, -(AutonomousConstants.WALL_TO_PLATFORM_ZONE - AutonomousConstants.WALL_TO_SWITCH)));
 		if(side == Side.LEFT) {
-			addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL, 0));
-		} else {
 			addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), -AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL, 0));
+		} else {
+			addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL, 0));
 		}
 		
 		//TODO: Place cube
 		
 		if(side == Side.LEFT) {
-			addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), -AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL, 0));
-		} else {
 			addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL, 0));
+		} else {
+			addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), -AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL, 0));
 		}
-		addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), 0, AutonomousConstants.WALL_TO_PLATFORM_ZONE - AutonomousConstants.WALL_TO_SWITCH_SIDE_DISTANCE));
+		addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), 0, AutonomousConstants.WALL_TO_PLATFORM_ZONE - AutonomousConstants.WALL_TO_SWITCH));
 	}
 
 }

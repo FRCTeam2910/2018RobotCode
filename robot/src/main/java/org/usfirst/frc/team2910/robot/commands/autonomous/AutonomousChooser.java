@@ -71,6 +71,8 @@ public class AutonomousChooser {
     }
 
     public Command getCommand(Robot robot) {
+        GrabCubeFromPlatformZoneCommand.resetAvailableCubes();
+
         String fieldConfiguration = DriverStation.getInstance().getGameSpecificMessage();
         StartingPosition startPos = startPosChooser.getSelected();
 
@@ -81,11 +83,10 @@ public class AutonomousChooser {
         int stageNumber = 1;
         for (int i = 0; i < priorityChoices.size(); i++) {
             AutonomousStageChoice choice = priorityChoices.get(i).getSelected();
-            System.out.println(choice);
             if (isChoiceGood(choice, fieldConfiguration, startPos)) {
-//                System.out.printf("%d: %s\n", stageNumber, choice);
+                System.out.printf("%d: %s\n", stageNumber, choice);
                 if (stageNumber == 1) {
-                    switch (priorityChoices.get(i).getSelected()) {
+                    switch (choice) {
                         case NONE:
                             return autoGroup;
                         case AUTOLINE:

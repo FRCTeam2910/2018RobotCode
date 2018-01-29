@@ -15,6 +15,12 @@ public class GrabCubeFromPlatformZoneCommand extends CommandGroup {
         SwerveDriveSubsystem drivetrain = robot.getDrivetrain();
 
         int cubeToGrab = getFirstAvailableFromSide(startSide);
+        availableCubes[cubeToGrab] = false;
+
+        System.out.println(startSide);
+        System.out.println(cubeToGrab);
+        System.out.println(endSide);
+
         int cubeRelativeToStart = getRelativeCubeForSide(cubeToGrab, startSide);
 
         // Face towards driverstation
@@ -24,6 +30,8 @@ public class GrabCubeFromPlatformZoneCommand extends CommandGroup {
         double distToSwitch = AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL - widthLengthDiff + drivetrain.getWidth() / 2;
 
         double switchEdgeToCube = cubeRelativeToStart * (GAP_BETWEEN_PLATFORM_CUBES + CUBE_WIDTH) + CUBE_WIDTH / 2;
+
+        System.out.println(distToSwitch + switchEdgeToCube);
 
         // Drive to cube
         addSequential(new DriveForDistanceCommand(drivetrain,
@@ -37,10 +45,11 @@ public class GrabCubeFromPlatformZoneCommand extends CommandGroup {
 
         // Drive to end side
         addSequential(new DriveForDistanceCommand(drivetrain,
-                (endSide == Side.LEFT ? 1 : -1) * (distToSwitch + cubeToSwitchEdge)));
+                (endSide == Side.LEFT ? 1 : -1) * (distToSwitch + cubeToSwitchEdge),
+                0));
 
         // Face towards center
-//        addSequential(new SetDrivetrainAngleCommand(drivetrain));
+        addSequential(new SetDrivetrainAngleCommand(drivetrain, endSide == Side.LEFT ? 270 : 90));
 
         // TODO: End up on end side
     }
@@ -52,7 +61,7 @@ public class GrabCubeFromPlatformZoneCommand extends CommandGroup {
                     if (availableCubes[i]) return i;
                 break;
             case RIGHT:
-                for (int i = availableCubes.length - 1; i <= 0; i--)
+                for (int i = availableCubes.length - 1; i >= 0; i--)
                     if (availableCubes[i]) return i;
                 break;
         }
@@ -69,5 +78,10 @@ public class GrabCubeFromPlatformZoneCommand extends CommandGroup {
             default:
                 return 0;
         }
+    }
+
+    public static void resetAvailableCubes() {
+        for (int i = 0; i < availableCubes.length; i++)
+            availableCubes[i] = true;
     }
 }

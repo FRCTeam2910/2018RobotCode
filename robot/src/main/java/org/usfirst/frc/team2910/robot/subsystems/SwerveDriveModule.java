@@ -49,13 +49,13 @@ public class SwerveDriveModule extends Subsystem {
         driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, 0);
         driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
 
-        driveMotor.config_kP(0, 1, 0);
-        driveMotor.config_kI(0, 0.001, 0);
-        driveMotor.config_kD(0, 0, 0);
+        driveMotor.config_kP(0, 15, 0);
+        driveMotor.config_kI(0, 0.01, 0);
+        driveMotor.config_kD(0, 0.1, 0);
         driveMotor.config_kF(0, 0.2, 0);
 
-        driveMotor.configMotionCruiseVelocity(160, 0);
-        driveMotor.configMotionAcceleration(80, 0);
+        driveMotor.configMotionCruiseVelocity(320, 0);
+        driveMotor.configMotionAcceleration(100, 0);
 
         driveMotor.setNeutralMode(NeutralMode.Brake);
 
@@ -69,6 +69,14 @@ public class SwerveDriveModule extends Subsystem {
         driveMotor.configPeakCurrentLimit(50, 0);
         driveMotor.configPeakCurrentDuration(100, 0);
         driveMotor.enableCurrentLimit(true);
+    }
+
+    private double encoderTicksToInches(double ticks) {
+        return ticks / 35.866;
+    }
+
+    private double inchesToEncoderTicks(double inches) {
+        return inches * 35.866;
     }
 
     @Override
@@ -95,7 +103,7 @@ public class SwerveDriveModule extends Subsystem {
     }
 
     public double getDriveDistance() {
-        return (mDriveMotor.getSelectedSensorPosition(0) / (80 * driveGearRatio)) * (2 * Math.PI * driveWheelRadius);
+        return encoderTicksToInches(mDriveMotor.getSelectedSensorPosition(0));
     }
 
     public TalonSRX getDriveMotor() {
@@ -116,6 +124,10 @@ public class SwerveDriveModule extends Subsystem {
 
     public void setDriveInverted(boolean inverted) {
         driveInverted = inverted;
+    }
+
+    public double getDriveWheelRadius() {
+        return driveWheelRadius;
     }
 
     public void setDriveWheelRadius(double radius) {
@@ -176,9 +188,13 @@ public class SwerveDriveModule extends Subsystem {
     public void setTargetDistance(double distance) {
         if (driveInverted) distance = -distance;
 
-        distance /= 2 * Math.PI * driveWheelRadius; // to wheel rotations
-        distance *= driveGearRatio; // to encoder rotations
-        distance *= 80; // to encoder ticks
+//        distance /= 2 * Math.PI * driveWheelRadius; // to wheel rotations
+//        distance *= driveGearRatio; // to encoder rotations
+//        distance *= 80; // to encoder ticks
+
+        System.out.println(distance);
+
+        distance = inchesToEncoderTicks(distance);
 
         SmartDashboard.putNumber("Module Ticks " + moduleNumber, distance);
 

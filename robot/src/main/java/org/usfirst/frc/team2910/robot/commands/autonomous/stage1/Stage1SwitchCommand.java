@@ -1,17 +1,13 @@
 package org.usfirst.frc.team2910.robot.commands.autonomous.stage1;
 
-import static org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousConstants.SWITCH_LENGTH;
-import static org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousConstants.SWITCH_SCORE_TO_SWITCH_WALL;
-import static org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousConstants.SWITCH_SIDE_TO_PLATFORM_ZONE;
-import static org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousConstants.WALL_TO_PLATFORM_ZONE;
-import static org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousConstants.WALL_TO_SWITCH_SIDE_DISTANCE;
-
 import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.commands.SetFieldOrientedAngleCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.DriveForDistanceCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+
+import static org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousConstants.*;
 
 public class Stage1SwitchCommand extends CommandGroup {
 
@@ -60,7 +56,7 @@ public class Stage1SwitchCommand extends CommandGroup {
                 0));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 0,
-                WALL_TO_PLATFORM_ZONE - WALL_TO_SWITCH_SIDE_DISTANCE));
+                WALL_TO_PLATFORM_ZONE - WALL_TO_SWITCH));
     }
 
     private void driveSideToFarSwitch(StartingPosition startPos) {
@@ -72,7 +68,7 @@ public class Stage1SwitchCommand extends CommandGroup {
                 0));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 0,
-                -SWITCH_SIDE_TO_PLATFORM_ZONE));
+                -WALL_TO_PLATFORM_ZONE - WALL_TO_SWITCH));
         addSequential(new SetDrivetrainAngleCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? 270 : 90)));
     }
@@ -80,6 +76,6 @@ public class Stage1SwitchCommand extends CommandGroup {
     private void driveSideToNearSwitch(StartingPosition startPos) {
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 0,
-                WALL_TO_SWITCH_SIDE_DISTANCE));
+                WALL_TO_SWITCH + SWITCH_DEPTH / 2 - robot.getDrivetrain().getWidth() / 2));
     }
 }

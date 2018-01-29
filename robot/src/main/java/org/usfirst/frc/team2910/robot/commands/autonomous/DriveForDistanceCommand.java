@@ -16,7 +16,7 @@ public class DriveForDistanceCommand extends Command {
     private final SwerveDriveSubsystem drivetrain;
     private final double angle;
     private final double distance;
-    private final double distLeft, distForward;
+    private final double distRight, distForward;
     private final PIDController angleErrorController;
     private final Timer finishTimer = new Timer();
     private boolean isTimerStarted = false;
@@ -32,16 +32,18 @@ public class DriveForDistanceCommand extends Command {
         this(drivetrain, 0, distance);
     }
 
-    public DriveForDistanceCommand(SwerveDriveSubsystem drivetrain, double distLeft, double distForward) {
+    public DriveForDistanceCommand(SwerveDriveSubsystem drivetrain, double distRight, double distForward) {
         this.drivetrain = drivetrain;
-        this.angle = Math.toDegrees(Math.atan2(distLeft, distForward));
+        this.angle = Math.toDegrees(Math.atan2(distRight, distForward));
 
-        this.distLeft = distLeft;
+        this.distRight = -distRight;
         this.distForward = distForward;
 
-        this.distance = Math.sqrt(distLeft * distLeft + distForward * distForward);
+        this.distance = Math.sqrt(distRight * distRight + distForward * distForward);
 
-        angleErrorController = new PIDController(0.06, 0.00001, 0, new PIDSource() {
+        System.out.printf("Drive Distance: % .3f in\n", distance);
+
+        angleErrorController = new PIDController(0.05, 0.00001, 0, new PIDSource() {
             @Override
             public void setPIDSourceType(PIDSourceType pidSource) { }
 
@@ -94,7 +96,7 @@ public class DriveForDistanceCommand extends Command {
     @Override
     protected void execute() {
         double forwardFactor = distForward / distance;
-        double strafeFactor = -distLeft / distance;
+        double strafeFactor = -distRight / distance;
 
         double[] moduleAngles = drivetrain.calculateSwerveModuleAngles(forwardFactor, strafeFactor, rotationFactor);
 
