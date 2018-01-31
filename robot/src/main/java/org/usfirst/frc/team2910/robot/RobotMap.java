@@ -13,4 +13,14 @@ public class RobotMap {
 	public static final int[] DRIVETRAIN_RIGHT_ENCODER = {2, 3};
 	public static final int[] DRIVETRAIN_RIGHT_MOTORS = {0, 1, 2};
 	public static final int[] DRIVETRAIN_RIGHT_SHIFTER = {6, 7};
+	
+	//TODO: Get Motor & solenoid values
+	public static final int GATHERER_LEFT_MOTOR = 0;
+	public static final int GATHERER_RIGHT_MOTOR = 1;
+	
+	public static final int GATHERER_LEFT_SOLENOID_1 = 0;
+	public static final int GATHERER_LEFT_SOLENOID_2 = 1;
+	
+	public static final int GATHERER_RIGHT_SOLENOID_1 = 3;
+	public static final int GATHERER_RIGHT_SOLENOID_2 = 4;
 }
