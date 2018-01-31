@@ -1,12 +1,15 @@
 package org.usfirst.frc.team2910.robot.subsystems;
 
+import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.RobotMap;
+import org.usfirst.frc.team2910.robot.commands.GathererCommand;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class GathererSubsystem {
+public class GathererSubsystem  extends Subsystem{
 	private Talon leftMotor = new Talon(RobotMap.GATHERER_LEFT_MOTOR);
 	private Talon rightMotor = new Talon(RobotMap.GATHERER_RIGHT_MOTOR);
 	
@@ -23,8 +26,14 @@ public class GathererSubsystem {
 		}
 	}
 	
-	public void activateGatherer(double gathererSpeed) {
-		leftMotor.set(gathererSpeed);
-		rightMotor.set(gathererSpeed);
+	public void activateGatherer(double leftSpeed, double rightSpeed) {
+		leftMotor.set(leftSpeed);
+		rightMotor.set(rightSpeed);
+	}
+
+	@Override
+	protected void initDefaultCommand() {
+		setDefaultCommand(new GathererCommand(this, Robot.getOI().getSecondaryController()));
+		
 	}
 }

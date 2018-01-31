@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2910.robot.commands;
 
 import org.usfirst.frc.team2910.robot.Robot;
+import org.usfirst.frc.team2910.robot.input.IGamepad;
 import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -8,10 +9,12 @@ import edu.wpi.first.wpilibj.command.Command;
 public class GathererCommand extends Command{
 	
 	private GathererSubsystem gatherer;
-	public static final double GATHERER_SPEED = 0.7;
+	private IGamepad controller;
 	
-	public GathererCommand(GathererSubsystem gatherer) {
+	public GathererCommand(GathererSubsystem gatherer, IGamepad controller) {
 		this.gatherer = gatherer;
+		this.controller = controller;
+		requires(gatherer);
 	}
 
 	protected void initialize() {
@@ -19,7 +22,7 @@ public class GathererCommand extends Command{
 	}
 	
 	protected void execute() {
-		gatherer.activateGatherer(GATHERER_SPEED);
+		gatherer.activateGatherer(controller.getLeftYValue(), controller.getRightYValue());
 	}
 	
 	protected void interrupted() {
@@ -27,13 +30,12 @@ public class GathererCommand extends Command{
 	}
 	
 	protected void end() {
-		gatherer.activateGatherer(GATHERER_SPEED);
+		gatherer.activateGatherer(0, 0);
 		gatherer.readyGatherer();
 	}
 	
 	@Override
 	protected boolean isFinished() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
