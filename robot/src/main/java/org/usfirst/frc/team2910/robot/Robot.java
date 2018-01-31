@@ -9,6 +9,7 @@ import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
 import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
+import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.MotorTesterSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
@@ -25,6 +26,7 @@ public class Robot extends IterativeRobot {
 	private static OI mOI;
 	private static SwerveDriveSubsystem swerveDriveSubsystem;
 	private static MotorTesterSubsystem motorTesterSubsystem;
+	private static ElevatorSubsystem elevatorSubsystem;
 
 	private final AutonomousChooser autoChooser = new AutonomousChooser();
 	private Command autoCommand;
@@ -43,6 +45,7 @@ public class Robot extends IterativeRobot {
 
 		swerveDriveSubsystem = new SwerveDriveSubsystem();
 		motorTesterSubsystem = new MotorTesterSubsystem();
+		elevatorSubsystem = new ElevatorSubsystem();
 
 		mOI.registerControls();
 
@@ -123,5 +126,9 @@ public class Robot extends IterativeRobot {
 
 	public SwerveDriveSubsystem getDrivetrain() {
 		return swerveDriveSubsystem;
+	}
+
+	public ElevatorSubsystem getElevator() {
+		return elevatorSubsystem;
 	}
 }

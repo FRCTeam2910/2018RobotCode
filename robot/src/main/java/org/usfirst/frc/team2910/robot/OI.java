@@ -1,11 +1,10 @@
 package org.usfirst.frc.team2910.robot;
 
-import org.usfirst.frc.team2910.robot.commands.AdjustFieldOrientedAngleCommand;
-import org.usfirst.frc.team2910.robot.commands.ResetDrivetrainEncoderCommand;
-import org.usfirst.frc.team2910.robot.commands.ToggleFieldOrientedCommand;
+import org.usfirst.frc.team2910.robot.commands.*;
 import org.usfirst.frc.team2910.robot.input.DPadButton;
 import org.usfirst.frc.team2910.robot.input.IGamepad;
 import org.usfirst.frc.team2910.robot.input.XboxGamepad;
+import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -26,6 +25,12 @@ public class OI {
 		primaryController.getStartButton().whenPressed(new ToggleFieldOrientedCommand(mRobot.getDrivetrain()));
 		primaryController.getDPadButton(DPadButton.Direction.LEFT).whenPressed(new AdjustFieldOrientedAngleCommand(mRobot.getDrivetrain(), false));
 		primaryController.getDPadButton(DPadButton.Direction.RIGHT).whenPressed(new AdjustFieldOrientedAngleCommand(mRobot.getDrivetrain(), true));
+
+		secondaryController.getDPadButton(DPadButton.Direction.UP).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SCALE_HEIGHT));
+		secondaryController.getDPadButton(DPadButton.Direction.RIGHT).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_HEIGHT));
+		secondaryController.getDPadButton(DPadButton.Direction.DOWN).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_HEIGHT));
+
+		secondaryController.getDPadButton(DPadButton.Direction.LEFT).toggleWhenPressed(new ToggleElevatorGearCommand(mRobot.getElevator()));
 	}
 
 	public IGamepad getPrimaryController() {
