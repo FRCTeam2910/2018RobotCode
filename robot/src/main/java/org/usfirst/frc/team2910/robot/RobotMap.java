@@ -13,4 +13,8 @@ public class RobotMap {
 	public static final int[] DRIVETRAIN_RIGHT_ENCODER = {2, 3};
 	public static final int[] DRIVETRAIN_RIGHT_MOTORS = {0, 1, 2};
 	public static final int[] DRIVETRAIN_RIGHT_SHIFTER = {6, 7};
+
+	// TODO: Get ports for carriage motors
+	public static final int CARRIAGE_LEFT_MOTOR = 0;
+	public static final int CARRIAGE_RIGHT_MOTOR = 0;
 }
