@@ -13,9 +13,12 @@ public class ElevatorSubsystem extends Subsystem {
         LOW
     }
 
-    public static final double SCORE_SCALE_HEIGHT = 80;
-    public static final double SCORE_SWITCH_HEIGHT = 10;
-    public static final double GROUND_HEIGHT = 0;
+    public static final double SCORE_SCALE_POSITION = 1;
+    public static final double SCORE_SWITCH_POISITON = 0.25;
+    public static final double GROUND_POSITION = 0;
+
+    public static final double MAX_ENCODER_VALUE = 4096;
+    public static final double MIN_ENCODER_VALUE = 0;
 
     private final TalonSRX[] motors = {
             new TalonSRX(RobotMap.ELEVATOR_MOTORS[0]),
@@ -48,7 +51,9 @@ public class ElevatorSubsystem extends Subsystem {
             shiftingSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
 
-    public void setElevatorPosition(double height) {
-        motors[0].set(ControlMode.Position, height);
+    public void setElevatorPosition(double percentage) {
+        double encoderTicks = percentage * (MAX_ENCODER_VALUE - MIN_ENCODER_VALUE) + MIN_ENCODER_VALUE;
+
+        motors[0].set(ControlMode.Position, encoderTicks);
     }
 }

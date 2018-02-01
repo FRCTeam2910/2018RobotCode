@@ -26,9 +26,9 @@ public class OI {
 		primaryController.getDPadButton(DPadButton.Direction.LEFT).whenPressed(new AdjustFieldOrientedAngleCommand(mRobot.getDrivetrain(), false));
 		primaryController.getDPadButton(DPadButton.Direction.RIGHT).whenPressed(new AdjustFieldOrientedAngleCommand(mRobot.getDrivetrain(), true));
 
-		secondaryController.getDPadButton(DPadButton.Direction.UP).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SCALE_HEIGHT));
-		secondaryController.getDPadButton(DPadButton.Direction.RIGHT).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_HEIGHT));
-		secondaryController.getDPadButton(DPadButton.Direction.DOWN).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_HEIGHT));
+		secondaryController.getDPadButton(DPadButton.Direction.UP).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SCALE_POSITION));
+		secondaryController.getDPadButton(DPadButton.Direction.RIGHT).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
+		secondaryController.getDPadButton(DPadButton.Direction.DOWN).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
 
 		secondaryController.getDPadButton(DPadButton.Direction.LEFT).toggleWhenPressed(new ToggleElevatorGearCommand(mRobot.getElevator()));
 	}

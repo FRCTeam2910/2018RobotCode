@@ -6,16 +6,16 @@ import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 public class SetElevatorPositionCommand extends Command {
 
     private final ElevatorSubsystem elevator;
-    private final double height;
+    private final double percentage;
 
-    public SetElevatorPositionCommand(ElevatorSubsystem elevator, double height) {
+    public SetElevatorPositionCommand(ElevatorSubsystem elevator, double percentage) {
         this.elevator = elevator;
-        this.height = height;
+        this.percentage = percentage;
     }
 
     @Override
     protected void initialize() {
-        elevator.setElevatorPosition(height);
+        elevator.setElevatorPosition(percentage);
     }
 
     @Override
