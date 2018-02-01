@@ -3,6 +3,7 @@ package org.usfirst.frc.team2910.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team2910.robot.RobotMap;
@@ -19,6 +20,8 @@ public class ElevatorSubsystem extends Subsystem {
 
     public static final double MAX_ENCODER_VALUE = 4096;
     public static final double MIN_ENCODER_VALUE = 0;
+
+    private final DigitalInput limitSwitch = new DigitalInput(RobotMap.ELEVATOR_LIMIT_SWITCH);
 
     private final TalonSRX[] motors = {
             new TalonSRX(RobotMap.ELEVATOR_MOTORS[0]),
@@ -55,5 +58,17 @@ public class ElevatorSubsystem extends Subsystem {
         double encoderTicks = percentage * (MAX_ENCODER_VALUE - MIN_ENCODER_VALUE) + MIN_ENCODER_VALUE;
 
         motors[0].set(ControlMode.Position, encoderTicks);
+    }
+
+    public void setElevatorSpeed(double speed) {
+        motors[0].set(ControlMode.PercentOutput, speed);
+    }
+
+    public boolean getLimitSwitchState() {
+        return limitSwitch.get();
+    }
+
+    public void zeroElevatorEncoder() {
+        motors[0].setSelectedSensorPosition(0, 0, 0);
     }
 }

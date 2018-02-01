@@ -16,4 +16,6 @@ public class RobotMap {
 
     public static final int[] ELEVATOR_MOTORS = {0, 1};
     public static final int[] ELEVATOR_SHIFTER = {0, 1};
+
+    public static final int ELEVATOR_LIMIT_SWITCH = 0;
 }
