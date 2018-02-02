@@ -31,6 +31,9 @@ public class ElevatorSubsystem extends Subsystem {
     private final DoubleSolenoid shiftingSolenoid = new DoubleSolenoid(RobotMap.ELEVATOR_SHIFTER[0],
             RobotMap.ELEVATOR_SHIFTER[1]);
 
+    private final DoubleSolenoid lockingSolenoid = new DoubleSolenoid(RobotMap.ELEVATOR_LOCKER[0],
+            RobotMap.ELEVATOR_LOCKER[1]);
+
     public ElevatorSubsystem() {
         motors[0].configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 0);
         motors[0].config_kP(0, 0, 0);
@@ -71,4 +74,13 @@ public class ElevatorSubsystem extends Subsystem {
     public void zeroElevatorEncoder() {
         motors[0].setSelectedSensorPosition(0, 0, 0);
     }
+
+    public void lock() {
+        lockingSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void unlock(){
+        lockingSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
 }
