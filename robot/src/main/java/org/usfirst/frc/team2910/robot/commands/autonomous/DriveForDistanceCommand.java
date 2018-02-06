@@ -2,6 +2,7 @@ package org.usfirst.frc.team2910.robot.commands.autonomous;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
 import java.io.BufferedWriter;
@@ -41,9 +42,7 @@ public class DriveForDistanceCommand extends Command {
 
         this.distance = Math.sqrt(distRight * distRight + distForward * distForward);
 
-        System.out.printf("Drive Distance: % .3f in\n", distance);
-
-        angleErrorController = new PIDController(0.05, 0.00001, 0, new PIDSource() {
+        angleErrorController = new PIDController(0.035, 0, 0, new PIDSource() {
             @Override
             public void setPIDSourceType(PIDSourceType pidSource) { }
 
@@ -61,6 +60,7 @@ public class DriveForDistanceCommand extends Command {
         });
         angleErrorController.setInputRange(0, 360);
         angleErrorController.setOutputRange(-0.5, 0.5);
+        angleErrorController.setContinuous(true);
 
         requires(drivetrain);
     }
@@ -91,6 +91,9 @@ public class DriveForDistanceCommand extends Command {
                 encVelLoggers[i] = null;
             }
         }
+
+        SmartDashboard.putNumber("Drive Distance Forward", distForward);
+        SmartDashboard.putNumber("Drive Distance Right", distRight);
     }
 
     @Override

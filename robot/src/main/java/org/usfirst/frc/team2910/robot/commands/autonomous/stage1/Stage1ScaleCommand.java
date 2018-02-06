@@ -44,30 +44,33 @@ public class Stage1ScaleCommand extends CommandGroup {
         }
 
         // TODO: Score cube
-
-        addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                0,
-                WALL_TO_PLATFORM_ZONE - WALL_TO_SCALE));
     }
 
     private void driveSideToFarScale(StartingPosition startPos) {
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 0,
-                WALL_TO_PLATFORM_ZONE));
-        addSequential(new SetDrivetrainAngleCommand(robot.getDrivetrain(), 180));
+                WALL_TO_PLATFORM_ZONE - robot.getDrivetrain().getWidth() / 2));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (startPos == StartingPosition.LEFT ? -1 : 1) * (SWITCH_LENGTH + 2 * SWITCH_SCORE_TO_SWITCH_WALL + START_POS_TO_SCALE_SCORE),
+                (startPos == StartingPosition.LEFT ? -1 : 1) * (SWITCH_LENGTH + 2 * SWITCH_SCORE_TO_SWITCH_WALL + robot.getDrivetrain().getLength()),
                 0));
         addSequential(new SetDrivetrainAngleCommand(robot.getDrivetrain(),
-                (startPos == StartingPosition.LEFT ? 270 : 90)));
+                (startPos == StartingPosition.LEFT ? 90 : 270)));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                0,
+                (startPos == StartingPosition.LEFT ? -1 : 1) * START_POS_TO_SCALE_SCORE,
                 WALL_TO_SCALE - WALL_TO_PLATFORM_ZONE));
+        // TODO: Score
+        addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
+                (startPos == StartingPosition.LEFT ? 1 : -1) * START_POS_TO_SCALE_SCORE,
+                WALL_TO_PLATFORM_ZONE - WALL_TO_SCALE));
     }
 
     private void driveSideToNearScale(StartingPosition startPos) {
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (startPos == StartingPosition.LEFT ? -1 : 1) * START_POS_TO_SCALE_SCORE,
+                (startPos == StartingPosition.LEFT ? 1 : -1) * START_POS_TO_SCALE_SCORE,
                 WALL_TO_SCALE));
+        // TODO: Score
+        addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
+                (startPos == StartingPosition.LEFT ? -1 : 1) * START_POS_TO_SCALE_SCORE,
+                WALL_TO_PLATFORM_ZONE - WALL_TO_SCALE));
     }
 }

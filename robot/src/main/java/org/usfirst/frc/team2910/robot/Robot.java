@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
+import org.usfirst.frc.team2910.robot.commands.autonomous.DriveForDistanceCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
@@ -90,7 +91,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autoCommand = autoChooser.getCommand(this);
-//		autoCommand = new SetDrivetrainAngleCommand(getDrivetrain(), 0);
+//		autoCommand = new DriveForDistanceCommand(getDrivetrain(), 0, 20 * 12);
 		autoCommand.start();
 	}
 
