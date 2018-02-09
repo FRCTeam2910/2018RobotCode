@@ -20,13 +20,17 @@ public class Stage1ScaleCommand extends CommandGroup {
         else if (startPos == StartingPosition.RIGHT)
             addSequential(new SetFieldOrientedAngleCommand(robot.getDrivetrain(), robot.getDrivetrain().getRawGyroAngle() - 90));
 
+        if (startPos == StartingPosition.CENTER) {
+            addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), SWITCH_LENGTH / 2 + SWITCH_SCORE_TO_SWITCH_WALL + robot.getDrivetrain().getLength() / 2.
+                    , 0));
+
+            startPos = StartingPosition.RIGHT;
+        }
+
         // TODO: Move elevator to scale position
 
         // Move to switch scoring position
         switch (startPos) {
-            case CENTER:
-                // TODO: Center Stage 1 Scale
-                break;
             case LEFT:
                 if (scalePos == 'L') {
                     driveSideToNearScale(startPos);
