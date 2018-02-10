@@ -167,7 +167,9 @@ public class SwerveDriveModule extends Subsystem {
         double currentError = mAngleMotor.getClosedLoopError(0);
         if (Math.abs(currentError - mLastError) < 7.5 &&
                 Math.abs(currentAngle - targetAngle) > 5) {
-            if (mStallTimeBegin == Long.MAX_VALUE) mStallTimeBegin = System.currentTimeMillis();
+            if (mStallTimeBegin == Long.MAX_VALUE) {
+            	mStallTimeBegin = System.currentTimeMillis();
+            }
             if (System.currentTimeMillis() - mStallTimeBegin > STALL_TIMEOUT) {
             	angleMotorJam = true;
             	mAngleMotor.set(ControlMode.Disabled, 0);
@@ -211,5 +213,11 @@ public class SwerveDriveModule extends Subsystem {
 
     public void zeroDistance() {
         mDriveMotor.setSelectedSensorPosition(0, 0, 0);
+    }
+    
+    public void resetMotor() {
+    	angleMotorJam = false;
+    	mStallTimeBegin = Long.MAX_VALUE;
+    	SmartDashboard.putBoolean("Motor Jammed" + moduleNumber, angleMotorJam);
     }
 }

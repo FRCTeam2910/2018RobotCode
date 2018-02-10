@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.usfirst.frc.team2910.robot.commands.ResetMotorsCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
 import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchCommand;
@@ -22,7 +24,7 @@ import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 public class Robot extends IterativeRobot {
 	public static final boolean DEBUG = true;
 
-	private static OI mOI;
+	private static OI mOI; 
 	private static SwerveDriveSubsystem swerveDriveSubsystem;
 	private static MotorTesterSubsystem motorTesterSubsystem;
 
@@ -45,6 +47,8 @@ public class Robot extends IterativeRobot {
 		motorTesterSubsystem = new MotorTesterSubsystem();
 
 		mOI.registerControls();
+		
+		SmartDashboard.putData("Reset Motors", new ResetMotorsCommand(swerveDriveSubsystem));
 	}
 
 	@Override
