@@ -4,36 +4,58 @@ import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.RobotMap;
 import org.usfirst.frc.team2910.robot.commands.GathererCommand;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-public class GathererSubsystem  extends Subsystem{
-	private Talon leftMotor = new Talon(RobotMap.GATHERER_LEFT_MOTOR);
-	private Talon rightMotor = new Talon(RobotMap.GATHERER_RIGHT_MOTOR);
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
+public class GathererSubsystem  extends Subsystem {
+	public static enum Position {
+		IN,
+		OUT
+	};
 	
-	private DoubleSolenoid leftSolenoid = new DoubleSolenoid(RobotMap.GATHERER_LEFT_SOLENOID_1, RobotMap.GATHERER_LEFT_SOLENOID_2);
-	private DoubleSolenoid rightSolenoid = new DoubleSolenoid(RobotMap.GATHERER_RIGHT_SOLENOID_1, RobotMap.GATHERER_RIGHT_SOLENOID_2);
+	private WPI_TalonSRX leftMotor = new WPI_TalonSRX(RobotMap.GATHERER_LEFT_MOTOR);
+	private WPI_TalonSRX rightMotor = new WPI_TalonSRX(RobotMap.GATHERER_RIGHT_MOTOR);
 	
-	public void readyGatherer() {
-		if(leftSolenoid.get() == Value.kForward && rightSolenoid.get() == Value.kForward) {
-			leftSolenoid.set(Value.kReverse);
-			rightSolenoid.set(Value.kReverse);
-		} else {
-			leftSolenoid.set(Value.kForward);
-			rightSolenoid.set(Value.kForward);
-		}
+	private TalonSRX leftCarriage = new TalonSRX(22);
+	private TalonSRX rightCarriage = new TalonSRX(21);
+	
+	private Solenoid leftSolenoid = new Solenoid(RobotMap.GATHERER_LEFT_SOLENOID);
+	private Solenoid rightSolenoid = new Solenoid(RobotMap.GATHERER_RIGHT_SOLENOID);
+	
+	private final DifferentialDrive intakeDriver = new DifferentialDrive(leftMotor, rightMotor);
+	
+	public GathererSubsystem() {
+		setLeftArm(Position.OUT);
+		setRightArm(Position.IN);
+		
+		leftCarriage.setInverted(true);
+		leftCarriage.follow(leftMotor);
+		rightCarriage.setInverted(true);
+		rightCarriage.follow(rightMotor);
 	}
 	
-	public void activateGatherer(double leftSpeed, double rightSpeed) {
-		leftMotor.set(leftSpeed);
-		rightMotor.set(rightSpeed);
+	public void setLeftArm(Position position) {
+		leftSolenoid.set(position == Position.OUT);
+	}
+	
+	public void setRightArm(Position position) {
+		rightSolenoid.set(position == Position.IN);
+	}
+	
+	public void activateGatherer(double in, double rot) {
+		intakeDriver.arcadeDrive(in, rot);
+//		leftCarriage.set(ControlMode.PercentOutput, leftSpeed);
+//		rightCarriage.set(ControlMode.PercentOutput, rightSpeed);
 	}
 
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new GathererCommand(this, Robot.getOI().getSecondaryController()));
-		
+		setDefaultCommand(new GathererCommand(this, Robot.getOI().getSecondaryController()));	
 	}
 }

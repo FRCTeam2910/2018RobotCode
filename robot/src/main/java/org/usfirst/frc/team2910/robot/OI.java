@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2910.robot;
 
+import org.usfirst.frc.team2910.robot.commands.ActuateGathererCommand;
 import org.usfirst.frc.team2910.robot.commands.AdjustFieldOrientedAngleCommand;
 import org.usfirst.frc.team2910.robot.commands.ResetDrivetrainEncoderCommand;
 import org.usfirst.frc.team2910.robot.commands.ToggleFieldOrientedCommand;
@@ -27,6 +28,8 @@ public class OI {
 		primaryController.getDPadButton(DPadButton.Direction.LEFT).whenPressed(new AdjustFieldOrientedAngleCommand(mRobot.getDrivetrain(), false));
 		primaryController.getDPadButton(DPadButton.Direction.RIGHT).whenPressed(new AdjustFieldOrientedAngleCommand(mRobot.getDrivetrain(), true));
 
+		secondaryController.getLeftTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.GetGatherer(), true));
+		secondaryController.getRightTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.GetGatherer(), false));
 	}
 
 	public IGamepad getPrimaryController() {
