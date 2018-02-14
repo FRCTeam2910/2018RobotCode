@@ -19,8 +19,11 @@ public class DriveForDistanceCommand extends Command {
     }
 
     public DriveForDistanceCommand(SwerveDriveSubsystem drivetrain, double distLeft, double distForward) {
-        this.drivetrain = drivetrain;
+        System.out.println("FWD: " + distForward);
+    	
+    	this.drivetrain = drivetrain;
         this.angle = Math.toDegrees(Math.atan2(distLeft, distForward));
+        
         this.distance = Math.sqrt(distLeft*distLeft + distForward*distForward);
 
         requires(drivetrain);
@@ -33,15 +36,22 @@ public class DriveForDistanceCommand extends Command {
         isTimerStarted = false;
 
         for (int i = 0; i < 4; i++) {
-            drivetrain.getSwerveModule(i).setTargetAngle(angle);
+            drivetrain.getSwerveModule(i).setTargetAngle(angle + drivetrain.getGyroAngle());
             drivetrain.getSwerveModule(i).zeroDistance();
             drivetrain.getSwerveModule(i).setTargetDistance(distance);
         }
+        
+        System.out.printf("Module Angles: % .3f\n", angle);
     }
 
     @Override
     protected boolean isFinished() {
-        if (Math.abs(distance - Math.abs(drivetrain.getSwerveModule(0).getDriveDistance())) < TARGET_DISTANCE_BUFFER) {
+    	boolean inBuffer = true;
+    	for (int i = 0; i < 4; i++) {
+    		inBuffer &= Math.abs(distance - Math.abs(drivetrain.getSwerveModule(i).getDriveDistance())) < TARGET_DISTANCE_BUFFER;
+    	}
+    	
+        if (inBuffer) {
             if (!isTimerStarted) {
                 finishTimer.start();
                 isTimerStarted = true;

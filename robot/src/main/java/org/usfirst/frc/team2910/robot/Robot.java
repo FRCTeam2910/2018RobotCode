@@ -1,4 +1,3 @@
-
 package org.usfirst.frc.team2910.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -10,6 +9,7 @@ import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleComm
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
+import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.MotorTesterSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
@@ -27,6 +27,7 @@ public class Robot extends IterativeRobot {
 	private static SwerveDriveSubsystem swerveDriveSubsystem;
 	private static MotorTesterSubsystem motorTesterSubsystem;
 	private static ElevatorSubsystem elevatorSubsystem;
+	private static GathererSubsystem gathererSubsystem;
 
 	private final AutonomousChooser autoChooser = new AutonomousChooser();
 	private Command autoCommand;
@@ -42,14 +43,13 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		mOI = new OI(this);
-
+		
+		gathererSubsystem = new GathererSubsystem();
 		swerveDriveSubsystem = new SwerveDriveSubsystem();
 		motorTesterSubsystem = new MotorTesterSubsystem();
 		elevatorSubsystem = new ElevatorSubsystem();
 
 		mOI.registerControls();
-
-		autoCommand = new Stage1SwitchCommand(this, StartingPosition.LEFT, 'L');
 	}
 
 	@Override
@@ -57,6 +57,7 @@ public class Robot extends IterativeRobot {
 		for (int i = 0; i < 4; i++) {
 			SmartDashboard.putNumber("Module Angle " + i, swerveDriveSubsystem.getSwerveModule(i).getCurrentAngle());
 			SmartDashboard.putNumber("Module Pos " + i, (swerveDriveSubsystem.getSwerveModule(i).getDriveDistance()));
+			SmartDashboard.putNumber("Module Raw Angle " + i, swerveDriveSubsystem.getSwerveModule(i).getAngleMotor().getSelectedSensorPosition(0));
 		}
 
 		SmartDashboard.putNumber("Drivetrain Angle", swerveDriveSubsystem.getGyroAngle());
@@ -92,8 +93,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-//		autoCommand = autoChooser.getCommand(this);
-		autoCommand = new SetDrivetrainAngleCommand(swerveDriveSubsystem, 225);
+		autoCommand = autoChooser.getCommand(this);
+//		autoCommand = new Stage1SwitchCommand(this, StartingPosition.RIGHT, 'R');
 		autoCommand.start();
 	}
 
@@ -130,5 +131,9 @@ public class Robot extends IterativeRobot {
 
 	public ElevatorSubsystem getElevator() {
 		return elevatorSubsystem;
+	}
+
+	public GathererSubsystem GetGatherer() {
+		return gathererSubsystem;
 	}
 }

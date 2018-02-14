@@ -7,13 +7,15 @@ import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
 public class SetDrivetrainAngleCommand extends Command {
     private static final double ANGLE_CHECK_TIME = 0.5;
-    private static final double TARGET_ANGLE_BUFFER = 1.0;
+    private static final double TARGET_ANGLE_BUFFER = 0.3;
 
 
     private final SwerveDriveSubsystem drivetrain;
     private final double targetAngle;
     private final Timer finishTimer = new Timer();
     private boolean isTimerStarted = false;
+    
+    private double arcLength = 0;
 
     public SetDrivetrainAngleCommand(SwerveDriveSubsystem drivetrain, double targetAngle) {
         this.drivetrain = drivetrain;
@@ -29,7 +31,7 @@ public class SetDrivetrainAngleCommand extends Command {
         isTimerStarted = false;
 
         double angleDiff = Math.toRadians((targetAngle - drivetrain.getGyroAngle()) % 360);
-        double arcLength = SwerveDriveSubsystem.TURNING_RADIUS * angleDiff;
+        arcLength = SwerveDriveSubsystem.TURNING_RADIUS * angleDiff;
 
         double a = -(SwerveDriveSubsystem.WHEELBASE / SwerveDriveSubsystem.TRACKWIDTH);
         double b = (SwerveDriveSubsystem.WHEELBASE / SwerveDriveSubsystem.TRACKWIDTH);
@@ -48,11 +50,18 @@ public class SetDrivetrainAngleCommand extends Command {
             drivetrain.getSwerveModule(i).zeroDistance();
             drivetrain.getSwerveModule(i).setTargetDistance(arcLength);
         }
+        
+        SmartDashboard.putNumber("Set Angle Distance", arcLength);
     }
 
     @Override
     protected boolean isFinished() {
-        if (Math.abs(targetAngle - drivetrain.getGyroAngle()) < TARGET_ANGLE_BUFFER) {
+    	boolean inBuffer = true;
+    	for (int i = 0; i < 4; i++) {
+    		inBuffer &= Math.abs(arcLength - Math.abs(drivetrain.getSwerveModule(i).getDriveDistance())) < TARGET_ANGLE_BUFFER;
+    	}
+    	
+        if (inBuffer) {
             if (!isTimerStarted) {
                 finishTimer.start();
                 isTimerStarted = true;

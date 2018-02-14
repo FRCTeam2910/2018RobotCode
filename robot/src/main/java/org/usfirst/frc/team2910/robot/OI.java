@@ -1,6 +1,10 @@
 package org.usfirst.frc.team2910.robot;
 
 import org.usfirst.frc.team2910.robot.commands.*;
+import org.usfirst.frc.team2910.robot.commands.ActuateGathererCommand;
+import org.usfirst.frc.team2910.robot.commands.AdjustFieldOrientedAngleCommand;
+import org.usfirst.frc.team2910.robot.commands.ResetDrivetrainEncoderCommand;
+import org.usfirst.frc.team2910.robot.commands.ToggleFieldOrientedCommand;
 import org.usfirst.frc.team2910.robot.input.DPadButton;
 import org.usfirst.frc.team2910.robot.input.IGamepad;
 import org.usfirst.frc.team2910.robot.input.XboxGamepad;
@@ -33,6 +37,9 @@ public class OI {
 		secondaryController.getDPadButton(DPadButton.Direction.LEFT).toggleWhenPressed(new ToggleElevatorGearCommand(mRobot.getElevator()));
 
 		secondaryController.getBackButton().whenPressed(new CalibrateElevatorEncoderCommand(mRobot.getElevator()));
+
+		secondaryController.getLeftTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.GetGatherer(), true));
+		secondaryController.getRightTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.GetGatherer(), false));
 	}
 
 	public IGamepad getPrimaryController() {

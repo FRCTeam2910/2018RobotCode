@@ -1,6 +1,7 @@
 # Eclipse files and folders
 .classpath
 .project
+.metadata/
 .settings/
 
 # Intellij files and folders

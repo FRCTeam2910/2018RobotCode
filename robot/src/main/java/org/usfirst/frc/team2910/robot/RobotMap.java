@@ -7,17 +7,16 @@ package org.usfirst.frc.team2910.robot;
  * floating around.
  */
 public class RobotMap {
-    public static final int[] DRIVETRAIN_LEFT_ENCODER = {0, 1};
-    public static final int[] DRIVETRAIN_LEFT_MOTORS = {3, 4, 5};
-    public static final int[] DRIVETRAIN_LEFT_SHIFTER = {0, 1};
-    public static final int[] DRIVETRAIN_RIGHT_ENCODER = {2, 3};
-    public static final int[] DRIVETRAIN_RIGHT_MOTORS = {0, 1, 2};
-    public static final int[] DRIVETRAIN_RIGHT_SHIFTER = {6, 7};
-
     public static final int[] ELEVATOR_MOTORS = {0, 1};
     public static final int[] ELEVATOR_SHIFTER = {0, 1};
 
     public static final int[] ELEVATOR_LOCKER = {2, 3};
 
     public static final int ELEVATOR_LIMIT_SWITCH = 0;
+
+	public static final int GATHERER_LEFT_MOTOR = 30;
+	public static final int GATHERER_RIGHT_MOTOR = 29;
+	
+	public static final int GATHERER_LEFT_SOLENOID = 1;
+	public static final int GATHERER_RIGHT_SOLENOID = 0;
 }

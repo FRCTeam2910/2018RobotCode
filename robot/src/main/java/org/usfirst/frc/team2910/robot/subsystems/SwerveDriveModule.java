@@ -38,22 +38,23 @@ public class SwerveDriveModule extends Subsystem {
 
 		angleMotor.configSelectedFeedbackSensor(FeedbackDevice.Analog,0, 0);
 		angleMotor.setSensorPhase(true);
-		angleMotor.config_kP(0, 20, 0);
+		angleMotor.config_kP(0, 30, 0);
 		angleMotor.config_kI(0, 0.001, 0);
 		angleMotor.config_kD(0, 200, 0);
+		angleMotor.setNeutralMode(NeutralMode.Brake);
 		angleMotor.set(ControlMode.Position, 0);
 
 		driveMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 
 		driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, 0);
 		driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
-
-		driveMotor.config_kP(0, 10, 0);
-		driveMotor.config_kI(0, 0, 0);
-		driveMotor.config_kD(0, 0, 0);
+		
+		driveMotor.config_kP(0, 80, 0);
+		driveMotor.config_kI(0, 0.002, 0);
+		driveMotor.config_kD(0, 5, 0);
 		driveMotor.config_kF(0, 0.2, 0);
 
-		driveMotor.configMotionCruiseVelocity(640, 0);
+		driveMotor.configMotionCruiseVelocity(480, 0);
 		driveMotor.configMotionAcceleration(320, 0);
 
 		driveMotor.setNeutralMode(NeutralMode.Brake);
@@ -121,10 +122,10 @@ public class SwerveDriveModule extends Subsystem {
 
 	public void setTargetAngle(double targetAngle) {
 		mLastTargetAngle = targetAngle;
-
+		
 		targetAngle %= 360;
 		targetAngle += mZeroOffset;
-
+		
 		double currentAngle = mAngleMotor.getSelectedSensorPosition(0) * (360.0 / 1024.0);
 		double currentAngleMod = currentAngle % 360;
 		if (currentAngleMod < 0) currentAngleMod += 360;
@@ -163,6 +164,7 @@ public class SwerveDriveModule extends Subsystem {
 		}
 		mLastError = currentError;
 
+		SmartDashboard.putNumber("Module Target Angle " + mModuleNumber, targetAngle % 360);
 
 		targetAngle *= 1024.0 / 360.0;
 		mAngleMotor.set(ControlMode.Position, targetAngle);
