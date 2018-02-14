@@ -25,15 +25,15 @@ public class HolonomicDriveCommand extends Command {
 		double strafe = Robot.getOI().getPrimaryController().getLeftXValue();
 		double rotation = Robot.getOI().getPrimaryController().getRightXValue() * 0.5;
 
+		forward = deadband(forward);
+		strafe = deadband(strafe);
+		rotation = deadband(rotation);
+		
 		if (Robot.getOI().getPrimaryController().getLeftBumperButton().get()) {
 			rotation = -1;
 		} else if (Robot.getOI().getPrimaryController().getRightBumperButton().get()) {
 			rotation = 1;
 		}
-
-		forward = deadband(forward);
-		strafe = deadband(strafe);
-		rotation = deadband(rotation);
 
 		SmartDashboard.putNumber("Forward", forward);
 		SmartDashboard.putNumber("Strafe", strafe);

@@ -6,11 +6,11 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveDriveSubsystem extends HolonomicDrivetrain {
-    public static final double WHEELBASE = 14.5;  // Competition bot: 20.5
-    public static final double TRACKWIDTH = 13.5; // Competition bot: 20.5
+    public static final double WHEELBASE = 20.5;  // Swerve bot: 14.5
+    public static final double TRACKWIDTH = 25.5; // Swerve bot: 13.5
 
-    public static final double WIDTH = 20;  // Competition bot: 32
-    public static final double LENGTH = 19; // Competition bot: 27
+    public static final double WIDTH = 32;  // Swerve bot: 20
+    public static final double LENGTH = 27; // Swerve bot: 19
 
     /*
      * 0 is Front Right
@@ -19,11 +19,17 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
      * 3 is Back Right
      */
     private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[]{
-            new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 253.47),
-            new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 337.5),
-            new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 11.95),
-            new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 16.17),
+            new SwerveDriveModule(0, new TalonSRX(34), new TalonSRX(32), 131.83),
+            new SwerveDriveModule(1, new TalonSRX(23), new TalonSRX(26), 9.49),
+            new SwerveDriveModule(2, new TalonSRX(24), new TalonSRX(25), 338.90),
+            new SwerveDriveModule(3, new TalonSRX(33), new TalonSRX(31), 198.63),
     };
+//    private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[]{
+//            new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 253.47),
+//            new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 337.5),
+//            new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 11.95),
+//            new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 16.17),
+//    };
 
     private AHRS mNavX = new AHRS(SPI.Port.kMXP, (byte) 200);
 
@@ -31,8 +37,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
         super(WIDTH, LENGTH);
         zeroGyro();
 
-        mSwerveModules[0].setDriveInverted(true);
-        mSwerveModules[3].setDriveInverted(true);
+        mSwerveModules[1].setDriveInverted(true);
+        mSwerveModules[2].setDriveInverted(true);
+//      mSwerveModules[0].setDriveInverted(true);
+//      mSwerveModules[3[.setDriveInverted(true);
 
         for (SwerveDriveModule module : mSwerveModules) {
             module.setTargetAngle(0);
@@ -71,7 +79,8 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
         angle %= 360;
         if (angle < 0) angle += 360;
 
-        return angle;
+        return 360 - angle;
+//		return angle;
     }
 
     public double getGyroRate() {
@@ -94,6 +103,7 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     public void holonomicDrive(double forward, double strafe, double rotation) {
         forward *= getSpeedMultiplier();
         strafe *= getSpeedMultiplier();
+        rotation = -rotation;
         if (isFieldOriented()) {
             double angleRad = Math.toRadians(getGyroAngle());
             double temp = forward * Math.cos(angleRad) +
