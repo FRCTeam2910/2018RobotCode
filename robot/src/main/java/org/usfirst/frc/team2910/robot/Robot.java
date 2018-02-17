@@ -1,15 +1,12 @@
-
 package org.usfirst.frc.team2910.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
-import org.usfirst.frc.team2910.robot.commands.autonomous.DriveForDistanceCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
+import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.MotorTesterSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
@@ -22,34 +19,39 @@ import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
  * directory.
  */
 public class Robot extends IterativeRobot {
-    public static final boolean DEBUG = true;
+	public static final boolean DEBUG = true;
 
-    private static OI mOI;
-    private static SwerveDriveSubsystem swerveDriveSubsystem;
-    private static MotorTesterSubsystem motorTesterSubsystem;
-    private static GathererSubsystem gathererSubsystem;
+	private static OI mOI;
+	private static SwerveDriveSubsystem swerveDriveSubsystem;
+	private static MotorTesterSubsystem motorTesterSubsystem;
+	private static ElevatorSubsystem elevatorSubsystem;
+	private static GathererSubsystem gathererSubsystem;
 
-    private final AutonomousChooser autoChooser = new AutonomousChooser();
-    private Command autoCommand;
+	private final AutonomousChooser autoChooser = new AutonomousChooser();
+	private Command autoCommand;
 
-    public static OI getOI() {
-        return mOI;
-    }
+	public static OI getOI() {
+		return mOI;
+	}
 
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
-    @Override
-    public void robotInit() {
-        mOI = new OI(this);
+	/**
+	 * This function is run when the robot is first started up and should be
+	 * used for any initialization code.
+	 */
+	@Override
+	public void robotInit() {
+		mOI = new OI(this);
+		
+		gathererSubsystem = new GathererSubsystem();
+		swerveDriveSubsystem = new SwerveDriveSubsystem();
+		motorTesterSubsystem = new MotorTesterSubsystem();
+		elevatorSubsystem = new ElevatorSubsystem();
 
-        gathererSubsystem = new GathererSubsystem();
-        swerveDriveSubsystem = new SwerveDriveSubsystem();
-        motorTesterSubsystem = new MotorTesterSubsystem();
+		mOI.registerControls();
 
-        mOI.registerControls();
-    }
+		NetworkTableInstance instance = NetworkTableInstance.getDefault();
+		instance.getTable("limelight").getEntry("ledState").setNumber(1.0);
+	}
 
     @Override
     public void robotPeriodic() {
@@ -61,76 +63,84 @@ public class Robot extends IterativeRobot {
             SmartDashboard.putNumber("Module Current Ticks " + i, swerveDriveSubsystem.getSwerveModule(i).getDriveMotor().getSelectedSensorPosition(0));
         }
 
-        SmartDashboard.putNumber("Drivetrain Angle", swerveDriveSubsystem.getGyroAngle());
-    }
+		SmartDashboard.putNumber("Elevator encoder", elevatorSubsystem.getEncoderValue());
+		SmartDashboard.putNumber("Elevator height", elevatorSubsystem.getCurrentHeight());
+		SmartDashboard.putNumber("Elevator target height", elevatorSubsystem.getTargetHeight());
+		SmartDashboard.putNumber("Elevator speed", elevatorSubsystem.getMotors()[0].getSelectedSensorVelocity(0));
 
-    /**
-     * This function is called once each time the robot enters Disabled mode.
-     * You can use it to reset any subsystem information you want to clear when
-     * the robot is disabled.
-     */
-    @Override
-    public void disabledInit() {
-        for (int i = 0; i < 4; i++) {
-            swerveDriveSubsystem.getSwerveModule(i).robotDisabledInit();
-        }
-    }
+		SmartDashboard.putNumber("Drivetrain Angle", swerveDriveSubsystem.getGyroAngle());
+	}
 
-    @Override
-    public void disabledPeriodic() {
-        Scheduler.getInstance().run();
-    }
+	/**
+	 * This function is called once each time the robot enters Disabled mode.
+	 * You can use it to reset any subsystem information you want to clear when
+	 * the robot is disabled.
+	 */
+	@Override
+	public void disabledInit() {
+		for (int i = 0; i < 4; i++) {
+			swerveDriveSubsystem.getSwerveModule(i).robotDisabledInit();
+		}
+	}
 
-    /**
-     * This autonomous (along with the chooser code above) shows how to select
-     * between different autonomous modes using the dashboard. The sendable
-     * chooser code works with the Java SmartDashboard. If you prefer the
-     * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-     * getString code to get the auto name from the text box below the Gyro
-     * <p>
-     * You can add additional auto modes by adding additional commands to the
-     * chooser code above (like the commented example) or additional comparisons
-     * to the switch structure below with additional strings & commands.
-     */
-    @Override
-    public void autonomousInit() {
-        autoCommand = autoChooser.getCommand(this);
-        autoCommand.start();
-    }
+	@Override
+	public void disabledPeriodic() {
+		Scheduler.getInstance().run();
+	}
 
-    /**
-     * This function is called periodically during autonomous
-     */
-    @Override
-    public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
-    }
+	/**
+	 * This autonomous (along with the chooser code above) shows how to select
+	 * between different autonomous modes using the dashboard. The sendable
+	 * chooser code works with the Java SmartDashboard. If you prefer the
+	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
+	 * getString code to get the auto name from the text box below the Gyro
+	 * <p>
+	 * You can add additional auto modes by adding additional commands to the
+	 * chooser code above (like the commented example) or additional comparisons
+	 * to the switch structure below with additional strings & commands.
+	 */
+	@Override
+	public void autonomousInit() {
+		autoCommand = autoChooser.getCommand(this);
+		autoCommand.start();
+	}
 
-    @Override
-    public void teleopInit() {
-        if (autoCommand != null) autoCommand.cancel();
-    }
+	/**
+	 * This function is called periodically during autonomous
+	 */
+	@Override
+	public void autonomousPeriodic() {
+		Scheduler.getInstance().run();
+	}
 
-    /**
-     * This function is called periodically during operator control
-     */
-    @Override
-    public void teleopPeriodic() {
-        Scheduler.getInstance().run();
-    }
+	@Override
+	public void teleopInit() {
+		if (autoCommand != null) autoCommand.cancel();
+	}
 
-    /**
-     * This function is called periodically during test mode
-     */
-    @Override
-    public void testPeriodic() {
-    }
+	/**
+	 * This function is called periodically during operator control
+	 */
+	@Override
+	public void teleopPeriodic() {
+		Scheduler.getInstance().run();
+	}
 
-    public SwerveDriveSubsystem getDrivetrain() {
-        return swerveDriveSubsystem;
-    }
+	/**
+	 * This function is called periodically during test mode
+	 */
+	@Override
+	public void testPeriodic() { }
 
-    public GathererSubsystem getGatherer() {
-        return gathererSubsystem;
-    }
+	public SwerveDriveSubsystem getDrivetrain() {
+		return swerveDriveSubsystem;
+	}
+
+	public ElevatorSubsystem getElevator() {
+		return elevatorSubsystem;
+	}
+
+	public GathererSubsystem GetGatherer() {
+		return gathererSubsystem;
+	}
 }

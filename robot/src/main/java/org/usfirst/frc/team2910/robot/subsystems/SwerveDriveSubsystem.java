@@ -12,18 +12,18 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     public static final double WIDTH = 32;  // Swerve bot: 20
     public static final double LENGTH = 27; // Swerve bot: 19
 
-    /*
-     * 0 is Front Right
-     * 1 is Front Left
-     * 2 is Back Left
-     * 3 is Back Right
-     */
-    private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[]{
-            new SwerveDriveModule(0, new TalonSRX(34), new TalonSRX(32), 131.83),
-            new SwerveDriveModule(1, new TalonSRX(23), new TalonSRX(26), 9.49),
-            new SwerveDriveModule(2, new TalonSRX(24), new TalonSRX(25), 338.90),
-            new SwerveDriveModule(3, new TalonSRX(33), new TalonSRX(31), 198.63),
-    };
+	/*
+	 * 0 is Front Right
+	 * 1 is Front Left
+	 * 2 is Back Left
+	 * 3 is Back Right
+	 */
+	private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[] {
+			new SwerveDriveModule(0, new TalonSRX(33), new TalonSRX(31), 132.89),
+			new SwerveDriveModule(1, new TalonSRX(23), new TalonSRX(26), 9.1),
+			new SwerveDriveModule(2, new TalonSRX(24), new TalonSRX(25), 338.55),
+			new SwerveDriveModule(3, new TalonSRX(34), new TalonSRX(32), 197.93),
+	};
 //    private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[]{
 //            new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 253.47),
 //            new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 337.5),

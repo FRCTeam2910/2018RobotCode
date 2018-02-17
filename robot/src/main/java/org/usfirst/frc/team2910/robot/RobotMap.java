@@ -7,8 +7,12 @@ package org.usfirst.frc.team2910.robot;
  * floating around.
  */
 public class RobotMap {
-	
-	//TODO: Get Motor & solenoid values
+    public static final int[] ELEVATOR_MOTORS = {27, 28};
+    public static final int[] ELEVATOR_SHIFTER = {3, 4};
+    public static final int ELEVATOR_LOCKER = 2;
+
+    public static final int ELEVATOR_LIMIT_SWITCH = 0;
+
 	public static final int GATHERER_LEFT_MOTOR = 30;
 	public static final int GATHERER_RIGHT_MOTOR = 29;
 	

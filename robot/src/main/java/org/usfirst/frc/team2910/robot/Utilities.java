@@ -1,13 +1,10 @@
 package org.usfirst.frc.team2910.robot;
 
 public final class Utilities {
-	private Utilities() {}
 
-	public static double deadband(double in) {
-		if (in < -0.02 || 0.02 < in) {
-			return in;
-		}
+    public static double deadband(double in) {
+        if (Math.abs(in) < 0.02) return 0;
 
-		return 0;
-	}
+        return in;
+    }
 }
