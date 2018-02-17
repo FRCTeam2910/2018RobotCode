@@ -1,13 +1,11 @@
 package org.usfirst.frc.team2910.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
-import org.usfirst.frc.team2910.robot.commands.autonomous.SetDrivetrainAngleCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.MotorTesterSubsystem;
@@ -50,6 +48,9 @@ public class Robot extends IterativeRobot {
 		elevatorSubsystem = new ElevatorSubsystem();
 
 		mOI.registerControls();
+
+		NetworkTableInstance instance = NetworkTableInstance.getDefault();
+		instance.getTable("limelight").getEntry("ledState").setNumber(1.0);
 	}
 
 	@Override
@@ -59,6 +60,11 @@ public class Robot extends IterativeRobot {
 			SmartDashboard.putNumber("Module Pos " + i, (swerveDriveSubsystem.getSwerveModule(i).getDriveDistance()));
 			SmartDashboard.putNumber("Module Raw Angle " + i, swerveDriveSubsystem.getSwerveModule(i).getAngleMotor().getSelectedSensorPosition(0));
 		}
+
+		SmartDashboard.putNumber("Elevator encoder", elevatorSubsystem.getEncoderValue());
+		SmartDashboard.putNumber("Elevator height", elevatorSubsystem.getCurrentHeight());
+		SmartDashboard.putNumber("Elevator target height", elevatorSubsystem.getTargetHeight());
+		SmartDashboard.putNumber("Elevator speed", elevatorSubsystem.getMotors()[0].getSelectedSensorVelocity(0));
 
 		SmartDashboard.putNumber("Drivetrain Angle", swerveDriveSubsystem.getGyroAngle());
 	}
@@ -94,7 +100,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autoCommand = autoChooser.getCommand(this);
-//		autoCommand = new Stage1SwitchCommand(this, StartingPosition.RIGHT, 'R');
 		autoCommand.start();
 	}
 

@@ -27,6 +27,7 @@ public class CalibrateElevatorEncoderCommand extends Command {
     @Override
     protected void end() {
         elevator.setElevatorSpeed(0.0);
+        elevator.setElevatorPosition(0);
         elevator.zeroElevatorEncoder();
     }
 

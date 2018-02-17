@@ -48,10 +48,8 @@ public class GathererSubsystem  extends Subsystem {
 		rightSolenoid.set(position == Position.IN);
 	}
 	
-	public void activateGatherer(double in, double rot) {
-		intakeDriver.arcadeDrive(in, rot);
-//		leftCarriage.set(ControlMode.PercentOutput, leftSpeed);
-//		rightCarriage.set(ControlMode.PercentOutput, rightSpeed);
+	public void activateGatherer(double out, double rot) {
+		intakeDriver.arcadeDrive(out, rot);
 	}
 
 	@Override

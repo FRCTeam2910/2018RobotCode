@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2910.robot;
 
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team2910.robot.commands.*;
 import org.usfirst.frc.team2910.robot.commands.ActuateGathererCommand;
 import org.usfirst.frc.team2910.robot.commands.AdjustFieldOrientedAngleCommand;
@@ -25,21 +26,39 @@ public class OI {
 	}
 
 	public void registerControls() {
-		primaryController.getAButton().whenPressed(new ResetDrivetrainEncoderCommand(mRobot.getDrivetrain()));
+		{
+			CommandGroup group = new CommandGroup();
+			group.addSequential(new ResetDrivetrainEncoderCommand(mRobot.getDrivetrain()));
+			group.addSequential(new SetFieldOrientedCommand(mRobot.getDrivetrain()));
+			primaryController.getRightBumperButton().whenPressed(group);
+		}
 		primaryController.getStartButton().whenPressed(new ToggleFieldOrientedCommand(mRobot.getDrivetrain()));
-		primaryController.getDPadButton(DPadButton.Direction.LEFT).whenPressed(new AdjustFieldOrientedAngleCommand(mRobot.getDrivetrain(), false));
-		primaryController.getDPadButton(DPadButton.Direction.RIGHT).whenPressed(new AdjustFieldOrientedAngleCommand(mRobot.getDrivetrain(), true));
+
+		// TODO: PrimaryController: A launches cube out of carriage for x seconds
+		primaryController.getAButton().whenPressed(new LaunchCubeCommand(mRobot.GetGatherer(), 1));
+		primaryController.getBButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
+		primaryController.getXButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SCALE_POSITION));
+		primaryController.getYButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
+
+		// TODO: PrimaryController: DPad snaps to angle and doesn't interfere with joystick drive
+
+		// TODO: PrimaryController: Triggers make micro-adjustments on elevator height (include trigger value)
 
 		secondaryController.getDPadButton(DPadButton.Direction.UP).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SCALE_POSITION));
 		secondaryController.getDPadButton(DPadButton.Direction.RIGHT).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
 		secondaryController.getDPadButton(DPadButton.Direction.DOWN).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
 
-		secondaryController.getDPadButton(DPadButton.Direction.LEFT).toggleWhenPressed(new ToggleElevatorGearCommand(mRobot.getElevator()));
+		// TODO: Secondary Controller: Toggles elevator climbing mode (low gear, fast right joystick Y adjustments, lock when no input)
+		secondaryController.getLeftBumperButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.Climbing));
+		secondaryController.getRightBumperButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.Regular));
+		secondaryController.getDPadButton(DPadButton.Direction.LEFT).toggleWhenPressed(new ToggleElevatorModeCommand(mRobot.getElevator()));
 
 		secondaryController.getBackButton().whenPressed(new CalibrateElevatorEncoderCommand(mRobot.getElevator()));
 
 		secondaryController.getLeftTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.GetGatherer(), true));
 		secondaryController.getRightTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.GetGatherer(), false));
+
+		// TODO: Secondary Controller: Right Joystick Y makes micro-adjustments on elevator height
 	}
 
 	public IGamepad getPrimaryController() {
