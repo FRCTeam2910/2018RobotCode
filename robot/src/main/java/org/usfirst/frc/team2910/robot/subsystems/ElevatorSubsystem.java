@@ -20,10 +20,11 @@ public class ElevatorSubsystem extends Subsystem {
         Climbing
     }
 
-    public static final double STARTING_ENCODER_TICKS = 6527;
+    public static final int STARTING_ENCODER_TICKS = 6527;
 
+    public static final double TOP_POSITION = 77;
     public static final double SCORE_SCALE_POSITION = 6 * 12;
-    public static final double SCORE_SWITCH_POISITON = 20;
+    public static final double SCORE_SWITCH_POISITON = 3 * 12;
     public static final double GROUND_POSITION = 0;
 
     private static final double INCH_PER_ENCODER_TICK = 150 / 26009.6;
@@ -51,6 +52,7 @@ public class ElevatorSubsystem extends Subsystem {
 
         motors[0].configAllowableClosedloopError(0, (int) ((1 / 8) * ENCODER_TICKS_PER_INCH), 0);
 
+        motors[0].configForwardSoftLimitEnable(false, 0);
         motors[0].configNominalOutputForward(0.05, 0);
         motors[0].configNominalOutputReverse(-0.05, 0);
 
@@ -97,6 +99,7 @@ public class ElevatorSubsystem extends Subsystem {
     }
 
     public void setElevatorPosition(double height) {
+        height = Math.min(height, 77);
         targetHeight = height;
         double encoderTicks = height * ENCODER_TICKS_PER_INCH;
 
@@ -143,4 +146,7 @@ public class ElevatorSubsystem extends Subsystem {
         return motors;
     }
 
+    public void setEncoderPosition(int position) {
+        motors[0].setSelectedSensorPosition(position, 0, 0);
+    }
 }

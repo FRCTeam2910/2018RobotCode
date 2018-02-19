@@ -18,6 +18,8 @@ public abstract class HolonomicDrivetrain extends Drivetrain {
 
 	public abstract double getGyroAngle();
 
+	public abstract double getRawGyroAngle();
+
 	public abstract void holonomicDrive(double forward, double strafe, double rotation);
 
 	@Override
@@ -41,6 +43,6 @@ public abstract class HolonomicDrivetrain extends Drivetrain {
 	public abstract void stopDriveMotors();
 
 	public void zeroGyro() {
-		setAdjustmentAngle(getGyroAngle() + getAdjustmentAngle());
+		setAdjustmentAngle(getRawGyroAngle());
 	}
 }

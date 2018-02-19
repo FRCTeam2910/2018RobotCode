@@ -61,6 +61,7 @@ public class Robot extends IterativeRobot {
             SmartDashboard.putNumber("Module Raw Angle " + i, swerveDriveSubsystem.getSwerveModule(i).getAngleMotor().getSelectedSensorPosition(0));
             SmartDashboard.putNumber("Module Drive Speed " + i, swerveDriveSubsystem.getSwerveModule(i).getDriveMotor().getMotorOutputPercent());
             SmartDashboard.putNumber("Module Current Ticks " + i, swerveDriveSubsystem.getSwerveModule(i).getDriveMotor().getSelectedSensorPosition(0));
+        	SmartDashboard.putNumber("Module Drive % " + i, swerveDriveSubsystem.getSwerveModule(i).getDriveMotor().getMotorOutputPercent());
         }
 
 		SmartDashboard.putNumber("Elevator encoder", elevatorSubsystem.getEncoderValue());
@@ -116,6 +117,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		if (autoCommand != null) autoCommand.cancel();
+
+		for (int i = 0; i < 4; i++)
+			swerveDriveSubsystem.getSwerveModule(i).zeroDistance();
 	}
 
 	/**
@@ -140,7 +144,7 @@ public class Robot extends IterativeRobot {
 		return elevatorSubsystem;
 	}
 
-	public GathererSubsystem GetGatherer() {
+	public GathererSubsystem getGatherer() {
 		return gathererSubsystem;
 	}
 }

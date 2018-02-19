@@ -8,18 +8,19 @@ import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
 public class SetDrivetrainAngleCommand extends Command {
     private static final double ANGLE_CHECK_TIME = 0.5;
-    private static final double TARGET_ANGLE_BUFFER = 2.0;
+    private static final double TARGET_ANGLE_BUFFER = 3.0;
 
     private final SwerveDriveSubsystem drivetrain;
     private final double targetAngle;
     private final PIDController angleController;
     private final Timer finishTimer = new Timer();
     private boolean isTimerStarted = false;
-    
-    private double arcLength = 0;
 
     public SetDrivetrainAngleCommand(SwerveDriveSubsystem drivetrain, double targetAngle) {
         this.drivetrain = drivetrain;
+
+        if (targetAngle < 0)
+            targetAngle += 360;
         this.targetAngle = targetAngle;
 
         angleController = new PIDController(0.03, 0, 0.075, new PIDSource() {
@@ -38,7 +39,7 @@ public class SetDrivetrainAngleCommand extends Command {
             }
         }, output -> {
             for (int i = 0; i < 4; i++)
-                drivetrain.getSwerveModule(i).setTargetSpeed(output);
+                drivetrain.getSwerveModule(i).setTargetSpeed(-output);
         });
         angleController.setInputRange(0, 360);
         angleController.setOutputRange(-0.5, 0.5);

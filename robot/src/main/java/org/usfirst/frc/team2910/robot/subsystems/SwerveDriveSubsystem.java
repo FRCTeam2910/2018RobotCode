@@ -9,8 +9,8 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     public static final double WHEELBASE = 20.5;  // Swerve bot: 14.5
     public static final double TRACKWIDTH = 25.5; // Swerve bot: 13.5
 
-    public static final double WIDTH = 32;  // Swerve bot: 20
-    public static final double LENGTH = 27; // Swerve bot: 19
+    public static final double WIDTH = 37;  // Swerve bot: 20
+    public static final double LENGTH = 32; // Swerve bot: 19
 
 	/*
 	 * 0 is Front Right

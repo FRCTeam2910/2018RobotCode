@@ -11,8 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class DriveForDistanceCommand extends Command {
-    private static final double TARGET_DISTANCE_BUFFER = 0.3;
-    private static final double DISTANCE_CHECK_TIME = 0.5;
+    private static final double TARGET_DISTANCE_BUFFER = 2;
+    private static final double DISTANCE_CHECK_TIME = 0.25;
 
     private final SwerveDriveSubsystem drivetrain;
     private final double angle;
@@ -41,8 +41,7 @@ public class DriveForDistanceCommand extends Command {
         this.distForward = distForward;
 
         this.distance = Math.sqrt(distRight * distRight + distForward * distForward);
-
-        angleErrorController = new PIDController(0.035, 0, 0, new PIDSource() {
+        angleErrorController = new PIDController(0.02, 0, 0, new PIDSource() {
             @Override
             public void setPIDSourceType(PIDSourceType pidSource) { }
 
@@ -101,7 +100,7 @@ public class DriveForDistanceCommand extends Command {
         double forwardFactor = distForward / distance;
         double strafeFactor = -distRight / distance;
 
-        double[] moduleAngles = drivetrain.calculateSwerveModuleAngles(forwardFactor, strafeFactor, rotationFactor);
+        double[] moduleAngles = drivetrain.calculateSwerveModuleAngles(forwardFactor, strafeFactor, -rotationFactor);
 
         for (int i = 0; i < 4; i++) {
             drivetrain.getSwerveModule(i).setTargetAngle(moduleAngles[i]);

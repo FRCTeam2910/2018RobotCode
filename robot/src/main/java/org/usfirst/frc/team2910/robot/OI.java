@@ -31,7 +31,7 @@ public class OI {
 		primaryController.getStartButton().whenPressed(new ToggleFieldOrientedCommand(mRobot.getDrivetrain()));
 
 		// TODO: PrimaryController: A launches cube out of carriage for x seconds
-		primaryController.getAButton().whenPressed(new LaunchCubeCommand(mRobot.GetGatherer(), 1));
+		primaryController.getAButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1));
 		primaryController.getBButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
 		primaryController.getXButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SCALE_POSITION));
 		primaryController.getYButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
@@ -51,8 +51,8 @@ public class OI {
 
 		secondaryController.getBackButton().whenPressed(new CalibrateElevatorEncoderCommand(mRobot.getElevator()));
 
-		secondaryController.getLeftTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.GetGatherer(), true));
-		secondaryController.getRightTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.GetGatherer(), false));
+		secondaryController.getLeftTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.getGatherer(), true));
+		secondaryController.getRightTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.getGatherer(), false));
 
 		// TODO: Secondary Controller: Right Joystick Y makes micro-adjustments on elevator height
 	}

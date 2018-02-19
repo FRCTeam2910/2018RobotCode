@@ -6,11 +6,14 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.Robot;
+import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1CenterSwitchCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1ScaleCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
+import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2SameSideSwitchCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2ScaleCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2SwitchCommand;
+import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.util.Side;
 
 import java.util.ArrayList;
@@ -47,6 +50,7 @@ public class AutonomousChooser {
     private boolean isChoiceGood(AutonomousStageChoice choice, String fieldConf, StartingPosition startPos) {
         Side switchSide = Side.fromChar(fieldConf.charAt(0)),
                 scaleSide = Side.fromChar(fieldConf.charAt(1));
+        if (startPos == StartingPosition.CENTER) return true;
 
         switch (choice) {
             case NONE:
@@ -78,8 +82,10 @@ public class AutonomousChooser {
 
         CommandGroup autoGroup = new CommandGroup();
 
-        Side lastSide = Side.LEFT;
+        robot.getElevator().setEncoderPosition(ElevatorSubsystem.STARTING_ENCODER_TICKS);
+        robot.getElevator().setElevatorPosition(robot.getElevator().getCurrentHeight());
 
+        Side lastSide = Side.LEFT;
         int stageNumber = 1;
         for (int i = 0; i < priorityChoices.size(); i++) {
             AutonomousStageChoice choice = priorityChoices.get(i).getSelected();
@@ -100,6 +106,11 @@ public class AutonomousChooser {
                             break;
                         case SAME_SIDE_SWITCH:
                         case OPPOSITE_SIDE_SWITCH:
+                            if (startPos == StartingPosition.CENTER) {
+                                autoGroup.addSequential(new Stage1CenterSwitchCommand(robot,
+                                        Side.fromChar(fieldConfiguration.charAt(0))));
+                                return autoGroup;
+                            }
                             autoGroup.addSequential(new Stage1SwitchCommand(robot,
                                     startPos, fieldConfiguration.charAt(0)));
                             lastSide = Side.fromChar(fieldConfiguration.charAt(0));
@@ -107,6 +118,10 @@ public class AutonomousChooser {
                     }
                 } else {
                     // Grab Cube
+
+                    if (priorityChoices.get(i).getSelected() == AutonomousStageChoice.SAME_SIDE_SWITCH) {
+                        autoGroup.addSequential(new Stage2SameSideSwitchCommand(robot, lastSide));
+                    }
 
                     Side targetSide;
                     Side startSide = (startPos == StartingPosition.LEFT ? Side.LEFT : Side.RIGHT);
