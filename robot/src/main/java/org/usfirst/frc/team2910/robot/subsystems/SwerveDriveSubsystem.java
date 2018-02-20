@@ -157,4 +157,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
             module.setTargetSpeed(0);
         }
     }
+    
+    public void resetMotors() {
+    	for(int i = 0; i < mSwerveModules.length; i++) {
+    		mSwerveModules[i].resetMotor();
+    	}
+    }
 }
