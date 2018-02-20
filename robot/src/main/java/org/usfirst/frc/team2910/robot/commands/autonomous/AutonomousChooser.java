@@ -6,10 +6,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.Robot;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1CenterSwitchCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1ScaleCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.Stage1SwitchCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
+import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.*;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2SameSideSwitchCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2ScaleCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2SwitchCommand;
@@ -96,7 +93,7 @@ public class AutonomousChooser {
                         case NONE:
                             return autoGroup;
                         case AUTOLINE:
-                            // TODO: Auto line
+                            autoGroup.addSequential(new AutoLineCommand(robot, startPos));
                             return autoGroup;
                         case SAME_SIDE_SCALE:
                         case OPPOSITE_SIDE_SCALE:
