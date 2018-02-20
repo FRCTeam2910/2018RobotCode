@@ -3,10 +3,10 @@ package org.usfirst.frc.team2910.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team2910.robot.subsystems.HolonomicDrivetrain;
 
-public class ResetDrivetrainEncoderCommand extends Command {
+public class ZeroDrivetrainGyroCommand extends Command {
 	private HolonomicDrivetrain mDrivetrain;
 
-	public ResetDrivetrainEncoderCommand(HolonomicDrivetrain drivetrain) {
+	public ZeroDrivetrainGyroCommand(HolonomicDrivetrain drivetrain) {
 		mDrivetrain = drivetrain;
 	}
 

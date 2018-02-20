@@ -18,11 +18,18 @@ public class ManualElevatorControlCommand extends Command {
 
     @Override
     protected void execute() {
-        double input = Robot.getOI().getSecondaryController().getRightYValue();
+        double primaryInput = Robot.getOI().getPrimaryController().getRightTriggerValue() -
+                Robot.getOI().getPrimaryController().getLeftTriggerValue();
+        System.out.println(primaryInput);
+        double secondaryInput = Robot.getOI().getSecondaryController().getRightYValue();
 
-        if (Math.abs(input) > 0.05) {
-            input *= Math.abs(input);
-            elevator.setElevatorSpeed(input);
+        if (Math.abs(primaryInput) > 0.05) {
+            primaryInput *= Math.abs(primaryInput);
+            elevator.setElevatorSpeed(primaryInput);
+            shouldSetPosition = true;
+        } else if (Math.abs(secondaryInput) > 0.05) {
+            secondaryInput *= Math.abs(secondaryInput);
+            elevator.setElevatorSpeed(secondaryInput);
             shouldSetPosition = true;
         } else if (shouldSetPosition) {
             elevator.getMotors()[0].setIntegralAccumulator(0, 0, 0);
