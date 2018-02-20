@@ -10,7 +10,6 @@ import org.usfirst.frc.team2910.robot.commands.ResetMotorsCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
-import org.usfirst.frc.team2910.robot.subsystems.MotorTesterSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
 /**
@@ -25,7 +24,6 @@ public class Robot extends IterativeRobot {
 
 	private static OI mOI; 
 	private static SwerveDriveSubsystem swerveDriveSubsystem;
-	private static MotorTesterSubsystem motorTesterSubsystem;
 	private static ElevatorSubsystem elevatorSubsystem;
 	private static GathererSubsystem gathererSubsystem;
 
@@ -46,7 +44,6 @@ public class Robot extends IterativeRobot {
 		
 		gathererSubsystem = new GathererSubsystem();
 		swerveDriveSubsystem = new SwerveDriveSubsystem();
-		motorTesterSubsystem = new MotorTesterSubsystem();
 		elevatorSubsystem = new ElevatorSubsystem();
 
 		mOI.registerControls();
