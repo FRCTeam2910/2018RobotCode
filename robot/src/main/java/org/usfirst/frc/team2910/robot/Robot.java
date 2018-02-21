@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2910.robot;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -48,7 +49,7 @@ public class Robot extends IterativeRobot {
 
 		mOI.registerControls();
 		NetworkTableInstance instance = NetworkTableInstance.getDefault();
-		instance.getTable("limelight").getEntry("ledState").setNumber(1.0);
+		instance.getTable("limelight").getEntry("ledMode").setNumber(1.0);
 
 		SmartDashboard.putData("Reset Motors", new ResetMotorsCommand(swerveDriveSubsystem));
 }

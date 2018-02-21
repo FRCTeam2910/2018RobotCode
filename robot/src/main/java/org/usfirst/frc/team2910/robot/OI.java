@@ -26,9 +26,9 @@ public class OI {
         primaryController.getStartButton().whenPressed(new ZeroDrivetrainGyroCommand(mRobot.getDrivetrain()));
 
         // TODO: PrimaryController: A launches cube out of carriage for x seconds
-        primaryController.getAButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1));
-        primaryController.getBButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
-        primaryController.getXButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SCALE_POSITION));
+        primaryController.getAButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1, 0.75));
+        primaryController.getBButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1, 1));
+        primaryController.getXButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.TOP_POSITION));
         primaryController.getYButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
 
         // TODO: PrimaryController: DPad snaps to angle and doesn't interfere with joystick drive
@@ -43,6 +43,9 @@ public class OI {
         secondaryController.getLeftBumperButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.Climbing));
         secondaryController.getRightBumperButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.Regular));
         secondaryController.getDPadButton(DPadButton.Direction.LEFT).toggleWhenPressed(new ToggleElevatorModeCommand(mRobot.getElevator()));
+
+        secondaryController.getXButton().whenPressed(new SetElevatorLockCommand(mRobot.getElevator(), true));
+        secondaryController.getYButton().whenPressed(new SetElevatorLockCommand(mRobot.getElevator(), false));
 
         secondaryController.getBackButton().whenPressed(new CalibrateElevatorEncoderCommand(mRobot.getElevator()));
 

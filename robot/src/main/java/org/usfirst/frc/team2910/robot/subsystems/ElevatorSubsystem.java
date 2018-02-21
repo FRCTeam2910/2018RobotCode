@@ -22,7 +22,7 @@ public class ElevatorSubsystem extends Subsystem {
 
     public static final int STARTING_ENCODER_TICKS = 6527;
 
-    public static final double TOP_POSITION = 77;
+    public static final double TOP_POSITION = 77.5;
     public static final double SCORE_SCALE_POSITION = 6 * 12;
     public static final double SCORE_SWITCH_POISITON = 3 * 12;
     public static final double GROUND_POSITION = 0;
@@ -35,8 +35,7 @@ public class ElevatorSubsystem extends Subsystem {
             new TalonSRX(RobotMap.ELEVATOR_MOTORS[1])
     };
 
-    private final DoubleSolenoid shiftingSolenoid = new DoubleSolenoid(RobotMap.ELEVATOR_SHIFTER[0],
-            RobotMap.ELEVATOR_SHIFTER[1]);
+    private final Solenoid shiftingSolenoid = new Solenoid(RobotMap.ELEVATOR_SHIFTER);
 
     private final Solenoid lockingSolenoid = new Solenoid(RobotMap.ELEVATOR_LOCKER);
 
@@ -92,14 +91,16 @@ public class ElevatorSubsystem extends Subsystem {
     public void setGear(Gear gear) {
         System.out.printf("Shifting to %s%n", gear);
         if (gear == Gear.HIGH) {
-            shiftingSolenoid.set(DoubleSolenoid.Value.kForward);
+            shiftingSolenoid.set(false);
         } else {
-            shiftingSolenoid.set(DoubleSolenoid.Value.kReverse);
+            shiftingSolenoid.set(true);
         }
     }
 
     public void setElevatorPosition(double height) {
-        height = Math.min(height, 77);
+        if (isLocked()) return;
+
+        height = Math.min(height, 78);
         targetHeight = height;
         double encoderTicks = height * ENCODER_TICKS_PER_INCH;
 
@@ -107,6 +108,8 @@ public class ElevatorSubsystem extends Subsystem {
     }
 
     public void setElevatorSpeed(double speed) {
+        if (isLocked()) return;
+
         motors[0].set(ControlMode.PercentOutput, speed);
     }
 
@@ -121,11 +124,16 @@ public class ElevatorSubsystem extends Subsystem {
     public void lock() {
         System.out.println("LOCKED");
         lockingSolenoid.set(false);
+        setElevatorSpeed(0);
     }
 
     public void unlock() {
         System.out.println("UNLOCKED");
         lockingSolenoid.set(true);
+    }
+
+    public boolean isLocked() {
+        return !lockingSolenoid.get();
     }
 
     public double getEncoderValue() {

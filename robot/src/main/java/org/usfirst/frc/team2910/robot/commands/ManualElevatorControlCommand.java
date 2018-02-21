@@ -23,6 +23,11 @@ public class ManualElevatorControlCommand extends Command {
         System.out.println(primaryInput);
         double secondaryInput = Robot.getOI().getSecondaryController().getRightYValue();
 
+        if (elevator.getCurrentHeight() > ElevatorSubsystem.TOP_POSITION) {
+            primaryInput = Math.min(0, primaryInput);
+            secondaryInput = Math.min(0, secondaryInput);
+        }
+
         if (Math.abs(primaryInput) > 0.05) {
             primaryInput *= Math.abs(primaryInput);
             elevator.setElevatorSpeed(primaryInput);

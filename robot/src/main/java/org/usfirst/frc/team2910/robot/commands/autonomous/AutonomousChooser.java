@@ -116,8 +116,10 @@ public class AutonomousChooser {
                 } else {
                     // Grab Cube
 
-                    if (priorityChoices.get(i).getSelected() == AutonomousStageChoice.SAME_SIDE_SWITCH) {
+                    if (priorityChoices.get(i).getSelected() == AutonomousStageChoice.SAME_SIDE_SWITCH &&
+                            lastSide == Side.fromChar(fieldConfiguration.charAt(0))) {
                         autoGroup.addSequential(new Stage2SameSideSwitchCommand(robot, lastSide));
+                        continue;
                     }
 
                     Side targetSide;

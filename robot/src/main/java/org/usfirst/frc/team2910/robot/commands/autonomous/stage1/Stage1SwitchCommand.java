@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2910.robot.commands.autonomous.stage1;
 
 import org.usfirst.frc.team2910.robot.Robot;
+import org.usfirst.frc.team2910.robot.commands.CalibrateElevatorEncoderCommand;
 import org.usfirst.frc.team2910.robot.commands.LaunchCubeCommand;
 import org.usfirst.frc.team2910.robot.commands.SetElevatorPositionCommand;
 import org.usfirst.frc.team2910.robot.commands.SetFieldOrientedAngleCommand;
@@ -50,7 +51,7 @@ public class Stage1SwitchCommand extends CommandGroup {
                 }
                 break;
         }
-        }
+    }
 
     private void driveSideToFarSwitch(StartingPosition startPos) {
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
@@ -70,11 +71,12 @@ public class Stage1SwitchCommand extends CommandGroup {
                 0));
 
         addSequential(new LaunchCubeCommand(robot.getGatherer(), 1));
-        addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
+        addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.GROUND_POSITION + 5));
 
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? -1 : 1) * SCORE_SWITCH,
                 0));
+        addParallel(new CalibrateElevatorEncoderCommand(robot.getElevator()));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 0,
                 WALL_TO_PLATFORM_ZONE - (WALL_TO_SWITCH + SWITCH_DEPTH / 2)));
@@ -87,9 +89,10 @@ public class Stage1SwitchCommand extends CommandGroup {
                 (startPos == StartingPosition.LEFT ? -1 : 1) * SCORE_SWITCH,
                 WALL_TO_SWITCH + SWITCH_DEPTH / 2 - robot.getDrivetrain().getWidth() / 2));
         addSequential(new LaunchCubeCommand(robot.getGatherer(), 1));
-        addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
+        addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.GROUND_POSITION + 5));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? 1 : -1) * SCORE_SWITCH,
                 WALL_TO_PLATFORM_ZONE - (WALL_TO_SWITCH + SWITCH_DEPTH / 2)));
+        addSequential(new CalibrateElevatorEncoderCommand(robot.getElevator()));
     }
 }

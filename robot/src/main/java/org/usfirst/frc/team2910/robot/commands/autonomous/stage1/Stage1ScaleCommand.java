@@ -77,7 +77,7 @@ public class Stage1ScaleCommand extends CommandGroup {
     }
 
     private void driveSideToNearScale(StartingPosition startPos) {
-        addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SCALE_POSITION));
+        addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SCALE_POSITION, 1));
         /* HACK: Move less right when on the left side because the energy chain was hitting the scale when on the
         * practice field. */
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),

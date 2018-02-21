@@ -8,11 +8,17 @@ public class LaunchCubeCommand extends Command {
 
     private final GathererSubsystem gatherer;
     private final double runTime;
+    private final double speed;
     private final Timer timer = new Timer();
 
     public LaunchCubeCommand(GathererSubsystem gatherer, double runTime) {
+        this(gatherer, runTime, 1);
+    }
+
+    public LaunchCubeCommand(GathererSubsystem gatherer, double runTime, double speed) {
         this.gatherer = gatherer;
         this.runTime = runTime;
+        this.speed = speed;
 
         requires(gatherer);
     }
@@ -25,7 +31,7 @@ public class LaunchCubeCommand extends Command {
 
     @Override
     protected void execute() {
-        gatherer.activateGatherer(1, 0);
+        gatherer.activateGatherer(speed, 0);
     }
 
     @Override

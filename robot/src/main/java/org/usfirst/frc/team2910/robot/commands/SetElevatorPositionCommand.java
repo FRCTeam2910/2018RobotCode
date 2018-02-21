@@ -9,6 +9,7 @@ public class SetElevatorPositionCommand extends Command {
     private final ElevatorSubsystem elevator;
     private final double height;
     private final double waitTime;
+    private final boolean shouldEndInstantly;
     private final Timer waitTimer = new Timer();
 
     public SetElevatorPositionCommand(ElevatorSubsystem elevator, double height) {
@@ -19,6 +20,7 @@ public class SetElevatorPositionCommand extends Command {
         this.elevator = elevator;
         this.height = height;
         this.waitTime = waitTime;
+        shouldEndInstantly = waitTime < 0.001;
 
         requires(elevator);
     }
@@ -38,6 +40,7 @@ public class SetElevatorPositionCommand extends Command {
 
     @Override
     protected boolean isFinished() {
+        if (shouldEndInstantly) return true;
         return Math.abs(height - elevator.getCurrentHeight()) < (1.0/8.0);
     }
 
@@ -49,7 +52,6 @@ public class SetElevatorPositionCommand extends Command {
 
     @Override
     protected void interrupted() {
-        System.out.println("INTERRUPTED");
         end();
     }
 }
