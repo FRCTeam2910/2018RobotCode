@@ -1,0 +1,10 @@
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'commons-net', name: 'commons-net', version: '3.+'
+    compile project(':motion_profiling')
+}

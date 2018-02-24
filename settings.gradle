@@ -1,2 +1,3 @@
+include 'motion_profiling:generator'
+include 'motion_profiling'
 include 'robot'
-

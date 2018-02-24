@@ -1,15 +1,19 @@
+import jaci.openrio.gradle.GradleRIOPlugin
+import jaci.openrio.gradle.frc.FRCJavaArtifact
+import jaci.openrio.gradle.frc.RoboRIO
+
 apply plugin: 'jaci.openrio.gradle.GradleRIO'
 
 apply plugin: 'java'
 
 deploy {
     targets {
-        target('roborio', jaci.openrio.gradle.frc.RoboRIO) {
+        target('roborio', RoboRIO) {
             team = 2910
         }
     }
     artifacts {
-        artifact('robotCode', jaci.openrio.gradle.frc.FRCJavaArtifact) {
+        artifact('robotCode', FRCJavaArtifact) {
             targets << 'roborio'
         }
     }
@@ -19,10 +23,11 @@ dependencies {
     compile wpilib()
     compile ctre()
     compile navx()
+    compile project(':motion_profiling')
 }
 
 jar {
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    manifest jaci.openrio.gradle.GradleRIOPlugin.javaManifest('org.usfirst.frc.team2910.robot.Robot')
+    manifest GradleRIOPlugin.javaManifest('org.usfirst.frc.team2910.robot.Robot')
 }
 
