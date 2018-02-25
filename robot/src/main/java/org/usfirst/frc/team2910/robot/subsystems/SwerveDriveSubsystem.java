@@ -19,10 +19,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 	 * 3 is Back Right
 	 */
 	private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[] {
-			new SwerveDriveModule(0, new TalonSRX(33), new TalonSRX(31), 132.89),
-			new SwerveDriveModule(1, new TalonSRX(23), new TalonSRX(26), 9.1),
-			new SwerveDriveModule(2, new TalonSRX(24), new TalonSRX(25), 338.55),
-			new SwerveDriveModule(3, new TalonSRX(34), new TalonSRX(32), 197.93),
+			new SwerveDriveModule(0, new TalonSRX(33), new TalonSRX(31), 321.328),
+			new SwerveDriveModule(1, new TalonSRX(23), new TalonSRX(26), 245.742),
+			new SwerveDriveModule(2, new TalonSRX(24), new TalonSRX(25), 88.242),
+			new SwerveDriveModule(3, new TalonSRX(34), new TalonSRX(32), 234.492),
 	};
 //    private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[]{
 //            new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 253.47),
