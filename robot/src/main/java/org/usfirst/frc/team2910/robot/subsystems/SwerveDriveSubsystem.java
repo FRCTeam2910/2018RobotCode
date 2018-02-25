@@ -18,18 +18,18 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 	 * 2 is Back Left
 	 * 3 is Back Right
 	 */
-	private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[] {
-			new SwerveDriveModule(0, new TalonSRX(33), new TalonSRX(31), 132.89),
-			new SwerveDriveModule(1, new TalonSRX(23), new TalonSRX(26), 9.1),
-			new SwerveDriveModule(2, new TalonSRX(24), new TalonSRX(25), 338.55),
-			new SwerveDriveModule(3, new TalonSRX(34), new TalonSRX(32), 197.93),
-	};
-//    private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[]{
-//            new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 253.47),
-//            new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 337.5),
-//            new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 11.95),
-//            new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 16.17),
-//    };
+//	private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[] {
+//			new SwerveDriveModule(0, new TalonSRX(33), new TalonSRX(31), 132.89),
+//			new SwerveDriveModule(1, new TalonSRX(23), new TalonSRX(26), 9.1),
+//			new SwerveDriveModule(2, new TalonSRX(24), new TalonSRX(25), 338.55),
+//			new SwerveDriveModule(3, new TalonSRX(34), new TalonSRX(32), 197.93),
+//	};
+    private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[]{
+            new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 253.47),
+            new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 337.5),
+            new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 11.95),
+            new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 16.17),
+    };
 
     private AHRS mNavX = new AHRS(SPI.Port.kMXP, (byte) 200);
 

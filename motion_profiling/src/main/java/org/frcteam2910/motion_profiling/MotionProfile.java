@@ -1,6 +1,12 @@
 package org.frcteam2910.motion_profiling;
 
-public class MotionProfile {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MotionProfile implements Serializable {
+    private static final long serialVersionUID = -4970557251825378042L;
+
     private MotionSegment[] segments;
 
     public MotionProfile(int length) {

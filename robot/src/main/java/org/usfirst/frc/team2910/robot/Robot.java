@@ -7,11 +7,20 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.frcteam2910.motion_profiling.MotionProfile;
+import org.frcteam2910.motion_profiling.MotionProfileLoader;
+import org.frcteam2910.motion_profiling.MotionProfileSerializer;
 import org.usfirst.frc.team2910.robot.commands.ResetMotorsCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
+import org.usfirst.frc.team2910.robot.commands.autonomous.FollowMotionProfileCommand;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -42,7 +51,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		mOI = new OI(this);
-		
+
 		gathererSubsystem = new GathererSubsystem();
 		swerveDriveSubsystem = new SwerveDriveSubsystem();
 		elevatorSubsystem = new ElevatorSubsystem();
@@ -103,8 +112,18 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autoCommand = autoChooser.getCommand(this);
-		autoCommand.start();
+		try (InputStream in = new FileInputStream(new File("/home/lvuser/motion_profiles/test.motionprofile"))) {
+			MotionProfile[] profiles = MotionProfileSerializer.deserialize(in);
+			for (int i = 0; i < 4; i++) {
+				System.out.printf("Loaded profile with a length of %d%n", profiles[i].getLength());
+			}
+			autoCommand = new FollowMotionProfileCommand(swerveDriveSubsystem, profiles);
+			autoCommand.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+//		autoCommand = autoChooser.getCommand(this);
 	}
 
 	/**

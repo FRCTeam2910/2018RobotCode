@@ -1,5 +1,8 @@
 package org.usfirst.frc.team2910.robot.subsystems;
 
+import com.ctre.phoenix.motion.MotionProfileStatus;
+import com.ctre.phoenix.motion.SetValueMotionProfile;
+import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -8,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.commands.SwerveModuleCommand;
-import org.usfirst.frc.team2910.robot.util.MotorStallException;
 
 public class SwerveDriveModule extends Subsystem {
     private static final long STALL_TIMEOUT = 2000;
@@ -47,13 +49,16 @@ public class SwerveDriveModule extends Subsystem {
 
         driveMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 
-        driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, 0);
+//        driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, 0);
         driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
 
-        driveMotor.config_kP(0, 15, 0);
-        driveMotor.config_kI(0, 0.01, 0);
-        driveMotor.config_kD(0, 0.1, 0);
-        driveMotor.config_kF(0, 0.2, 0);
+        driveMotor.configMotionProfileTrajectoryPeriod(0, 40);
+        driveMotor.changeMotionControlFramePeriod(20);
+
+        driveMotor.config_kP(0, 2.0, 0);
+        driveMotor.config_kI(0, 0.0, 0);
+        driveMotor.config_kD(0, 20.0, 0);
+        driveMotor.config_kF(0, 0.076, 0);
 
         driveMotor.configMotionCruiseVelocity(720, 0);
         driveMotor.configMotionAcceleration(240, 0);
@@ -227,6 +232,15 @@ public class SwerveDriveModule extends Subsystem {
         mDriveMotor.set(ControlMode.PercentOutput, speed);
     }
 
+    public void setTargetVelocity(double velocity) {
+        if (angleMotorJam) {
+            mDriveMotor.set(ControlMode.Disabled, 0);
+        }
+        if (driveInverted) velocity = -velocity;
+
+        mDriveMotor.set(ControlMode.Velocity, inchesToEncoderTicks(velocity));
+    }
+
     public void zeroDistance() {
         mDriveMotor.setSelectedSensorPosition(0, 0, 0);
     }
@@ -235,5 +249,57 @@ public class SwerveDriveModule extends Subsystem {
     	angleMotorJam = false;
     	mStallTimeBegin = Long.MAX_VALUE;
     	SmartDashboard.putBoolean("Motor Jammed" + moduleNumber, angleMotorJam);
+    }
+
+    private static boolean t;
+
+    public void pushMotionPoint(TrajectoryPoint angle, TrajectoryPoint drive) {
+        angle.position = inchesToEncoderTicks(angle.position);
+        angle.velocity = inchesToEncoderTicks(angle.velocity) / 10;
+        drive.position = inchesToEncoderTicks(drive.position);
+        drive.velocity = inchesToEncoderTicks(drive.velocity) / 10;
+
+        if (!t) {
+            SmartDashboard.putNumber("First point tick " + moduleNumber, drive.position);
+            t = true;
+        }
+
+        mAngleMotor.pushMotionProfileTrajectory(angle);
+        mDriveMotor.pushMotionProfileTrajectory(drive);
+    }
+
+    public void processMotionBuffer() {
+        mAngleMotor.processMotionProfileBuffer();
+        mDriveMotor.processMotionProfileBuffer();
+
+        MotionProfileStatus status = new MotionProfileStatus();
+        mDriveMotor.getMotionProfileStatus(status);
+        System.out.println(status.activePointValid);
+    }
+
+    public boolean isMotionProfileComplete() {
+        MotionProfileStatus status = new MotionProfileStatus();
+        mAngleMotor.getMotionProfileStatus(status);
+
+        if (status.isLast) {
+            mDriveMotor.getMotionProfileStatus(status);
+
+            return status.isLast;
+        }
+
+        return false;
+    }
+
+    public void enableMotionProfiling() {
+        mAngleMotor.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+        mDriveMotor.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+    }
+
+    public void clearMotionProfilingBuffer() {
+        mAngleMotor.clearMotionProfileTrajectories();
+        mDriveMotor.clearMotionProfileTrajectories();
+
+        mAngleMotor.clearMotionProfileHasUnderrun(0);
+        mDriveMotor.clearMotionProfileHasUnderrun(0);
     }
 }

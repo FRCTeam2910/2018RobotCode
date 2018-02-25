@@ -1,5 +1,7 @@
 apply plugin: 'application'
 
+mainClassName = 'org.frcteam2910.motion_profiling.generator.Generator'
+
 repositories {
     mavenCentral()
 }
@@ -7,4 +9,9 @@ repositories {
 dependencies {
     compile group: 'commons-net', name: 'commons-net', version: '3.+'
     compile project(':motion_profiling')
+    compile files('lib/Pathfinder.jar')
+}
+
+run {
+    classpath += files('src/main/resources')
 }
