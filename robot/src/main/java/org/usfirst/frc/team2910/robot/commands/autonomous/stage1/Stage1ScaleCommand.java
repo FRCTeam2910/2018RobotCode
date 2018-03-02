@@ -81,10 +81,10 @@ public class Stage1ScaleCommand extends CommandGroup {
         /* HACK: Move less right when on the left side because the energy chain was hitting the scale when on the
         * practice field. */
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (startPos == StartingPosition.LEFT ? -1 : 1) * SCORE_SCALE + (startPos == StartingPosition.LEFT ? -4 : -4),
+                (startPos == StartingPosition.LEFT ? -1 : 1) * SCORE_SCALE,
                 WALL_TO_SCALE - robot.getDrivetrain().getWidth() / 2));
         addSequential(new LaunchCubeCommand(robot.getGatherer(), 1));
-        addParallel(new SetElevatorPositionCommand(robot.getElevator(), 5, 0.25));
+        addParallel(new SetElevatorPositionCommand(robot.getElevator(), 5, 0.4));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? 1 : -1) * SCORE_SCALE,
                 WALL_TO_PLATFORM_ZONE - WALL_TO_SCALE));

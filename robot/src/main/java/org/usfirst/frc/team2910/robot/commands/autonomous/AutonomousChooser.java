@@ -31,12 +31,12 @@ public class AutonomousChooser {
         for (int i = 0; i < CHOICE_COUNT; i++) {
             SendableChooser<AutonomousStageChoice> chooser = new SendableChooser<>();
 
-            chooser.addDefault("None", AutonomousStageChoice.NONE);
-            chooser.addObject("Auto line", AutonomousStageChoice.AUTOLINE);
-            chooser.addObject("Same Side Scale", AutonomousStageChoice.SAME_SIDE_SCALE);
-            chooser.addObject("Same Side Switch", AutonomousStageChoice.SAME_SIDE_SWITCH);
-            chooser.addObject("Opposite Side Scale", AutonomousStageChoice.OPPOSITE_SIDE_SCALE);
-            chooser.addObject("Opposite Side Switch", AutonomousStageChoice.OPPOSITE_SIDE_SWITCH);
+            chooser.addDefault(String.format("None (%d)", i), AutonomousStageChoice.NONE);
+            chooser.addObject(String.format("Auto line (%d)", i), AutonomousStageChoice.AUTOLINE);
+            chooser.addObject(String.format("Same Side Scale (%d)", i), AutonomousStageChoice.SAME_SIDE_SCALE);
+            chooser.addObject(String.format("Same Side Switch (%d)", i), AutonomousStageChoice.SAME_SIDE_SWITCH);
+            chooser.addObject(String.format("Opposite Side Scale (%d)", i), AutonomousStageChoice.OPPOSITE_SIDE_SCALE);
+            chooser.addObject(String.format("Opposite Side Switch (%d)", i), AutonomousStageChoice.OPPOSITE_SIDE_SWITCH);
 
             priorityChoices.add(chooser);
 
@@ -156,6 +156,8 @@ public class AutonomousChooser {
                 stageNumber++;
             }
         }
+
+        autoGroup.addSequential(new GrabCubeFromPlatformZoneCommand(robot, lastSide, lastSide));
 
         return autoGroup;
     }

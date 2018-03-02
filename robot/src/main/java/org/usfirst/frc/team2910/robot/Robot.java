@@ -3,12 +3,14 @@ package org.usfirst.frc.team2910.robot;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team2910.robot.commands.ResetMotorsCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
+import org.usfirst.frc.team2910.robot.commands.autonomous.DriveForTimeCommand;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
@@ -103,8 +105,25 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autoCommand = autoChooser.getCommand(this);
-		autoCommand.start();
+        // Sometimes the FMS doesn't give the game string right away.
+        // Wait 1 second maximum for the game string to be given.
+        // If no game string is recieved, go to the auto line.
+        
+        Timer waitTimer = new Timer();
+        waitTimer.start();
+        while (DriverStation.getInstance().getGameSpecificMessage().isEmpty()
+                && !waitTimer.hasPeriodPassed(1)) {
+            Scheduler.getInstance().run();
+        }
+
+        swerveDriveSubsystem.setFieldOriented(true);
+
+        if (waitTimer.hasPeriodPassed(1))
+            autoCommand = new DriveForTimeCommand(swerveDriveSubsystem, 2.5, 0.5, 0);
+        else
+		    autoCommand = autoChooser.getCommand(this);
+		
+        autoCommand.start();
 	}
 
 	/**

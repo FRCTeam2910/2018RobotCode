@@ -55,8 +55,8 @@ public class SwerveDriveModule extends Subsystem {
         driveMotor.config_kD(0, 0.1, 0);
         driveMotor.config_kF(0, 0.2, 0);
 
-        driveMotor.configMotionCruiseVelocity(720, 0);
-        driveMotor.configMotionAcceleration(240, 0);
+        driveMotor.configMotionCruiseVelocity(640, 0);
+        driveMotor.configMotionAcceleration(200, 0);
 
         driveMotor.setNeutralMode(NeutralMode.Brake);
 
@@ -75,11 +75,11 @@ public class SwerveDriveModule extends Subsystem {
     }
 
     private double encoderTicksToInches(double ticks) {
-        return ticks / 32.9;
+        return ticks / 35.6;
     }
 
     private double inchesToEncoderTicks(double inches) {
-        return inches * 32.9;
+        return inches * 35.6;
     }
 
     @Override
