@@ -119,38 +119,40 @@ public class AutonomousChooser {
                     if (priorityChoices.get(i).getSelected() == AutonomousStageChoice.SAME_SIDE_SWITCH &&
                             lastSide == Side.fromChar(fieldConfiguration.charAt(0))) {
                         autoGroup.addSequential(new Stage2SameSideSwitchCommand(robot, lastSide));
+                        return autoGroup;
+                    } else {
                         continue;
                     }
-
-                    Side targetSide;
-                    Side startSide = (startPos == StartingPosition.LEFT ? Side.LEFT : Side.RIGHT);
-                    switch (priorityChoices.get(i).getSelected()) {
-                        case OPPOSITE_SIDE_SCALE:
-                        case OPPOSITE_SIDE_SWITCH:
-                            targetSide = startSide.opposite();
-                            break;
-                        case SAME_SIDE_SCALE:
-                        case SAME_SIDE_SWITCH:
-                            targetSide = startSide;
-                            break;
-                        default:
-                            continue;
-                    }
-
-                    autoGroup.addSequential(new GrabCubeFromPlatformZoneCommand(robot, lastSide, targetSide));
-
-                    switch (priorityChoices.get(i).getSelected()) {
-                        case SAME_SIDE_SCALE:
-                        case OPPOSITE_SIDE_SCALE:
-                            autoGroup.addSequential(new Stage2ScaleCommand(robot, targetSide));
-                            break;
-                        case SAME_SIDE_SWITCH:
-                        case OPPOSITE_SIDE_SWITCH:
-                            autoGroup.addSequential(new Stage2SwitchCommand(robot, targetSide));
-                            break;
-                    }
-
-                    lastSide = targetSide;
+//
+//                    Side targetSide;
+//                    Side startSide = (startPos == StartingPosition.LEFT ? Side.LEFT : Side.RIGHT);
+//                    switch (priorityChoices.get(i).getSelected()) {
+//                        case OPPOSITE_SIDE_SCALE:
+//                        case OPPOSITE_SIDE_SWITCH:
+//                            targetSide = startSide.opposite();
+//                            break;
+//                        case SAME_SIDE_SCALE:
+//                        case SAME_SIDE_SWITCH:
+//                            targetSide = startSide;
+//                            break;
+//                        default:
+//                            continue;
+//                    }
+//
+//                    autoGroup.addSequential(new GrabCubeFromPlatformZoneCommand(robot, lastSide, targetSide));
+//
+//                    switch (priorityChoices.get(i).getSelected()) {
+//                        case SAME_SIDE_SCALE:
+//                        case OPPOSITE_SIDE_SCALE:
+//                            autoGroup.addSequential(new Stage2ScaleCommand(robot, targetSide));
+//                            break;
+//                        case SAME_SIDE_SWITCH:
+//                        case OPPOSITE_SIDE_SWITCH:
+//                            autoGroup.addSequential(new Stage2SwitchCommand(robot, targetSide));
+//                            break;
+//                    }
+//
+//                    lastSide = targetSide;
                 }
 
                 stageNumber++;

@@ -7,7 +7,7 @@ package org.usfirst.frc.team2910.robot;
  * floating around.
  */
 public class RobotMap {
-    public static final int[] ELEVATOR_MOTORS = {27, 28};
+    public static final int[] ELEVATOR_MOTORS = {28, 27};
     public static final int ELEVATOR_SHIFTER = 3;
     public static final int ELEVATOR_LOCKER = 2;
 

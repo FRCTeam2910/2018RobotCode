@@ -44,11 +44,12 @@ public class OI {
         secondaryController.getRightBumperButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.Regular));
         secondaryController.getDPadButton(DPadButton.Direction.LEFT).toggleWhenPressed(new ToggleElevatorModeCommand(mRobot.getElevator()));
 
+        secondaryController.getAButton().whileHeld(new IntakeCubeNoRequireCommand(mRobot.getGatherer(), -0.45, 0, Double.MAX_VALUE));
         secondaryController.getXButton().whenPressed(new SetElevatorLockCommand(mRobot.getElevator(), true));
         secondaryController.getYButton().whenPressed(new SetElevatorLockCommand(mRobot.getElevator(), false));
 
         secondaryController.getBackButton().whenPressed(new CalibrateElevatorEncoderCommand(mRobot.getElevator()));
-
+        secondaryController.getStartButton().whenPressed(new DisableLimitSwitchCommand(mRobot.getElevator()));
         secondaryController.getLeftTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.getGatherer(), true));
         secondaryController.getRightTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.getGatherer(), false));
 

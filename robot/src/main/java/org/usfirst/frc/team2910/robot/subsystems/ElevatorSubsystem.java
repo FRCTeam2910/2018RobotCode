@@ -22,7 +22,7 @@ public class ElevatorSubsystem extends Subsystem {
 
     public static final int STARTING_ENCODER_TICKS = 6527;
 
-    public static final double TOP_POSITION = 77.5;
+    public static final double TOP_POSITION = 79.25;
     public static final double SCORE_SCALE_POSITION = 6 * 12;
     public static final double SCORE_SWITCH_POISITON = 3 * 12;
     public static final double GROUND_POSITION = 0;
@@ -56,6 +56,7 @@ public class ElevatorSubsystem extends Subsystem {
         motors[0].configNominalOutputReverse(-0.05, 0);
 
         motors[0].configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+//        motors[0].configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
 
         unlock();
         setGear(Gear.HIGH);
@@ -100,7 +101,7 @@ public class ElevatorSubsystem extends Subsystem {
     public void setElevatorPosition(double height) {
         if (isLocked()) return;
 
-        height = Math.min(height, 78);
+        height = Math.min(height, TOP_POSITION);
         targetHeight = height;
         double encoderTicks = height * ENCODER_TICKS_PER_INCH;
 

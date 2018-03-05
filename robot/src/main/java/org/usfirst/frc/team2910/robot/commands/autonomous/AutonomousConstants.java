@@ -14,7 +14,7 @@ public class AutonomousConstants {
     public static final double SCORE_SWITCH = 85.25 - 29.69 - SwerveDriveSubsystem.LENGTH;
 
     public static final double WALL_TO_SCALE = 26 * 12;
-    public static final double SCORE_SCALE = 1 * 12;
+    public static final double SCORE_SCALE = 1.5 * 12;
 
     public static final double CUBE_WIDTH = 13;
     public static final double GAP_BETWEEN_PLATFORM_CUBES = (SWITCH_LENGTH - 6 * CUBE_WIDTH) / 5;

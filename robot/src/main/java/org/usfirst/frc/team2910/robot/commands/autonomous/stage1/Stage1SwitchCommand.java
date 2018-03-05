@@ -68,7 +68,7 @@ public class Stage1SwitchCommand extends CommandGroup {
         addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? 1 : -1) * SCORE_SWITCH,
-                0));
+                0), 1);
 
         addSequential(new LaunchCubeCommand(robot.getGatherer(), 1));
         addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.GROUND_POSITION + 5));
@@ -87,7 +87,7 @@ public class Stage1SwitchCommand extends CommandGroup {
         addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? -1 : 1) * SCORE_SWITCH,
-                WALL_TO_SWITCH + SWITCH_DEPTH / 2 - robot.getDrivetrain().getWidth() / 2));
+                WALL_TO_SWITCH + SWITCH_DEPTH / 2 - robot.getDrivetrain().getWidth() / 2), 7);
         addSequential(new LaunchCubeCommand(robot.getGatherer(), 1));
         addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.GROUND_POSITION + 5));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),

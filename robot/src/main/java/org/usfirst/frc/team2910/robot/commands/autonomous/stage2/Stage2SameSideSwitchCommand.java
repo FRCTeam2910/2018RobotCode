@@ -36,7 +36,7 @@ public class Stage2SameSideSwitchCommand extends CommandGroup {
 
         addParallel(new IntakeCubeCommand(robot.getGatherer(), -1, (side == Side.LEFT ? -1 : 1) * 0.25, 3));
         /* HACK: Added 5 to where we want to be so we don't run into the switch */
-        addSequential(new DriveForTimeCommand(drivetrain, 0.7284, 0, (side == Side.LEFT ? 1 : -1) * 0.5));
+        addSequential(new DriveForTimeCommand(drivetrain, 0.95, 0, (side == Side.LEFT ? 1 : -1) * 0.5));
         addSequential(new DriveForDistanceCommand(drivetrain,
                 (side == Side.LEFT ? 1 : -1) * 3,
                 (WALL_TO_SWITCH + SWITCH_DEPTH + 14) - WALL_TO_PLATFORM_ZONE));

@@ -66,8 +66,8 @@ public class SwerveDriveModule extends Subsystem {
         angleMotor.configPeakCurrentDuration(100, 0);
         angleMotor.enableCurrentLimit(true);
 
-        driveMotor.configContinuousCurrentLimit(30, 0);
-        driveMotor.configPeakCurrentLimit(50, 0);
+        driveMotor.configContinuousCurrentLimit(25, 0);
+        driveMotor.configPeakCurrentLimit(25, 0);
         driveMotor.configPeakCurrentDuration(100, 0);
         driveMotor.enableCurrentLimit(true);
         
@@ -138,10 +138,10 @@ public class SwerveDriveModule extends Subsystem {
     }
 
     public void setTargetAngle(double targetAngle) {
-    	if(angleMotorJam) {
-    		mAngleMotor.set(ControlMode.Disabled, 0);
-    		return;
-    	}
+//    	if(angleMotorJam) {
+//    		mAngleMotor.set(ControlMode.Disabled, 0);
+//    		return;
+//    	}
     	
         lastTargetAngle = targetAngle;
 
@@ -177,31 +177,31 @@ public class SwerveDriveModule extends Subsystem {
         targetAngle += currentAngle - currentAngleMod;
 
         double currentError = mAngleMotor.getClosedLoopError(0);
-        if (Math.abs(currentError - mLastError) < 7.5 &&
-                Math.abs(currentAngle - targetAngle) > 5) {
-            if (mStallTimeBegin == Long.MAX_VALUE) {
-            	mStallTimeBegin = System.currentTimeMillis();
-            }
-            if (System.currentTimeMillis() - mStallTimeBegin > STALL_TIMEOUT) {
-            	angleMotorJam = true;
-            	mAngleMotor.set(ControlMode.Disabled, 0);
-            	mDriveMotor.set(ControlMode.Disabled, 0);
-            	SmartDashboard.putBoolean("Motor Jammed" + moduleNumber, angleMotorJam);
-            	return;
-            }
-        } else {
-            mStallTimeBegin = Long.MAX_VALUE;
-        }
+//        if (Math.abs(currentError - mLastError) < 7.5 &&
+//                Math.abs(currentAngle - targetAngle) > 5) {
+//            if (mStallTimeBegin == Long.MAX_VALUE) {
+//            	mStallTimeBegin = System.currentTimeMillis();
+//            }
+//            if (System.currentTimeMillis() - mStallTimeBegin > STALL_TIMEOUT) {
+//            	angleMotorJam = true;
+//            	mAngleMotor.set(ControlMode.Disabled, 0);
+//            	mDriveMotor.set(ControlMode.Disabled, 0);
+//            	SmartDashboard.putBoolean("Motor Jammed" + moduleNumber, angleMotorJam);
+//            	return;
+//            }
+//        } else {
+//            mStallTimeBegin = Long.MAX_VALUE;
+//        }
         mLastError = currentError;
         targetAngle *= 1024.0 / 360.0;
         mAngleMotor.set(ControlMode.Position, targetAngle);
     }
 
     public void setTargetDistance(double distance) {
-    	if(angleMotorJam) {
-    		mDriveMotor.set(ControlMode.Disabled, 0);
-    		return;
-    	}
+//    	if(angleMotorJam) {
+//    		mDriveMotor.set(ControlMode.Disabled, 0);
+//    		return;
+//    	}
         if (driveInverted) distance = -distance;
 
 //        distance /= 2 * Math.PI * driveWheelRadius; // to wheel rotations
@@ -218,10 +218,10 @@ public class SwerveDriveModule extends Subsystem {
     }
 
     public void setTargetSpeed(double speed) {
-    	if(angleMotorJam) {
-    		mDriveMotor.set(ControlMode.Disabled, 0);
-    		return;
-    	}
+//    	if(angleMotorJam) {
+//    		mDriveMotor.set(ControlMode.Disabled, 0);
+//    		return;
+//    	}
         if (driveInverted) speed = -speed;
 
         mDriveMotor.set(ControlMode.PercentOutput, speed);
