@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.*;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2SameSideSwitchCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2ScaleCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2SwitchCommand;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.util.Side;
 

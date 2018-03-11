@@ -1,9 +1,11 @@
 package org.usfirst.frc.team2910.robot.commands.autonomous;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveModule;
+import org.usfirst.frc.team2910.robot.math.Vector2;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
 public class SetDrivetrainAngleCommand extends Command {
@@ -38,8 +40,7 @@ public class SetDrivetrainAngleCommand extends Command {
                 return drivetrain.getGyroAngle();
             }
         }, output -> {
-            for (int i = 0; i < 4; i++)
-                drivetrain.getSwerveModule(i).setTargetSpeed(-output);
+            drivetrain.holonomicDrive(new Vector2(), output, SwerveDriveSubsystem.DriveMode.PERCENTAGE);
         });
         angleController.setInputRange(0, 360);
         angleController.setOutputRange(-0.5, 0.5);
@@ -56,22 +57,6 @@ public class SetDrivetrainAngleCommand extends Command {
         finishTimer.reset();
         isTimerStarted = false;
 
-        double a = -(SwerveDriveSubsystem.WHEELBASE / SwerveDriveSubsystem.TRACKWIDTH);
-        double b = (SwerveDriveSubsystem.WHEELBASE / SwerveDriveSubsystem.TRACKWIDTH);
-        double c = -(SwerveDriveSubsystem.TRACKWIDTH / SwerveDriveSubsystem.WHEELBASE);
-        double d = (SwerveDriveSubsystem.TRACKWIDTH / SwerveDriveSubsystem.WHEELBASE);
-
-        double[] angles = new double[]{
-                Math.atan2(b, c),
-                Math.atan2(b, d),
-                Math.atan2(a, d),
-                Math.atan2(a, c)
-        };
-
-        for (int i = 0; i < 4; i++) {
-            drivetrain.getSwerveModule(i).setTargetAngle(Math.toDegrees(angles[i]));
-        }
-
         angleController.enable();
     }
 
@@ -79,8 +64,6 @@ public class SetDrivetrainAngleCommand extends Command {
     protected boolean isFinished() {
         double currentAngle = drivetrain.getGyroAngle();
         double currentError = currentAngle - targetAngle;
-
-        System.out.println(currentError);
 
         boolean inTargetBuffer = Math.abs(currentError) < TARGET_ANGLE_BUFFER
                 | 360 - Math.abs(currentError) < TARGET_ANGLE_BUFFER;

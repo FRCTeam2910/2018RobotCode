@@ -23,9 +23,7 @@ import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	public static final boolean DEBUG = true;
-
-	private static OI mOI; 
+	private static OI mOI;
 	private static SwerveDriveSubsystem swerveDriveSubsystem;
 	private static ElevatorSubsystem elevatorSubsystem;
 	private static GathererSubsystem gathererSubsystem;
@@ -44,7 +42,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		mOI = new OI(this);
-		
+
 		gathererSubsystem = new GathererSubsystem();
 		swerveDriveSubsystem = new SwerveDriveSubsystem();
 		elevatorSubsystem = new ElevatorSubsystem();
@@ -54,7 +52,7 @@ public class Robot extends IterativeRobot {
 		instance.getTable("limelight").getEntry("ledMode").setNumber(1.0);
 
 		SmartDashboard.putData("Reset Motors", new ResetMotorsCommand(swerveDriveSubsystem));
-}
+    }
 
     @Override
     public void robotPeriodic() {
@@ -82,9 +80,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		for (int i = 0; i < 4; i++) {
-			swerveDriveSubsystem.getSwerveModule(i).robotDisabledInit();
-		}
 	}
 
 	@Override
@@ -108,7 +103,7 @@ public class Robot extends IterativeRobot {
         // Sometimes the FMS doesn't give the game string right away.
         // Wait 1 second maximum for the game string to be given.
         // If no game string is recieved, go to the auto line.
-        
+
         Timer waitTimer = new Timer();
         waitTimer.start();
         while (DriverStation.getInstance().getGameSpecificMessage().isEmpty()
@@ -122,7 +117,7 @@ public class Robot extends IterativeRobot {
             autoCommand = new DriveForTimeCommand(swerveDriveSubsystem, 2.5, 0.5, 0);
         else
 		    autoCommand = autoChooser.getCommand(this);
-		
+
         autoCommand.start();
 	}
 

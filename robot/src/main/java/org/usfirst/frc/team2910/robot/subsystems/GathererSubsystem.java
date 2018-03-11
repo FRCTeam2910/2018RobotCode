@@ -4,12 +4,10 @@ import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.RobotMap;
 import org.usfirst.frc.team2910.robot.commands.GathererCommand;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 

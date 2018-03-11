@@ -5,7 +5,6 @@ import org.usfirst.frc.team2910.robot.input.IGamepad;
 import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class GathererCommand extends Command{
 	private GathererSubsystem gatherer;

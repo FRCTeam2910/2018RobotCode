@@ -7,8 +7,6 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team2910.robot.commands.SwerveModuleCommand;
-import org.usfirst.frc.team2910.robot.util.MotorStallException;
 
 public class SwerveDriveModule extends Subsystem {
     private static final long STALL_TIMEOUT = 2000;
@@ -83,9 +81,7 @@ public class SwerveDriveModule extends Subsystem {
     }
 
     @Override
-    protected void initDefaultCommand() {
-        setDefaultCommand(new SwerveModuleCommand(this));
-    }
+    protected void initDefaultCommand() { }
 
     public TalonSRX getAngleMotor() {
         return mAngleMotor;
@@ -115,10 +111,6 @@ public class SwerveDriveModule extends Subsystem {
 
     public double getTargetAngle() {
         return lastTargetAngle;
-    }
-
-    public void robotDisabledInit() {
-        mStallTimeBegin = Long.MAX_VALUE;
     }
 
     public void setDriveGearRatio(double ratio) {
@@ -176,7 +168,7 @@ public class SwerveDriveModule extends Subsystem {
 
         targetAngle += currentAngle - currentAngleMod;
 
-        double currentError = mAngleMotor.getClosedLoopError(0);
+//        double currentError = mAngleMotor.getClosedLoopError(0);
 //        if (Math.abs(currentError - mLastError) < 7.5 &&
 //                Math.abs(currentAngle - targetAngle) > 5) {
 //            if (mStallTimeBegin == Long.MAX_VALUE) {
@@ -192,7 +184,7 @@ public class SwerveDriveModule extends Subsystem {
 //        } else {
 //            mStallTimeBegin = Long.MAX_VALUE;
 //        }
-        mLastError = currentError;
+//        mLastError = currentError;
         targetAngle *= 1024.0 / 360.0;
         mAngleMotor.set(ControlMode.Position, targetAngle);
     }
@@ -208,12 +200,11 @@ public class SwerveDriveModule extends Subsystem {
 //        distance *= driveGearRatio; // to encoder rotations
 //        distance *= 80; // to encoder ticks
 
-        System.out.println(distance);
-
         distance = inchesToEncoderTicks(distance);
 
         SmartDashboard.putNumber("Module Ticks " + moduleNumber, distance);
 
+        zeroDistance();
         mDriveMotor.set(ControlMode.MotionMagic, distance);
     }
 
