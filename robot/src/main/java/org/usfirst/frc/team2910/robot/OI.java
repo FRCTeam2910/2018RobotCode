@@ -31,7 +31,12 @@ public class OI {
         primaryController.getXButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.TOP_POSITION));
         primaryController.getYButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
 
-        // TODO: PrimaryController: DPad snaps to angle and doesn't interfere with joystick drive
+        // DPad angle snapping
+        for (DPadButton.Direction direction : DPadButton.Direction.values()) {
+            if (direction == DPadButton.Direction.CENTER) continue;
+
+            primaryController.getDPadButton(direction).whenPressed(new SnapToAngleCommand(mRobot.getDrivetrain(), direction.getAngle()));
+        }
 
         // TODO: PrimaryController: Triggers make micro-adjustments on elevator height (include trigger value)
 

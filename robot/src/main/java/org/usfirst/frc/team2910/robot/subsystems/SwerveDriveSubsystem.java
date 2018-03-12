@@ -2,8 +2,10 @@ package org.usfirst.frc.team2910.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team2910.robot.Utilities;
 
 public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     public static final double WHEELBASE = 20.5;  // Swerve bot: 14.5
@@ -32,6 +34,8 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 //    };
 
     private AHRS mNavX = new AHRS(SPI.Port.kMXP, (byte) 200);
+
+    private final PIDController snapController = new PIDController(0.03, 0, 0.075, mNavX, output -> {});
 
     public SwerveDriveSubsystem() {
         super(WIDTH, LENGTH);
@@ -101,6 +105,14 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 
     @Override
     public void holonomicDrive(double forward, double strafe, double rotation) {
+        if (snapController.isEnabled()) {
+            if (Utilities.deadband(rotation) == 0) {
+                rotation = snapController.get();
+            } else {
+                snapController.disable();
+            }
+        }
+
         forward *= getSpeedMultiplier();
         strafe *= getSpeedMultiplier();
         rotation = -rotation;
@@ -162,5 +174,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     	for(int i = 0; i < mSwerveModules.length; i++) {
     		mSwerveModules[i].resetMotor();
     	}
+    }
+
+    public void setSnapAngle(double snapAngle) {
+        snapController.setSetpoint(snapAngle);
+        snapController.enable();
     }
 }
