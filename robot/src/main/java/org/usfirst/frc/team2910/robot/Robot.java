@@ -13,6 +13,7 @@ import org.frcteam2910.motion_profiling.MotionProfileSerializer;
 import org.usfirst.frc.team2910.robot.commands.ResetMotorsCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
 import org.usfirst.frc.team2910.robot.commands.autonomous.FollowMotionProfileCommand;
+import org.usfirst.frc.team2910.robot.commands.autonomous.FollowMotionProfileOnboardCommand;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
@@ -52,9 +53,9 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		mOI = new OI(this);
 
-		gathererSubsystem = new GathererSubsystem();
+//		gathererSubsystem = new GathererSubsystem();
 		swerveDriveSubsystem = new SwerveDriveSubsystem();
-		elevatorSubsystem = new ElevatorSubsystem();
+//		elevatorSubsystem = new ElevatorSubsystem();
 
 		mOI.registerControls();
 		NetworkTableInstance instance = NetworkTableInstance.getDefault();
@@ -72,12 +73,13 @@ public class Robot extends IterativeRobot {
             SmartDashboard.putNumber("Module Drive Speed " + i, swerveDriveSubsystem.getSwerveModule(i).getDriveMotor().getMotorOutputPercent());
             SmartDashboard.putNumber("Module Current Ticks " + i, swerveDriveSubsystem.getSwerveModule(i).getDriveMotor().getSelectedSensorPosition(0));
         	SmartDashboard.putNumber("Module Drive % " + i, swerveDriveSubsystem.getSwerveModule(i).getDriveMotor().getMotorOutputPercent());
+        	SmartDashboard.putNumber("Module Speed " + i, swerveDriveSubsystem.getSwerveModule(i).getCurrentSpeed());
         }
 
-		SmartDashboard.putNumber("Elevator encoder", elevatorSubsystem.getEncoderValue());
-		SmartDashboard.putNumber("Elevator height", elevatorSubsystem.getCurrentHeight());
-		SmartDashboard.putNumber("Elevator target height", elevatorSubsystem.getTargetHeight());
-		SmartDashboard.putNumber("Elevator speed", elevatorSubsystem.getMotors()[0].getSelectedSensorVelocity(0));
+//		SmartDashboard.putNumber("Elevator encoder", elevatorSubsystem.getEncoderValue());
+//		SmartDashboard.putNumber("Elevator height", elevatorSubsystem.getCurrentHeight());
+//		SmartDashboard.putNumber("Elevator target height", elevatorSubsystem.getTargetHeight());
+//		SmartDashboard.putNumber("Elevator speed", elevatorSubsystem.getMotors()[0].getSelectedSensorVelocity(0));
 
 		SmartDashboard.putNumber("Drivetrain Angle", swerveDriveSubsystem.getGyroAngle());
 	}
@@ -117,7 +119,7 @@ public class Robot extends IterativeRobot {
 			for (int i = 0; i < 4; i++) {
 				System.out.printf("Loaded profile with a length of %d%n", profiles[i].getLength());
 			}
-			autoCommand = new FollowMotionProfileCommand(swerveDriveSubsystem, profiles);
+			autoCommand = new FollowMotionProfileOnboardCommand(swerveDriveSubsystem, profiles);
 			autoCommand.start();
 		} catch (IOException e) {
 			e.printStackTrace();

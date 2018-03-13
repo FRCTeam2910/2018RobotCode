@@ -12,6 +12,8 @@ public class FollowMotionProfileCommand extends Command {
     private final SwerveDriveSubsystem drivetrain;
     private final MotionProfile[] profiles;
 
+    private int currentPoint = 0;
+
     public FollowMotionProfileCommand(SwerveDriveSubsystem drivetrain, MotionProfile[] profiles) {
         this.drivetrain = drivetrain;
         this.profiles = profiles;
@@ -21,6 +23,7 @@ public class FollowMotionProfileCommand extends Command {
 
     @Override
     protected void initialize() {
+        currentPoint = 0;
         for (int i = 0; i < 4; i++) {
             drivetrain.getSwerveModule(i).clearMotionProfilingBuffer();
             drivetrain.getSwerveModule(i).zeroDistance();
@@ -29,8 +32,8 @@ public class FollowMotionProfileCommand extends Command {
                 TrajectoryPoint anglePoint = new TrajectoryPoint();
 
                 drivePoint.timeDur = anglePoint.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_40ms;
-                drivePoint.position = anglePoint.position = profiles[i].getSegment(j).position / 3.28084 * 12;
-                drivePoint.velocity = anglePoint.velocity = profiles[i].getSegment(j).velocity / 3.28084 * 12;
+                drivePoint.position = anglePoint.position = profiles[i].getSegment(j).position * 100;
+                drivePoint.velocity = anglePoint.velocity = profiles[i].getSegment(j).velocity * 100;
                 drivePoint.headingDeg = anglePoint.headingDeg = 0;
 
                 if (j == 0) {
@@ -47,15 +50,19 @@ public class FollowMotionProfileCommand extends Command {
                 drivetrain.getSwerveModule(i).pushMotionPoint(anglePoint, drivePoint);
             }
 
-            drivetrain.getSwerveModule(i).processMotionBuffer();
+//            drivetrain.getSwerveModule(i).processMotionBuffer();
 
             drivetrain.getSwerveModule(i).enableMotionProfiling();
         }
     }
     @Override
     protected void execute() {
-        for (int i = 0; i < 4; i++)
+
+
+        for (int i = 0; i < 4; i++) {
+            drivetrain.getSwerveModule(i).enableMotionProfiling();
             drivetrain.getSwerveModule(i).processMotionBuffer();
+        }
     }
 
     @Override

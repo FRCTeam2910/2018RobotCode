@@ -44,8 +44,6 @@ public class ChangeElevatorModeCommand extends Command {
             timer.reset();
             timer.start();
 
-            System.out.println("RUNNING TIMER");
-
             waitingForZeroVel = false;
         }
     }

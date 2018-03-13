@@ -37,10 +37,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
         super(WIDTH, LENGTH);
         zeroGyro();
 
-        mSwerveModules[1].setDriveInverted(true);
-        mSwerveModules[2].setDriveInverted(true);
-//      mSwerveModules[0].setDriveInverted(true);
-//      mSwerveModules[3[.setDriveInverted(true);
+//        mSwerveModules[1].setDriveInverted(true);
+//        mSwerveModules[2].setDriveInverted(true);
+      mSwerveModules[0].setDriveInverted(true);
+      mSwerveModules[3].setDriveInverted(true);
 
         for (SwerveDriveModule module : mSwerveModules) {
             module.setTargetAngle(0);
@@ -79,8 +79,8 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
         angle %= 360;
         if (angle < 0) angle += 360;
 
-        return 360 - angle;
-//		return angle;
+//        return 360 - angle;
+		return angle;
     }
 
     public double getGyroRate() {
@@ -103,7 +103,7 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     public void holonomicDrive(double forward, double strafe, double rotation) {
         forward *= getSpeedMultiplier();
         strafe *= getSpeedMultiplier();
-        rotation = -rotation;
+//        rotation = -rotation;
         if (isFieldOriented()) {
             double angleRad = Math.toRadians(getGyroAngle());
             double temp = forward * Math.cos(angleRad) +
@@ -162,5 +162,21 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     	for(int i = 0; i < mSwerveModules.length; i++) {
     		mSwerveModules[i].resetMotor();
     	}
+    }
+
+    public SwerveDriveModule getFrontLeftModule() {
+        return mSwerveModules[1];
+    }
+
+    public SwerveDriveModule getFrontRightModule() {
+        return mSwerveModules[0];
+    }
+
+    public SwerveDriveModule getBackLeftModule() {
+        return mSwerveModules[3];
+    }
+
+    public SwerveDriveModule getBackRightModule() {
+        return mSwerveModules[2];
     }
 }

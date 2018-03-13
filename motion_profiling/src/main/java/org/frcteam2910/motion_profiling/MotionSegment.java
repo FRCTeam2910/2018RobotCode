@@ -28,4 +28,10 @@ public final class MotionSegment implements Serializable {
     public MotionSegment(MotionSegment segment) {
         this(segment.deltaTime, segment.x, segment.y, segment.position, segment.velocity, segment.acceleration, segment.jerk, segment.heading);
     }
+
+    @Override
+    public String toString() {
+        return String.format("(dt:% 3f x:% 3f y:% 3f p:% 3f v:% 3f a:% 3f j:% 3f h:% 3f)",
+                deltaTime, x, y, position, velocity, acceleration, jerk, heading);
+    }
 }

@@ -19,25 +19,28 @@ public class Generator {
 
 
     public static final Trajectory.Config CONFIG = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC,
-            Trajectory.Config.SAMPLES_HIGH, 0.04, 1.7, 2.0, 60.0);
+            Trajectory.Config.SAMPLES_HIGH, 0.02, 200, 150, 600.0);
 
     public static void main(String[] args) {
         Waypoint[] point = {
-                new Waypoint(-4, -1, Pathfinder.d2r(-45)),
-                new Waypoint(-2, -2, 0),
-                new Waypoint(0, 0, 0)
+                new Waypoint(0, 0, 0),
+                new Waypoint(5 * 12, 5 * 12, 0),
+                new Waypoint(10 * 12, 0, Math.toRadians(90)),
+                new Waypoint(5 * 12, -5 * 12, Math.toRadians(180)),
+                new Waypoint(0, 0, Math.toRadians(-90))
         };
+
 
         Trajectory mainTrajectory = Pathfinder.generate(point, CONFIG);
 
         SwerveModifier modifier = new SwerveModifier(mainTrajectory);
-        modifier.modify(14.5 / 12 * 3.28084,
-                13.5  / 12 * 3.28084,
+        modifier.modify(14.5 / 12,
+                13.5 / 12,
                 SwerveModifier.Mode.SWERVE_DEFAULT);
 
         MotionProfileUploader uploader = new MotionProfileUploader();
         try {
-            uploader.uploadProfile("test", new MotionProfile[] {
+            uploader.uploadProfile("test", new MotionProfile[]{
                     convert(modifier.getFrontLeftTrajectory()),
                     convert(modifier.getFrontRightTrajectory()),
                     convert(modifier.getBackLeftTrajectory()),

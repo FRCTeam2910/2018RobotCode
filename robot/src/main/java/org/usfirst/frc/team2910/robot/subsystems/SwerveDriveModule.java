@@ -12,6 +12,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.commands.SwerveModuleCommand;
 
+import java.util.ArrayDeque;
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class SwerveDriveModule extends Subsystem {
     private static final long STALL_TIMEOUT = 2000;
 
@@ -31,6 +35,8 @@ public class SwerveDriveModule extends Subsystem {
     private double driveWheelRadius = 2;
     private boolean angleMotorJam = false;
 
+    private Queue<TrajectoryPoint> motionPointQueue = new LinkedList<>();
+
     public SwerveDriveModule(int moduleNumber, TalonSRX angleMotor, TalonSRX driveMotor, double zeroOffset) {
         this.moduleNumber = moduleNumber;
 
@@ -47,18 +53,18 @@ public class SwerveDriveModule extends Subsystem {
         angleMotor.setNeutralMode(NeutralMode.Brake);
         angleMotor.set(ControlMode.Position, 0);
 
-        driveMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
-
+        driveMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        driveMotor.configNeutralDeadband(0.05, 40);
 //        driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, 0);
-        driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
-
-        driveMotor.configMotionProfileTrajectoryPeriod(0, 40);
-        driveMotor.changeMotionControlFramePeriod(20);
-
         driveMotor.config_kP(0, 2.0, 0);
         driveMotor.config_kI(0, 0.0, 0);
         driveMotor.config_kD(0, 20.0, 0);
         driveMotor.config_kF(0, 0.076, 0);
+
+        driveMotor.configMotionProfileTrajectoryPeriod(0, 40);
+        driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 40);
+        driveMotor.changeMotionControlFramePeriod(20);
+
 
         driveMotor.configMotionCruiseVelocity(720, 0);
         driveMotor.configMotionAcceleration(240, 0);
@@ -80,11 +86,11 @@ public class SwerveDriveModule extends Subsystem {
     }
 
     private double encoderTicksToInches(double ticks) {
-        return ticks / 32.9;
+        return ticks / 37.8;
     }
 
     private double inchesToEncoderTicks(double inches) {
-        return inches * 32.9;
+        return inches * 37.8;
     }
 
     @Override
@@ -213,8 +219,6 @@ public class SwerveDriveModule extends Subsystem {
 //        distance *= driveGearRatio; // to encoder rotations
 //        distance *= 80; // to encoder ticks
 
-        System.out.println(distance);
-
         distance = inchesToEncoderTicks(distance);
 
         SmartDashboard.putNumber("Module Ticks " + moduleNumber, distance);
@@ -251,30 +255,30 @@ public class SwerveDriveModule extends Subsystem {
     	SmartDashboard.putBoolean("Motor Jammed" + moduleNumber, angleMotorJam);
     }
 
-    private static boolean t;
-
     public void pushMotionPoint(TrajectoryPoint angle, TrajectoryPoint drive) {
         angle.position = inchesToEncoderTicks(angle.position);
         angle.velocity = inchesToEncoderTicks(angle.velocity) / 10;
         drive.position = inchesToEncoderTicks(drive.position);
         drive.velocity = inchesToEncoderTicks(drive.velocity) / 10;
 
-        if (!t) {
-            SmartDashboard.putNumber("First point tick " + moduleNumber, drive.position);
-            t = true;
-        }
-
-        mAngleMotor.pushMotionProfileTrajectory(angle);
-        mDriveMotor.pushMotionProfileTrajectory(drive);
+        motionPointQueue.add(drive);
     }
 
     public void processMotionBuffer() {
+        while (!mDriveMotor.isMotionProfileTopLevelBufferFull() && !motionPointQueue.isEmpty()) {
+            mDriveMotor.pushMotionProfileTrajectory(motionPointQueue.remove());
+        }
+
+        SmartDashboard.putNumber(String.format("Module %d top points", moduleNumber), motionPointQueue.size());
+
         mAngleMotor.processMotionProfileBuffer();
         mDriveMotor.processMotionProfileBuffer();
 
         MotionProfileStatus status = new MotionProfileStatus();
         mDriveMotor.getMotionProfileStatus(status);
-        System.out.println(status.activePointValid);
+
+        SmartDashboard.putNumber(String.format("Module %d middle points", moduleNumber), mDriveMotor.getMotionProfileTopLevelBufferCount());
+        SmartDashboard.putNumber(String.format("Module %d bottom points", moduleNumber), status.btmBufferCnt);
     }
 
     public boolean isMotionProfileComplete() {
@@ -286,12 +290,10 @@ public class SwerveDriveModule extends Subsystem {
 
             return status.isLast;
         }
-
         return false;
     }
 
     public void enableMotionProfiling() {
-        mAngleMotor.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
         mDriveMotor.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
     }
 
@@ -299,7 +301,13 @@ public class SwerveDriveModule extends Subsystem {
         mAngleMotor.clearMotionProfileTrajectories();
         mDriveMotor.clearMotionProfileTrajectories();
 
+        motionPointQueue.clear();
+
         mAngleMotor.clearMotionProfileHasUnderrun(0);
         mDriveMotor.clearMotionProfileHasUnderrun(0);
+    }
+
+    public double getCurrentSpeed() {
+        return encoderTicksToInches(mDriveMotor.getSensorCollection().getQuadratureVelocity()) * 10;
     }
 }
