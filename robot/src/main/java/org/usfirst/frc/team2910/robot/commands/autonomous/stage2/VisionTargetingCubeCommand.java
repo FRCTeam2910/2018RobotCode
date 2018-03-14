@@ -109,6 +109,11 @@ public class VisionTargetingCubeCommand extends CommandGroup{
 	
 	
 	protected void execute() {
+		if (Math.abs(forwardController.getError()) < 0.5)
+			PIDForwardValue = 0;
+		if (Math.abs(strafeController.getError()) < 0.5)
+			PIDStrafeValue = 0;
+
 		SmartDashboard.putNumber("Rotation Factor", rotationFactor);
 		if(tv.getDouble(0) == 0){	//If there is no target
 			if(side == side.RIGHT) {
@@ -117,7 +122,7 @@ public class VisionTargetingCubeCommand extends CommandGroup{
 				robot.getDrivetrain().holonomicDrive(0, .4, rotationFactor);
 			}
 		} else if(tx.getDouble(0) != 0 || ty.getDouble(0) != 0) {	//Else check that we are not already at the tar
-				robot.getDrivetrain().holonomicDrive(PIDForwardValue, PIDStrafeValue, rotationFactor);
+			robot.getDrivetrain().holonomicDrive(PIDForwardValue, PIDStrafeValue, rotationFactor);
 		}	else {
 			finish = true;
 			isFinished();
