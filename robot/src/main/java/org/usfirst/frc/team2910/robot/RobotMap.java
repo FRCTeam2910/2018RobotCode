@@ -11,7 +11,7 @@ public class RobotMap {
     public static final int ELEVATOR_SHIFTER = 3;
     public static final int ELEVATOR_LOCKER = 2;
 
-    public static final int ELEVATOR_LIMIT_SWITCH = 0;
+    public static final int ELEVATOR_SHIFTING_SWITCH = 0;
 
 	public static final int GATHERER_LEFT_MOTOR = 30;
 	public static final int GATHERER_RIGHT_MOTOR = 29;

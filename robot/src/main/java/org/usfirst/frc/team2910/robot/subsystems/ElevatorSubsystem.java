@@ -3,7 +3,6 @@ package org.usfirst.frc.team2910.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team2910.robot.RobotMap;
@@ -16,8 +15,8 @@ public class ElevatorSubsystem extends Subsystem {
     }
 
     public enum Mode {
-        Regular,
-        Climbing
+        REGULAR,
+        CLIMBING
     }
 
     public static final int STARTING_ENCODER_TICKS = 6527;
@@ -39,13 +38,15 @@ public class ElevatorSubsystem extends Subsystem {
 
     private final Solenoid lockingSolenoid = new Solenoid(RobotMap.ELEVATOR_LOCKER);
 
+    private final DigitalInput shiftingSwitch = new DigitalInput(RobotMap.ELEVATOR_SHIFTING_SWITCH);
+
     private double targetHeight = 0;
-    private Mode currentMode = Mode.Regular;
+    private Mode currentMode = Mode.REGULAR;
 
     public ElevatorSubsystem() {
         motors[0].configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 0);
-        motors[0].config_kP(0, 4, 0);
-        motors[0].config_kI(0, 0.01, 0);
+        motors[0].config_kP(0, 2, 0);
+        motors[0].config_kI(0, 0.005, 0);
         motors[0].config_kD(0, 0, 0);
         motors[0].config_IntegralZone(0, 500, 0);
 
@@ -58,8 +59,9 @@ public class ElevatorSubsystem extends Subsystem {
         motors[0].configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
 //        motors[0].configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
 
-        unlock();
-        setGear(Gear.HIGH);
+        motors[0].configContinuousCurrentLimit(30, 0);
+        motors[0].configPeakCurrentDuration(100, 0);
+        motors[0].configPeakCurrentLimit(30, 0);
 
         motors[0].setSensorPhase(true);
         motors[0].setInverted(true);
@@ -69,6 +71,9 @@ public class ElevatorSubsystem extends Subsystem {
             motors[i].follow(motors[0]);
             motors[i].configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, motors[0].getDeviceID(), 0);
         }
+
+        unlock();
+        setMode(Mode.REGULAR);
     }
 
     @Override
@@ -78,20 +83,27 @@ public class ElevatorSubsystem extends Subsystem {
 
     public void setMode(Mode mode) {
         switch (currentMode) {
-            case Regular:
+            case REGULAR:
                 setGear(Gear.HIGH);
+                motors[0].enableCurrentLimit(true);
+                motors[1].enableCurrentLimit(true);
                 break;
-            case Climbing:
+            case CLIMBING:
                 setGear(Gear.LOW);
+                motors[0].enableCurrentLimit(false);
+                motors[1].enableCurrentLimit(false);
                 break;
         }
 
         this.currentMode = mode;
     }
 
+    public Mode getCurrentMode() {
+        return currentMode;
+    }
+
     public void setGear(Gear gear) {
-        System.out.printf("Shifting to %s%n", gear);
-        if (gear == Gear.HIGH) {
+        if (gear == Gear.LOW) {
             shiftingSolenoid.set(false);
         } else {
             shiftingSolenoid.set(true);
@@ -153,6 +165,10 @@ public class ElevatorSubsystem extends Subsystem {
 
     public TalonSRX[] getMotors() {
         return motors;
+    }
+
+    public boolean isShiftingSwitchActivated() {
+        return shiftingSwitch.get();
     }
 
     public void setEncoderPosition(int position) {

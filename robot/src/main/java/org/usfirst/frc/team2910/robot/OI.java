@@ -40,8 +40,8 @@ public class OI {
         secondaryController.getDPadButton(DPadButton.Direction.DOWN).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
 
         // TODO: Secondary Controller: Toggles elevator climbing mode (low gear, fast right joystick Y adjustments, lock when no input)
-        secondaryController.getLeftBumperButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.Climbing));
-        secondaryController.getRightBumperButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.Regular));
+        secondaryController.getLeftBumperButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.CLIMBING));
+        secondaryController.getRightBumperButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.REGULAR));
         secondaryController.getDPadButton(DPadButton.Direction.LEFT).toggleWhenPressed(new ToggleElevatorModeCommand(mRobot.getElevator()));
 
         secondaryController.getAButton().whileHeld(new IntakeCubeNoRequireCommand(mRobot.getGatherer(), -0.45, 0, Double.MAX_VALUE));
