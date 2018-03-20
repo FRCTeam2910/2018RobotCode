@@ -130,6 +130,7 @@ public class VisionTargetingCubeCommand extends CommandGroup{
 	
 	protected void end() {
 		strafeController.disable();
-		strafeController.disable();
+		forwardController.disable();
+		angleErrorController.disable();
 	}
 }
