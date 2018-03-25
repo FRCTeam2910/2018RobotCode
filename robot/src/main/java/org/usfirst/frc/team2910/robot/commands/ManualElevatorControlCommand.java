@@ -36,10 +36,14 @@ public class ManualElevatorControlCommand extends Command {
             secondaryInput *= Math.abs(secondaryInput);
             elevator.setElevatorSpeed(secondaryInput);
             shouldSetPosition = true;
-        } else if (shouldSetPosition && elevator.getCurrentMode() == ElevatorSubsystem.Mode.REGULAR) {
-            elevator.getMotors()[0].setIntegralAccumulator(0, 0, 0);
-            elevator.setElevatorPosition(elevator.getCurrentHeight());
-            shouldSetPosition = false;
+        } else if (shouldSetPosition) {
+            if (elevator.getCurrentMode() == ElevatorSubsystem.Mode.CLIMBING) {
+                elevator.setElevatorSpeed(0);
+            } else {
+                elevator.getMotors()[0].setIntegralAccumulator(0, 0, 0);
+                elevator.setElevatorPosition(elevator.getCurrentHeight());
+                shouldSetPosition = false;
+            }
         }
     }
 

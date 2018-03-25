@@ -34,9 +34,7 @@ public class GathererSubsystem  extends Subsystem {
 		setLeftArm(Position.OUT);
 		setRightArm(Position.IN);
 		
-		leftCarriage.setInverted(true);
 		leftCarriage.follow(leftMotor);
-		rightCarriage.setInverted(true);
 		rightCarriage.follow(rightMotor);
 
 		intakeDriver.setSafetyEnabled(false);

@@ -18,7 +18,7 @@ public class Stage1CenterSwitchCommand extends CommandGroup {
 
         addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
-                (switchSide == Side.LEFT ? 1 : -1) * 50,
+                (switchSide == Side.LEFT ? 1.2 : -1) * 50,
                 WALL_TO_SWITCH - robot.getDrivetrain().getWidth() + 3));
         addSequential(new LaunchCubeCommand(robot.getGatherer(), 1));
     }

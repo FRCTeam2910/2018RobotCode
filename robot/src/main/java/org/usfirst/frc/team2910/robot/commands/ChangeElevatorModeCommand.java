@@ -34,7 +34,6 @@ public class ChangeElevatorModeCommand extends Command {
 
     @Override
     protected void execute() {
-        elevator.setElevatorSpeed(-0.1);
         if (timer.get() % WAIT_TIME > WAIT_TIME / 2)
             elevator.setElevatorSpeed(-0.1);
         else
@@ -43,7 +42,7 @@ public class ChangeElevatorModeCommand extends Command {
 
     @Override
     protected boolean isFinished() {
-        if (targetMode == ElevatorSubsystem.Mode.CLIMBING)
+        if (targetMode == ElevatorSubsystem.Mode.REGULAR)
             return true;
         else
             return elevator.isShiftingSwitchActivated();

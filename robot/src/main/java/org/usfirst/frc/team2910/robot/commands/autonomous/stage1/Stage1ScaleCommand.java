@@ -70,21 +70,21 @@ public class Stage1ScaleCommand extends CommandGroup {
                 0));
 
         addSequential(new LaunchCubeCommand(robot.getGatherer(), 1));
-        addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.GROUND_POSITION, 0.25));
+        addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.GROUND_POSITION, 1.0));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? -1 : 1) * SCORE_SCALE,
                 WALL_TO_PLATFORM_ZONE - WALL_TO_SCALE));
     }
 
     private void driveSideToNearScale(StartingPosition startPos) {
-        addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SCALE_POSITION, 1));
+        addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SCALE_POSITION, 2));
         /* HACK: Move less right when on the left side because the energy chain was hitting the scale when on the
         * practice field. */
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? -1 : 1) * SCORE_SCALE,
                 WALL_TO_SCALE - robot.getDrivetrain().getWidth() / 2));
         addSequential(new LaunchCubeCommand(robot.getGatherer(), 1));
-        addParallel(new SetElevatorPositionCommand(robot.getElevator(), 5, 0.4));
+        addParallel(new SetElevatorPositionCommand(robot.getElevator(), 5, 1.0));
         addSequential(new DriveForDistanceCommand(robot.getDrivetrain(),
                 (startPos == StartingPosition.LEFT ? 1 : -1) * SCORE_SCALE,
                 WALL_TO_PLATFORM_ZONE - WALL_TO_SCALE));

@@ -1,7 +1,6 @@
 package org.usfirst.frc.team2910.robot.commands.autonomous.stage2;
 
 import org.usfirst.frc.team2910.robot.Robot;
-import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 import org.usfirst.frc.team2910.robot.util.Side;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -18,13 +17,13 @@ public class VisionTargetingCubeCommand extends CommandGroup{
 	private final Robot robot;
 	private final PIDController angleErrorController;
 	private Side side;
-	private boolean finish = false;
+	private boolean finished = false;
 	private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 	private NetworkTableEntry tx = table.getEntry("tx");
 	private NetworkTableEntry ty = table.getEntry("ty");
 	private NetworkTableEntry tv = table.getEntry("tv");
-	private double PIDForwardValue;
-	private double PIDStrafeValue;
+	private double pidForwardValue;
+	private double pidStrafeValue;
 	private double rotationFactor;
 	
 	private PIDController forwardController = new PIDController(0.03, 0.0, 0.0, new PIDSource() {
@@ -43,7 +42,7 @@ public class VisionTargetingCubeCommand extends CommandGroup{
 		}
 	
 	}, output -> {	
-		PIDForwardValue = output;
+		pidForwardValue = output;
 	});
 	
 	private PIDController strafeController = new PIDController(0.025, 0.0, 0.0, new PIDSource() {
@@ -62,8 +61,8 @@ public class VisionTargetingCubeCommand extends CommandGroup{
 		}
 		
 	}, output -> {
-		PIDStrafeValue = -output;
-		SmartDashboard.putNumber("PID Strafe Value", PIDStrafeValue);
+		pidStrafeValue = -output;
+		SmartDashboard.putNumber("PID Strafe Value", pidStrafeValue);
 	});
 
 	public VisionTargetingCubeCommand(Robot robot, Side side) {
@@ -110,31 +109,31 @@ public class VisionTargetingCubeCommand extends CommandGroup{
 	
 	protected void execute() {
 		if (Math.abs(forwardController.getError()) < 0.5)
-			PIDForwardValue = 0;
+			pidForwardValue = 0;
 		if (Math.abs(strafeController.getError()) < 0.5)
-			PIDStrafeValue = 0;
+			pidStrafeValue = 0;
 
 		SmartDashboard.putNumber("Rotation Factor", rotationFactor);
 		if(tv.getDouble(0) == 0){	//If there is no target
-			if(side == side.RIGHT) {
+			if(side == Side.RIGHT) {
 				robot.getDrivetrain().holonomicDrive(0, -.4, rotationFactor);
 			} else {
 				robot.getDrivetrain().holonomicDrive(0, .4, rotationFactor);
 			}
 		} else if(tx.getDouble(0) != 0 || ty.getDouble(0) != 0) {	//Else check that we are not already at the tar
-			robot.getDrivetrain().holonomicDrive(PIDForwardValue, PIDStrafeValue, rotationFactor);
+			robot.getDrivetrain().holonomicDrive(pidForwardValue, pidStrafeValue, rotationFactor);
 		}	else {
-			finish = true;
-			isFinished();
+			finished = true;
 		}
 	}
 	
 	protected boolean isFinished() {
-		return finish;
+		return finished;
 	}
 	
 	protected void end() {
 		strafeController.disable();
-		strafeController.disable();
+		forwardController.disable();
+		angleErrorController.disable();
 	}
 }

@@ -111,21 +111,20 @@ public class Robot extends IterativeRobot {
         // Wait 1 second maximum for the game string to be given.
         // If no game string is recieved, go to the auto line.
         
-//        Timer waitTimer = new Timer();
-//        waitTimer.start();
-//        while (DriverStation.getInstance().getGameSpecificMessage().isEmpty()
-//                && !waitTimer.hasPeriodPassed(1)) {
-//            Scheduler.getInstance().run();
-//        }
-//
-//        swerveDriveSubsystem.setFieldOriented(true);
-//
-//        if (waitTimer.hasPeriodPassed(1))
-//            autoCommand = new DriveForTimeCommand(swerveDriveSubsystem, 2.5, 0.5, 0);
-//        else
-//		    autoCommand = autoChooser.getCommand(this);
-//		
-        autoCommand = new VisionTargetingCubeCommand(this, Side.LEFT);
+        Timer waitTimer = new Timer();
+        waitTimer.start();
+        while (DriverStation.getInstance().getGameSpecificMessage().isEmpty()
+                && !waitTimer.hasPeriodPassed(1)) {
+            Scheduler.getInstance().run();
+        }
+
+        swerveDriveSubsystem.setFieldOriented(true);
+
+        if (waitTimer.hasPeriodPassed(1))
+            autoCommand = new DriveForTimeCommand(swerveDriveSubsystem, 2.5, 0.5, 0);
+        else
+		    autoCommand = autoChooser.getCommand(this);
+
         autoCommand.start();
 	}
 

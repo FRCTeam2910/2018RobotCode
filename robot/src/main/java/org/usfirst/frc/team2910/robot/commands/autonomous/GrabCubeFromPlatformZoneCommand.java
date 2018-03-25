@@ -5,6 +5,7 @@ import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.commands.IntakeCubeCommand;
 import org.usfirst.frc.team2910.robot.commands.LaunchCubeCommand;
 import org.usfirst.frc.team2910.robot.commands.SetElevatorPositionCommand;
+import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.VisionTargetingCubeCommand;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 import org.usfirst.frc.team2910.robot.util.Side;
@@ -41,26 +42,29 @@ public class GrabCubeFromPlatformZoneCommand extends CommandGroup {
                 (startSide == Side.LEFT ? -1 : 1) * (distToSwitch + switchEdgeToCube),
                 0));
 
+        addSequential(new VisionTargetingCubeCommand(robot, endSide), 3);
         addParallel(new IntakeCubeCommand(robot.getGatherer(), 3));
-        addSequential(new DriveForDistanceCommand(drivetrain,
-                0,
-                ((WALL_TO_SWITCH + SWITCH_DEPTH + 5) - WALL_TO_PLATFORM_ZONE)));
-        addSequential(new DriveForDistanceCommand(drivetrain,
-                0,
-                WALL_TO_PLATFORM_ZONE - (WALL_TO_SWITCH + SWITCH_DEPTH + 5)));
-
-        int cubeRelativeToEnd = getRelativeCubeForSide(cubeToGrab, endSide);
-        double cubeToSwitchEdge = cubeRelativeToEnd * (GAP_BETWEEN_PLATFORM_CUBES + CUBE_WIDTH) + CUBE_WIDTH / 2;
-
-        // Drive to end side
-        addSequential(new DriveForDistanceCommand(drivetrain,
-                (endSide == Side.LEFT ? 1 : -1) * (distToSwitch + cubeToSwitchEdge),
-                0));
-
-        // Face towards center
-        addSequential(new SetDrivetrainAngleCommand(drivetrain, endSide == Side.LEFT ? 270 : 90));
-
-        // TODO: End up on end side
+        addSequential(new DriveForDistanceCommand(drivetrain, 0, -2), 2);
+//        addParallel(new IntakeCubeCommand(robot.getGatherer(), 3));
+//        addSequential(new DriveForDistanceCommand(drivetrain,
+//                0,
+//                ((WALL_TO_SWITCH + SWITCH_DEPTH + 5) - WALL_TO_PLATFORM_ZONE)));
+//        addSequential(new DriveForDistanceCommand(drivetrain,
+//                0,
+//                WALL_TO_PLATFORM_ZONE - (WALL_TO_SWITCH + SWITCH_DEPTH + 5)));
+//
+//        int cubeRelativeToEnd = getRelativeCubeForSide(cubeToGrab, endSide);
+//        double cubeToSwitchEdge = cubeRelativeToEnd * (GAP_BETWEEN_PLATFORM_CUBES + CUBE_WIDTH) + CUBE_WIDTH / 2;
+//
+//        // Drive to end side
+//        addSequential(new DriveForDistanceCommand(drivetrain,
+//                (endSide == Side.LEFT ? 1 : -1) * (distToSwitch + cubeToSwitchEdge),
+//                0));
+//
+//        // Face towards center
+//        addSequential(new SetDrivetrainAngleCommand(drivetrain, endSide == Side.LEFT ? 270 : 90));
+//
+//        // TODO: End up on end side
     }
 
     public static int getFirstAvailableFromSide(Side side) {

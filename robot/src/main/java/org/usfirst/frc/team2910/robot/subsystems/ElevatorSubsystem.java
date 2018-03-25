@@ -21,7 +21,7 @@ public class ElevatorSubsystem extends Subsystem {
 
     public static final int STARTING_ENCODER_TICKS = 6527;
 
-    public static final double TOP_POSITION = 79.25;
+    public static final double TOP_POSITION = 80.00;
     public static final double SCORE_SCALE_POSITION = 6 * 12;
     public static final double SCORE_SWITCH_POISITON = 3 * 12;
     public static final double GROUND_POSITION = 0;
@@ -59,9 +59,11 @@ public class ElevatorSubsystem extends Subsystem {
         motors[0].configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
 //        motors[0].configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
 
-        motors[0].configContinuousCurrentLimit(30, 0);
-        motors[0].configPeakCurrentDuration(100, 0);
-        motors[0].configPeakCurrentLimit(30, 0);
+        for (int i = 0; i < motors.length; i++) {
+            motors[i].configContinuousCurrentLimit(50, 0);
+            motors[i].configPeakCurrentDuration(100, 0);
+            motors[i].configPeakCurrentLimit(50, 0);
+        }
 
         motors[0].setSensorPhase(true);
         motors[0].setInverted(true);
@@ -104,9 +106,9 @@ public class ElevatorSubsystem extends Subsystem {
 
     public void setGear(Gear gear) {
         if (gear == Gear.LOW) {
-            shiftingSolenoid.set(false);
-        } else {
             shiftingSolenoid.set(true);
+        } else {
+            shiftingSolenoid.set(false);
         }
     }
 
@@ -122,6 +124,9 @@ public class ElevatorSubsystem extends Subsystem {
 
     public void setElevatorSpeed(double speed) {
         if (isLocked()) return;
+
+        if (getCurrentHeight() > TOP_POSITION)
+            speed = Math.max(speed, 0);
 
         motors[0].set(ControlMode.PercentOutput, speed);
     }

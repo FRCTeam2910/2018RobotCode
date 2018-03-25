@@ -13,7 +13,7 @@ public class RobotMap {
 
     public static final int ELEVATOR_SHIFTING_SWITCH = 0;
 
-	public static final int GATHERER_LEFT_MOTOR = 30;
+	public static final int GATHERER_LEFT_MOTOR = 31;
 	public static final int GATHERER_RIGHT_MOTOR = 29;
 	
 	public static final int GATHERER_LEFT_SOLENOID = 1;

@@ -116,12 +116,14 @@ public class AutonomousChooser {
                 } else {
                     // Grab Cube
 
-                    if (priorityChoices.get(i).getSelected() == AutonomousStageChoice.SAME_SIDE_SWITCH &&
-                            lastSide == Side.fromChar(fieldConfiguration.charAt(0))) {
-                        autoGroup.addSequential(new Stage2SameSideSwitchCommand(robot, lastSide));
-                        return autoGroup;
-                    } else {
-                        continue;
+                    if (i + 1 < priorityChoices.size()) {
+                        if (priorityChoices.get(i + 1).getSelected() == AutonomousStageChoice.SAME_SIDE_SWITCH &&
+                                lastSide == Side.fromChar(fieldConfiguration.charAt(0))) {
+                            autoGroup.addSequential(new Stage2SameSideSwitchCommand(robot, lastSide));
+                            return autoGroup;
+                        } else {
+                            continue;
+                        }
                     }
 //
 //                    Side targetSide;
