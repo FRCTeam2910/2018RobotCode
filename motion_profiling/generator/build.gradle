@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'commons-net', name: 'commons-net', version: '3.+'
+    compile group: 'commons-net', name: 'commons-net', version: '3.6'
     compile project(':motion_profiling')
     compile files('lib/Pathfinder.jar')
 }

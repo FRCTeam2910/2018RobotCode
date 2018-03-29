@@ -2,6 +2,7 @@ package org.frcteam2910.motion_profiling;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MotionProfileLoader {
@@ -11,24 +12,8 @@ public class MotionProfileLoader {
     }
 
     public static List<MotionProfile> loadProfile(String name) throws IOException {
-        String path = getPathOfProfile(name);
-
-        List<MotionProfile> profiles = new ArrayList<>();
-
-        try (ObjectInputStream oin = new ObjectInputStream(new FileInputStream(new File(path)))) {
-            int profileCount = oin.readInt();
-
-            for (int i = 0; i < profileCount; i++) {
-                int profileLength = oin.readInt();
-                MotionProfile profile = new MotionProfile(profileLength);
-                for (int j = 0; j < profileLength; j++)
-                    profile.setSegment(j, (MotionSegment) oin.readObject());
-                profiles.add(profile);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        try (InputStream in = new FileInputStream(new File(getPathOfProfile(name)))) {
+            return Arrays.asList(MotionProfileSerializer.deserialize(in));
         }
-
-        return profiles;
     }
 }

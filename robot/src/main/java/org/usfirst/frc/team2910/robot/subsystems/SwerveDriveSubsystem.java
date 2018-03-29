@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveDriveSubsystem extends HolonomicDrivetrain {
-    public static final double WHEELBASE = 20.5;  // Swerve bot: 14.5
-    public static final double TRACKWIDTH = 25.5; // Swerve bot: 13.5
+    public static final double WHEELBASE = 12.50;  // Swerve bot: 14.5 Comp Bot 20.5
+    public static final double TRACKWIDTH = 12.00; // Swerve bot: 13.5 Comp Bot 25.5
 
     public static final double WIDTH = 37;  // Swerve bot: 20
     public static final double LENGTH = 32; // Swerve bot: 19
@@ -25,10 +25,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 //			new SwerveDriveModule(3, new TalonSRX(34), new TalonSRX(32), 197.93),
 //	};
     private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[]{
-            new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 253.47),
-            new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 337.5),
-            new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 11.95),
-            new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 16.17),
+            new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 253.125),
+            new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 156.093),
+            new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 189.14),
+            new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 17.226),
     };
 
     private AHRS mNavX = new AHRS(SPI.Port.kMXP, (byte) 200);
@@ -37,10 +37,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
         super(WIDTH, LENGTH);
         zeroGyro();
 
-//        mSwerveModules[1].setDriveInverted(true);
-//        mSwerveModules[2].setDriveInverted(true);
-      mSwerveModules[0].setDriveInverted(true);
-      mSwerveModules[3].setDriveInverted(true);
+        mSwerveModules[0].setDriveInverted(true);
+        mSwerveModules[1].setDriveInverted(true);
+        mSwerveModules[2].setDriveInverted(true);
+        mSwerveModules[3].setDriveInverted(true);
 
         for (SwerveDriveModule module : mSwerveModules) {
             module.setTargetAngle(0);

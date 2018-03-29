@@ -39,7 +39,7 @@ public class MotionProfileFollower {
             heading = seg.heading;
             segment++;
 
-            System.out.printf("p: % 3f v: % 3f a: % 3f%n", seg.position, seg.velocity, seg.acceleration);
+            System.out.printf("p: % 3f v: % 3f a: % 3f h: % 3f%n", seg.position, seg.velocity, seg.acceleration, Math.toDegrees(seg.heading));
 
             return calculatedValue;
         } else {

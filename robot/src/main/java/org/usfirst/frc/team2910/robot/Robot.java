@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -67,7 +68,7 @@ public class Robot extends IterativeRobot {
     @Override
     public void robotPeriodic() {
         for (int i = 0; i < 4; i++) {
-            SmartDashboard.putNumber("Module Angle " + i, swerveDriveSubsystem.getSwerveModule(i).getCurrentAngle());
+            SmartDashboard.putNumber("Module Angle " + i, Math.round(swerveDriveSubsystem.getSwerveModule(i).getCurrentAngle() * 100) / 100.0);
             SmartDashboard.putNumber("Module Pos " + i, (swerveDriveSubsystem.getSwerveModule(i).getDriveDistance()));
             SmartDashboard.putNumber("Module Raw Angle " + i, swerveDriveSubsystem.getSwerveModule(i).getAngleMotor().getSelectedSensorPosition(0));
             SmartDashboard.putNumber("Module Drive Speed " + i, swerveDriveSubsystem.getSwerveModule(i).getDriveMotor().getMotorOutputPercent());
@@ -114,12 +115,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		try (InputStream in = new FileInputStream(new File("/home/lvuser/motion_profiles/test.motionprofile"))) {
-			MotionProfile[] profiles = MotionProfileSerializer.deserialize(in);
-			for (int i = 0; i < 4; i++) {
-				System.out.printf("Loaded profile with a length of %d%n", profiles[i].getLength());
-			}
-			autoCommand = new FollowMotionProfileOnboardCommand(swerveDriveSubsystem, profiles);
+		try {
+			System.out.println("Loading profile");
+			List<MotionProfile> pro = MotionProfileLoader.loadProfile("left_same_switch_turn");
+			System.out.println("Profile length: " + pro.size());
+			autoCommand = new FollowMotionProfileOnboardCommand(swerveDriveSubsystem, pro);
 			autoCommand.start();
 		} catch (IOException e) {
 			e.printStackTrace();

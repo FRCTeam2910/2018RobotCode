@@ -7,24 +7,18 @@ import org.frcteam2910.motion_profiling.MotionProfileLoader;
 import org.frcteam2910.motion_profiling.MotionProfileSerializer;
 import org.frcteam2910.motion_profiling.MotionSegment;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public class MotionProfileUploader implements AutoCloseable {
 
     private FTPClient client = new FTPClient();
 
-    public MotionProfileUploader() {
+    public MotionProfileUploader() throws IOException {
         FTPClientConfig config = new FTPClientConfig();
         client.configure(config);
 
-        try {
-            client.connect("roborio-2910-frc.local", 21);
-            client.login("anonymous", "");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        client.connect("roborio-2910-frc.local", 21);
+        client.login("anonymous", "");
     }
 
     @Override
@@ -32,12 +26,12 @@ public class MotionProfileUploader implements AutoCloseable {
         client.disconnect();
     }
 
-    public void uploadProfile(String name, MotionProfile[] profile) throws IOException {
+    public void uploadProfile(String name, MotionProfile[] profiles) throws IOException {
         String path = MotionProfileLoader.getPathOfProfile(name);
 
         client.makeDirectory("/home/lvuser/motion_profiles");
         try (OutputStream stream = client.storeFileStream(path)) {
-            MotionProfileSerializer.serialize(stream, profile);
+            MotionProfileSerializer.serialize(stream, profiles);
             stream.flush();
         }
     }
