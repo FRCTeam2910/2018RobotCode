@@ -66,8 +66,8 @@ public class SwerveDriveModule extends Subsystem {
         driveMotor.changeMotionControlFramePeriod(20);
 
 
-        driveMotor.configMotionCruiseVelocity(720, 0);
-        driveMotor.configMotionAcceleration(240, 0);
+        driveMotor.configMotionCruiseVelocity(320, 0);
+        driveMotor.configMotionAcceleration(160, 0);
 
         driveMotor.setNeutralMode(NeutralMode.Brake);
 
@@ -86,11 +86,11 @@ public class SwerveDriveModule extends Subsystem {
     }
 
     private double encoderTicksToInches(double ticks) {
-        return ticks / 37.8;
+        return ticks / 36.65;
     }
 
     private double inchesToEncoderTicks(double inches) {
-        return inches * 37.8;
+        return inches * 36.65;
     }
 
     @Override
@@ -117,7 +117,12 @@ public class SwerveDriveModule extends Subsystem {
     }
 
     public double getDriveDistance() {
-        return encoderTicksToInches(mDriveMotor.getSelectedSensorPosition(0));
+        int ticks = mDriveMotor.getSelectedSensorPosition(0);
+        if (driveInverted)
+            ticks = -ticks;
+
+
+        return encoderTicksToInches(ticks);
     }
 
     public TalonSRX getDriveMotor() {
@@ -188,31 +193,31 @@ public class SwerveDriveModule extends Subsystem {
         targetAngle += currentAngle - currentAngleMod;
 
         double currentError = mAngleMotor.getClosedLoopError(0);
-        if (Math.abs(currentError - mLastError) < 7.5 &&
-                Math.abs(currentAngle - targetAngle) > 5) {
-            if (mStallTimeBegin == Long.MAX_VALUE) {
-            	mStallTimeBegin = System.currentTimeMillis();
-            }
-            if (System.currentTimeMillis() - mStallTimeBegin > STALL_TIMEOUT) {
-            	angleMotorJam = true;
-            	mAngleMotor.set(ControlMode.Disabled, 0);
-            	mDriveMotor.set(ControlMode.Disabled, 0);
-            	SmartDashboard.putBoolean("Motor Jammed" + moduleNumber, angleMotorJam);
-            	return;
-            }
-        } else {
-            mStallTimeBegin = Long.MAX_VALUE;
-        }
+//        if (Math.abs(currentError - mLastError) < 7.5 &&
+//                Math.abs(currentAngle - targetAngle) > 5) {
+//            if (mStallTimeBegin == Long.MAX_VALUE) {
+//            	mStallTimeBegin = System.currentTimeMillis();
+//            }
+//            if (System.currentTimeMillis() - mStallTimeBegin > STALL_TIMEOUT) {
+//            	angleMotorJam = true;
+//            	mAngleMotor.set(ControlMode.Disabled, 0);
+//            	mDriveMotor.set(ControlMode.Disabled, 0);
+//            	SmartDashboard.putBoolean("Motor Jammed" + moduleNumber, angleMotorJam);
+//            	return;
+//            }
+//        } else {
+//            mStallTimeBegin = Long.MAX_VALUE;
+//        }
         mLastError = currentError;
         targetAngle *= 1024.0 / 360.0;
         mAngleMotor.set(ControlMode.Position, targetAngle);
     }
 
     public void setTargetDistance(double distance) {
-    	if(angleMotorJam) {
-    		mDriveMotor.set(ControlMode.Disabled, 0);
-    		return;
-    	}
+//    	if(angleMotorJam) {
+//    		mDriveMotor.set(ControlMode.Disabled, 0);
+//    		return;
+//    	}
         if (driveInverted) distance = -distance;
 
 //        distance /= 2 * Math.PI * driveWheelRadius; // to wheel rotations
@@ -221,25 +226,23 @@ public class SwerveDriveModule extends Subsystem {
 
         distance = inchesToEncoderTicks(distance);
 
-        SmartDashboard.putNumber("Module Ticks " + moduleNumber, distance);
-
         mDriveMotor.set(ControlMode.MotionMagic, distance);
     }
 
     public void setTargetSpeed(double speed) {
-    	if(angleMotorJam) {
-    		mDriveMotor.set(ControlMode.Disabled, 0);
-    		return;
-    	}
+//    	if(angleMotorJam) {
+//    		mDriveMotor.set(ControlMode.Disabled, 0);
+//    		return;
+//    	}
         if (driveInverted) speed = -speed;
 
         mDriveMotor.set(ControlMode.PercentOutput, speed);
     }
 
     public void setTargetVelocity(double velocity) {
-        if (angleMotorJam) {
-            mDriveMotor.set(ControlMode.Disabled, 0);
-        }
+//        if (angleMotorJam) {
+//            mDriveMotor.set(ControlMode.Disabled, 0);
+//        }
         if (driveInverted) velocity = -velocity;
 
         mDriveMotor.set(ControlMode.Velocity, inchesToEncoderTicks(velocity));
