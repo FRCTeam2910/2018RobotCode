@@ -25,10 +25,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 //			new SwerveDriveModule(3, new TalonSRX(34), new TalonSRX(32), 197.93),
 //	};
     private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[]{
-            new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 253.125),
-            new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 156.093),
-            new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 189.14),
-            new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 17.226),
+            new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 338.55),
+            new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 253.13),
+            new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 13.36),
+            new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 15.47),
     };
 
     private AHRS mNavX = new AHRS(SPI.Port.kMXP, (byte) 200);
@@ -37,9 +37,9 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
         super(WIDTH, LENGTH);
         zeroGyro();
 
-        mSwerveModules[0].setDriveInverted(true);
+//        mSwerveModules[0].setDriveInverted(true);
         mSwerveModules[1].setDriveInverted(true);
-        mSwerveModules[2].setDriveInverted(true);
+//        mSwerveModules[2].setDriveInverted(true);
         mSwerveModules[3].setDriveInverted(true);
 
         for (SwerveDriveModule module : mSwerveModules) {
@@ -178,5 +178,9 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 
     public SwerveDriveModule getBackRightModule() {
         return mSwerveModules[2];
+    }
+
+    public SwerveDriveModule[] getSwerveModules() {
+        return mSwerveModules;
     }
 }

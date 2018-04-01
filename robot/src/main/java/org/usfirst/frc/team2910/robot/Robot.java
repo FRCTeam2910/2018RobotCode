@@ -14,6 +14,8 @@ import org.usfirst.frc.team2910.robot.commands.ResetMotorsCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
 import org.usfirst.frc.team2910.robot.commands.autonomous.FollowMotionProfileCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.FollowMotionProfileOnboardCommand;
+import org.usfirst.frc.team2910.robot.commands.autonomous.FollowPathCommand;
+import org.usfirst.frc.team2910.robot.motion.Path;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
@@ -115,15 +117,33 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		try {
-			System.out.println("Loading profile");
-			List<MotionProfile> pro = MotionProfileLoader.loadProfile("left_same_switch_turn");
-			System.out.println("Profile length: " + pro.size());
-			autoCommand = new FollowMotionProfileOnboardCommand(swerveDriveSubsystem, pro);
-			autoCommand.start();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			System.out.println("Loading profile");
+//			List<MotionProfile> pro = MotionProfileLoader.loadProfile("left_same_switch_turn");
+//			System.out.println("Profile length: " + pro.size());
+//			autoCommand = new FollowMotionProfileOnboardCommand(swerveDriveSubsystem, pro);
+//			autoCommand.start();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+
+		Path oppositeScale = new Path(
+				3.96444,
+				new Path.Segment(171.84, 0),
+				new Path.Segment(84.62, 96.9644),
+				new Path.Segment(122.84, 0),
+				new Path.Segment(75.14, -123)
+		);
+
+		Path sameScale = new Path(
+				3.9499,
+				new Path.Segment(140, 0),
+				new Path.Segment(75.21, 28.7266),
+				new Path.Segment(63.85, 0)
+		);
+
+		autoCommand = new FollowPathCommand(getDrivetrain(), oppositeScale);
+		autoCommand.start();
 
 //		autoCommand = autoChooser.getCommand(this);
 	}
