@@ -18,7 +18,7 @@ public class ScoreScaleFromStart extends CommandGroup {
 				// Same side
 				addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.TOP_POSITION, SAME_SIDE_ELEVATOR_WAIT));
 				if (orientation == StartingOrientation.FORWARDS) {
-					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.LEFT_START_TO_LEFT_SCALE_FORWARD));
+					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.LEFT_START_FORWARD_TO_LEFT_SCALE_FRONT));
 				} else {
 					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.LEFT_START_TO_LEFT_SCALE_SIDE));
 				}
@@ -26,7 +26,7 @@ public class ScoreScaleFromStart extends CommandGroup {
 				// Opposite side
 				if (orientation == StartingOrientation.FORWARDS) {
 					addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.TOP_POSITION, OPPOSITE_SIDE_ELEVATOR_WAIT));
-					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.LEFT_START_TO_RIGHT_SCALE_FORWARD));
+					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.LEFT_START_FORWARD_TO_RIGHT_SCALE_FRONT));
 				} else {
 					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.LEFT_START_TO_RIGHT_SCALE_SIDE_STEP_1));
 					addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.TOP_POSITION));
@@ -39,7 +39,7 @@ public class ScoreScaleFromStart extends CommandGroup {
 				// Opposite side
 				if (orientation == StartingOrientation.FORWARDS) {
 					addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.TOP_POSITION, OPPOSITE_SIDE_ELEVATOR_WAIT));
-					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.RIGHT_START_TO_LEFT_SCALE_FORWARD));
+					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.RIGHT_START_FORWARD_TO_LEFT_SCALE_FRONT));
 				} else {
 					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.RIGHT_START_TO_LEFT_SCALE_SIDE_STEP_1));
 					addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.TOP_POSITION));
@@ -50,7 +50,7 @@ public class ScoreScaleFromStart extends CommandGroup {
 				// Same side
 				addParallel(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.TOP_POSITION, SAME_SIDE_ELEVATOR_WAIT));
 				if (orientation == StartingOrientation.FORWARDS) {
-					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.RIGHT_START_TO_RIGHT_SCALE_FORWARD));
+					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.RIGHT_START_FORWARD_TO_RIGHT_SCALE_FRONT));
 				} else {
 					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.RIGHT_START_TO_RIGHT_SCALE_SIDE));
 				}
