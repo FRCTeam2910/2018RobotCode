@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	public static final boolean DEBUG = true;
+	public static final boolean PRACTICE_BOT = true;
 
 	private static OI mOI; 
 	private static SwerveDriveSubsystem swerveDriveSubsystem;

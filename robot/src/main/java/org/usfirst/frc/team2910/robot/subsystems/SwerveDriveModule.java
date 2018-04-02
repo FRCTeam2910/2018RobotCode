@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.commands.SwerveModuleCommand;
 import org.usfirst.frc.team2910.robot.util.MotorStallException;
 
@@ -75,11 +76,19 @@ public class SwerveDriveModule extends Subsystem {
     }
 
     private double encoderTicksToInches(double ticks) {
-        return ticks / 35.6;
+        if (Robot.PRACTICE_BOT) {
+            return ticks / 36.65;
+        } else {
+            return ticks / 35.6;
+        }
     }
 
     private double inchesToEncoderTicks(double inches) {
-        return inches * 35.6;
+        if (Robot.PRACTICE_BOT) {
+            return inches * 36.65;
+        } else {
+            return inches * 35.6;
+        }
     }
 
     @Override

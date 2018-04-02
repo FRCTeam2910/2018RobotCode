@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team2910.robot.Robot;
 
 public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     public static final double WHEELBASE = 20.5;  // Swerve bot: 14.5 Comp bot: 20.5
@@ -18,18 +19,7 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 	 * 2 is Back Left
 	 * 3 is Back Right
 	 */
-	private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[] {
-			new SwerveDriveModule(0, new TalonSRX(33), new TalonSRX(30), 321.328),
-			new SwerveDriveModule(1, new TalonSRX(23), new TalonSRX(26), 245.742),
-			new SwerveDriveModule(2, new TalonSRX(24), new TalonSRX(25), 88.242),
-			new SwerveDriveModule(3, new TalonSRX(34), new TalonSRX(32), 234.492),
-	};
-//    private SwerveDriveModule[] mSwerveModules = new SwerveDriveModule[]{
-//            new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 253.47),
-//            new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 337.5),
-//            new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 11.95),
-//            new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 16.17),
-//    };
+	private SwerveDriveModule[] mSwerveModules;
 
     private AHRS mNavX = new AHRS(SPI.Port.kMXP, (byte) 200);
 
@@ -37,10 +27,27 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
         super(WIDTH, LENGTH);
         zeroGyro();
 
-        mSwerveModules[1].setDriveInverted(true);
-        mSwerveModules[2].setDriveInverted(true);
-//      mSwerveModules[0].setDriveInverted(true);
-//      mSwerveModules[3].setDriveInverted(true);
+        if (Robot.PRACTICE_BOT) {
+            mSwerveModules = new SwerveDriveModule[] {
+                    new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 338.55),
+                    new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 253.13),
+                    new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 13.36),
+                    new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 15.47),
+            };
+
+            mSwerveModules[1].setDriveInverted(true);
+            mSwerveModules[3].setDriveInverted(true);
+        } else {
+            mSwerveModules = new SwerveDriveModule[] {
+                    new SwerveDriveModule(0, new TalonSRX(33), new TalonSRX(30), 321.328),
+                    new SwerveDriveModule(1, new TalonSRX(23), new TalonSRX(26), 245.742),
+                    new SwerveDriveModule(2, new TalonSRX(24), new TalonSRX(25), 88.242),
+                    new SwerveDriveModule(3, new TalonSRX(34), new TalonSRX(32), 234.492),
+            };
+
+            mSwerveModules[1].setDriveInverted(true);
+            mSwerveModules[2].setDriveInverted(true);
+        }
 
         for (SwerveDriveModule module : mSwerveModules) {
             module.setTargetAngle(0);
@@ -79,8 +86,11 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
         angle %= 360;
         if (angle < 0) angle += 360;
 
-        return 360 - angle;
-//		return angle;
+        if (Robot.PRACTICE_BOT) {
+            return angle;
+        } else {
+            return 360 - angle;
+        }
     }
 
     public double getGyroRate() {
@@ -103,7 +113,10 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     public void holonomicDrive(double forward, double strafe, double rotation) {
         forward *= getSpeedMultiplier();
         strafe *= getSpeedMultiplier();
-        rotation = -rotation;
+        if (!Robot.PRACTICE_BOT) {
+            rotation = -rotation;
+        }
+
         if (isFieldOriented()) {
             double angleRad = Math.toRadians(getGyroAngle());
             double temp = forward * Math.cos(angleRad) +
