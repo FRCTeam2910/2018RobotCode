@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team2910.robot.motion.Path;
+import org.usfirst.frc.team2910.robot.motion.Trajectory;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveModule;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
@@ -13,6 +14,7 @@ public class FollowPathCommand extends Command {
 
 	private final SwerveDriveSubsystem drivetrain;
 	private final Path                 path;
+	private final Trajectory           trajectory;
 
 	private final PIDController angleCorrectionController = new PIDController(0.02, 0, 0, new PIDSource() {
 		@Override
@@ -36,10 +38,13 @@ public class FollowPathCommand extends Command {
 	public FollowPathCommand(SwerveDriveSubsystem drivetrain, Path path) {
 		this.drivetrain = drivetrain;
 		this.path = path;
+		this.trajectory = new Trajectory(path, drivetrain.getMaxAcceleration(), drivetrain.getMaxVelocity());
 
 		angleCorrectionController.setInputRange(0, 360);
 		angleCorrectionController.setOutputRange(-0.5, 0.5);
 		angleCorrectionController.setContinuous(true);
+
+		setTimeout(trajectory.getDuration() + 1);
 
 		requires(drivetrain);
 	}

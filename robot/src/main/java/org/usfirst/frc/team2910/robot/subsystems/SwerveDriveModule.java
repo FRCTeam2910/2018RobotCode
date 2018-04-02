@@ -83,11 +83,11 @@ public class SwerveDriveModule extends Subsystem {
         }
     }
 
-    private double inchesToEncoderTicks(double inches) {
+    private int inchesToEncoderTicks(double inches) {
         if (Robot.PRACTICE_BOT) {
-            return inches * 36.65;
+            return (int) Math.round(inches * 36.65);
         } else {
-            return inches * 35.6;
+            return (int) Math.round(inches * 35.6);
         }
     }
 
@@ -244,5 +244,10 @@ public class SwerveDriveModule extends Subsystem {
     	angleMotorJam = false;
     	mStallTimeBegin = Long.MAX_VALUE;
     	SmartDashboard.putBoolean("Motor Jammed" + moduleNumber, angleMotorJam);
+    }
+
+    public void setMotionConstraints(double maxAcceleration, double maxVelocity) {
+        mDriveMotor.configMotionAcceleration(inchesToEncoderTicks(maxAcceleration * 12) / 10, 0);
+        mDriveMotor.configMotionCruiseVelocity(inchesToEncoderTicks(maxVelocity * 12) / 10, 0);
     }
 }

@@ -3,7 +3,6 @@ package org.usfirst.frc.team2910.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.Robot;
 
 public class SwerveDriveSubsystem extends HolonomicDrivetrain {
@@ -53,6 +52,7 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
             module.setTargetAngle(0);
             module.setDriveGearRatio(5.7777);
             module.setDriveWheelRadius(module.getDriveWheelRadius() * 1.05);
+            module.setMotionConstraints(getMaxAcceleration(), getMaxVelocity());
         }
     }
 
@@ -179,5 +179,15 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 
     public SwerveDriveModule[] getSwerveModules() {
         return mSwerveModules;
+    }
+
+    @Override
+    public double getMaxAcceleration() {
+        return 4.68;
+    }
+
+    @Override
+    public double getMaxVelocity() {
+        return 13;
     }
 }

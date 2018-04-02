@@ -27,4 +27,8 @@ public abstract class Drivetrain extends Subsystem {
 	public void setSpeedMultiplier(double speedMultiplier) {
 		this.speedMultiplier = speedMultiplier;
 	}
+
+	public abstract double getMaxAcceleration();
+
+	public abstract double getMaxVelocity();
 }
