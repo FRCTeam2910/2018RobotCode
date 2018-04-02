@@ -74,4 +74,12 @@ public final class Path {
         return getDirectionAtSegment(currentSegmentIndex) +
                 percentageOfSegment * segments[currentSegmentIndex].direction;
     }
+
+    public Path flip() {
+        Segment[] flippedSegments = new Segment[segments.length];
+        for (int i = 0; i < segments.length; i++)
+            flippedSegments[i] = new Segment(segments[i].length, -segments[i].direction);
+
+        return new Path(-initialDirection, flippedSegments);
+    }
 }
