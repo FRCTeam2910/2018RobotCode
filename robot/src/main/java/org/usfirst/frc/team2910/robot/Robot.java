@@ -1,8 +1,9 @@
 package org.usfirst.frc.team2910.robot;
 
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team2910.robot.commands.ResetMotorsCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.AutonomousChooser;
-import org.usfirst.frc.team2910.robot.commands.autonomous.DriveForTimeCommand;
+import org.usfirst.frc.team2910.robot.commands.autonomous.*;
+import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.VisionTargetingCubeCommand;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
@@ -111,19 +112,27 @@ public class Robot extends IterativeRobot {
         // Wait 1 second maximum for the game string to be given.
         // If no game string is recieved, go to the auto line.
         
-        Timer waitTimer = new Timer();
-        waitTimer.start();
-        while (DriverStation.getInstance().getGameSpecificMessage().isEmpty()
-                && !waitTimer.hasPeriodPassed(1)) {
-            Scheduler.getInstance().run();
-        }
+//        Timer waitTimer = new Timer();
+//        waitTimer.start();
+//        while (DriverStation.getInstance().getGameSpecificMessage().isEmpty()
+//                && !waitTimer.hasPeriodPassed(1)) {
+//            Scheduler.getInstance().run();
+//        }
+//
+//        swerveDriveSubsystem.setFieldOriented(true);
+//
+//        if (waitTimer.hasPeriodPassed(1))
+//            autoCommand = new DriveForTimeCommand(swerveDriveSubsystem, 2.5, 0.5, 0);
+//        else
+//		    autoCommand = autoChooser.getCommand(this);
 
-        swerveDriveSubsystem.setFieldOriented(true);
+        getDrivetrain().setAdjustmentAngle(getDrivetrain().getRawGyroAngle());
 
-        if (waitTimer.hasPeriodPassed(1))
-            autoCommand = new DriveForTimeCommand(swerveDriveSubsystem, 2.5, 0.5, 0);
-        else
-		    autoCommand = autoChooser.getCommand(this);
+        CommandGroup group = new CommandGroup();
+        group.addSequential(new ScoreSwitchFromStart(this, StartingPosition.CENTER, Side.RIGHT, StartingOrientation.FORWARDS));
+        group.addSequential(new ScoreSwitchFrontFromSwitchFront(this, Side.RIGHT));
+
+        autoCommand = group;
 
         autoCommand.start();
 	}

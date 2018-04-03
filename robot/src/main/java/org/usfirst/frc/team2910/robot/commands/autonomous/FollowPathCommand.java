@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.motion.Path;
 import org.usfirst.frc.team2910.robot.motion.Trajectory;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveModule;
@@ -16,7 +17,8 @@ public class FollowPathCommand extends Command {
 	private final Path                 path;
 	private final Trajectory           trajectory;
 
-	private final PIDController angleCorrectionController = new PIDController(0.02, 0, 0, new PIDSource() {
+	// TODO: Comp bot P: 0.02, I: 0, D: 0
+	private final PIDController angleCorrectionController = new PIDController(0.01, 0, 0, new PIDSource() {
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource) {
 
@@ -69,10 +71,13 @@ public class FollowPathCommand extends Command {
 
 		double pathDirection = path.getDirectionAtDistance(currentDistance);
 
+		SmartDashboard.putNumber("Current distance", currentDistance);
+        SmartDashboard.putNumber("Path direction", pathDirection);
+
 		double[] angles = drivetrain.calculateSwerveModuleAngles(
 				Math.cos(Math.toRadians(pathDirection)),
 				Math.sin(Math.toRadians(pathDirection)),
-				angleCorrection
+				0
 		);
 
 		for (int i = 0; i < angles.length; i++) {
@@ -82,6 +87,7 @@ public class FollowPathCommand extends Command {
 
 	@Override
 	protected void end() {
+	    drivetrain.holonomicDrive(0, 0, 0);
 		angleCorrectionController.disable();
 	}
 

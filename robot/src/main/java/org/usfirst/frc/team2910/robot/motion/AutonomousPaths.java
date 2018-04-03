@@ -8,10 +8,10 @@ public class AutonomousPaths {
 	 * Drive from the right starting position to the right scale scoring position.
 	 */
 	public static final Path RIGHT_START_FORWARD_TO_RIGHT_SCALE_FRONT = new Path(
-			3.9499,
+			-3.9499,
 			new Segment.Line(140),
-			new Segment.Arc(75.21, 28.7266),
-			new Segment.Line(63.85)
+			new Segment.Arc(93.95, 35.8868),
+			new Segment.Line(48.89)
 	);
 
 	/**
@@ -25,11 +25,11 @@ public class AutonomousPaths {
 	 * Drive from the right starting position to the left scale scoring position.
 	 */
 	public static final Path RIGHT_START_FORWARD_TO_LEFT_SCALE_FRONT = new Path(
-			3.9644,
-			new Segment.Line(171.84),
-			new Segment.Arc(84.62, 96.9644),
-			new Segment.Line(122.84),
-			new Segment.Arc(75.14, 123)
+			-6.89781,
+			new Segment.Line(163.52),
+			new Segment.Arc(84.56, 96.8978),
+			new Segment.Line(135.12),
+			new Segment.Arc(73.30, -120)
 	);
 
 	/**
@@ -54,13 +54,13 @@ public class AutonomousPaths {
 
 	//<editor-fold desc="Start to switch front">
 	public static final Path CENTER_START_TO_RIGHT_SWITCH = new Path(
-			19.81,
+			-19.81,
 			new Segment.Line(113.06)
 	);
 
 	public static final Path CENTER_START_TO_LEFT_SWITCH = new Path(
 			55.04,
-			new Segment.Arc(133.76, 38.32)
+			new Segment.Arc(133.76, -38.32)
 	);
 	//</editor-fold>
 
@@ -68,11 +68,11 @@ public class AutonomousPaths {
 	public static final Path RIGHT_SWITCH_FRONT_SECOND_CUBE_STEP_1 = new Path(
 			180,
 			new Segment.Line(44),
-			new Segment.Arc(90.52, 180),
+			new Segment.Arc(90.52, -180),
 			new Segment.Line(12)
 	);
 	public static final Path RIGHT_SWITCH_FRONT_SECOND_CUBE_STEP_2 = new Path(
-			90,
+			-90,
 			new Segment.Line(24.64),
 			new Segment.Arc(50.84, 90)
 	);

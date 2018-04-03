@@ -6,11 +6,11 @@ import edu.wpi.first.wpilibj.SPI;
 import org.usfirst.frc.team2910.robot.Robot;
 
 public class SwerveDriveSubsystem extends HolonomicDrivetrain {
-    public static final double WHEELBASE = 20.5;  // Swerve bot: 14.5 Comp bot: 20.5
-    public static final double TRACKWIDTH = 25.5; // Swerve bot: 13.5 Comp bot: 25.5
+    public static final double WHEELBASE = 14.5;  // Swerve bot: 14.5 Comp bot: 20.5
+    public static final double TRACKWIDTH = 13.5; // Swerve bot: 13.5 Comp bot: 25.5
 
-    public static final double WIDTH = 37;  // Swerve bot: 20 Comp bot: 37
-    public static final double LENGTH = 32; // Swerve bot: 19 Comp bot: 32
+    public static final double WIDTH = 20;  // Swerve bot: 20 Comp bot: 37
+    public static final double LENGTH = 19; // Swerve bot: 19 Comp bot: 32
 
 	/*
 	 * 0 is Front Right
@@ -28,13 +28,13 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 
         if (Robot.PRACTICE_BOT) {
             mSwerveModules = new SwerveDriveModule[] {
-                    new SwerveDriveModule(0, new TalonSRX(6), new TalonSRX(5), 338.55),
-                    new SwerveDriveModule(1, new TalonSRX(3), new TalonSRX(4), 253.13),
-                    new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 13.36),
-                    new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 15.47),
+                    new SwerveDriveModule(0, new TalonSRX(3), new TalonSRX(4), 255.5859),
+                    new SwerveDriveModule(1, new TalonSRX(6), new TalonSRX(5), 338.906),
+                    new SwerveDriveModule(2, new TalonSRX(2), new TalonSRX(1), 13.359),
+                    new SwerveDriveModule(3, new TalonSRX(7), new TalonSRX(8), 15.82),
             };
 
-            mSwerveModules[1].setDriveInverted(true);
+            mSwerveModules[0].setDriveInverted(true);
             mSwerveModules[3].setDriveInverted(true);
         } else {
             mSwerveModules = new SwerveDriveModule[] {

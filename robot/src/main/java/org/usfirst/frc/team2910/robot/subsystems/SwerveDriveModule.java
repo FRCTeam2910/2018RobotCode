@@ -115,7 +115,11 @@ public class SwerveDriveModule extends Subsystem {
     }
 
     public double getDriveDistance() {
-        return encoderTicksToInches(mDriveMotor.getSelectedSensorPosition(0));
+        int ticks = mDriveMotor.getSelectedSensorPosition(0);
+        if (driveInverted)
+            ticks = -ticks;
+
+        return encoderTicksToInches(ticks);
     }
 
     public TalonSRX getDriveMotor() {

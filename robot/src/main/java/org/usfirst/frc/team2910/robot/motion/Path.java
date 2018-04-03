@@ -20,14 +20,14 @@ public class Path extends Segment {
 	private double getDistanceAtSegment(int segment) {
 		double distance = 0;
 		for (int i = 0; i < segment; i++)
-			distance += segments[segment].getLength();
+			distance += segments[i].getLength();
 		return distance;
 	}
 
 	private double getDirectionAtSegment(int segment) {
 		double direction = initialDirection;
 		for (int i = 0; i < segment; i++)
-			direction += segments[segment].getDirection(1);
+			direction += segments[i].getDirection(1);
 		return direction;
 	}
 
