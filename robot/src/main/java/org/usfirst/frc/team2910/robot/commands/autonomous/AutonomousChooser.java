@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.*;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2SameSideSwitchCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2ScaleCommand;
-import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2SwitchCommand;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.util.Side;
 
@@ -47,6 +45,31 @@ public class AutonomousChooser {
     private boolean isChoiceGood(AutonomousStageChoice choice, String fieldConf, StartingPosition startPos) {
         Side switchSide = Side.fromChar(fieldConf.charAt(0)),
                 scaleSide = Side.fromChar(fieldConf.charAt(1));
+        if (startPos == StartingPosition.CENTER) return true;
+
+        switch (choice) {
+            case NONE:
+                return true;
+            case AUTOLINE:
+                return true;
+            case SAME_SIDE_SCALE:
+                return (startPos == StartingPosition.LEFT && scaleSide == Side.LEFT) ||
+                        (startPos == StartingPosition.RIGHT && scaleSide == Side.RIGHT);
+            case SAME_SIDE_SWITCH:
+                return (startPos == StartingPosition.LEFT && switchSide == Side.LEFT) ||
+                        (startPos == StartingPosition.RIGHT && switchSide == Side.RIGHT);
+            case OPPOSITE_SIDE_SCALE:
+                return (startPos == StartingPosition.RIGHT && scaleSide == Side.LEFT) ||
+                        (startPos == StartingPosition.LEFT && scaleSide == Side.RIGHT);
+            case OPPOSITE_SIDE_SWITCH:
+                return (startPos == StartingPosition.RIGHT && switchSide == Side.LEFT) ||
+                        (startPos == StartingPosition.LEFT && switchSide == Side.RIGHT);
+            default:
+                return false;
+        }
+    }
+
+    private boolean isChoiceGood(AutonomousStageChoice choice, StartingPosition startPos, Side switchSide, Side scaleSide) {
         if (startPos == StartingPosition.CENTER) return true;
 
         switch (choice) {
@@ -162,6 +185,86 @@ public class AutonomousChooser {
         }
 
         autoGroup.addSequential(new GrabCubeFromPlatformZoneCommand(robot, lastSide, lastSide));
+
+        return autoGroup;
+    }
+
+    public Command getCommand(Robot robot, Side switchSide, Side scaleSide) {
+        StartingPosition startPos = startPosChooser.getSelected();
+
+        robot.getElevator().setEncoderPosition(ElevatorSubsystem.STARTING_ENCODER_TICKS);
+        robot.getElevator().setElevatorPosition(robot.getElevator().getCurrentHeight());
+
+        CommandGroup autoGroup = new CommandGroup();
+        autoGroup.addSequential(new SetDrivetrainAngleCommand(robot.getDrivetrain(), robot.getDrivetrain().getRawGyroAngle()));
+
+        boolean atScale = false;
+        int stageNumber = 1;
+        for (int i = 0; i < priorityChoices.size(); i++) {
+            AutonomousStageChoice choice = priorityChoices.get(i).getSelected();
+            if (!isChoiceGood(choice, startPos, switchSide, scaleSide))
+                continue;
+
+            System.out.printf("[INFO]: Stage %d action: %s%n", stageNumber, choice);
+
+            if (stageNumber == 1) {
+                Side startSide = null;
+                if (startPos == StartingPosition.LEFT)
+                    startSide = Side.LEFT;
+                else if (startPos == StartingPosition.RIGHT)
+                    startSide = Side.RIGHT;
+
+                switch (choice) {
+                    case NONE:
+                        return autoGroup;
+                    case AUTOLINE:
+                        autoGroup.addSequential(new AutoLineCommand(robot, startPos));
+                        return autoGroup;
+                    case SAME_SIDE_SCALE:
+                    case OPPOSITE_SIDE_SCALE:
+                        autoGroup.addSequential(new ScoreScaleFrontFromStartForward(robot, startSide, scaleSide));
+                        autoGroup.addSequential(new ScaleFromScaleFront(robot, scaleSide));
+                        atScale = true;
+                        break;
+                    case SAME_SIDE_SWITCH:
+                    case OPPOSITE_SIDE_SWITCH:
+                        if (startPos == StartingPosition.CENTER)
+                            autoGroup.addSequential(new ScoreSwitchFrontFromStartCenter(robot, switchSide));
+                        else
+                            autoGroup.addSequential(new ScoreSwitchSideFromStartForward(robot, startSide, switchSide));
+                        atScale = false;
+                        break;
+                }
+            } else {
+                switch (choice) {
+                    case AUTOLINE:
+                        // Intentional fallthrough, nothing we can to as an auto already ran.
+                    case NONE:
+                        // Nothing else to do
+                        return autoGroup;
+                    case SAME_SIDE_SCALE:
+                    case OPPOSITE_SIDE_SCALE:
+                        if (atScale)
+                            autoGroup.addSequential(new ScoreScaleFrontFromScale(robot, scaleSide));
+                        else
+                            System.err.println("[WARNING]: I don't know how to score in the scale when I'm not at the scale!");
+                        atScale = true;
+                        break;
+                    case SAME_SIDE_SWITCH:
+                    case OPPOSITE_SIDE_SWITCH:
+                        if (startPos == StartingPosition.CENTER)
+                            autoGroup.addSequential(new ScoreSwitchFrontFromSwitchFront(robot, switchSide));
+                        else if (atScale)
+                            autoGroup.addSequential(new ScoreSwitchBackFromScale(robot, switchSide, scaleSide));
+                        else
+                            System.err.println("[WARNING]: I don't know how to get to the switch if I'm not at the switch front or the scale!");
+                        atScale = false;
+                        break;
+                }
+            }
+
+            stageNumber++;
+        }
 
         return autoGroup;
     }

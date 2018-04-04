@@ -9,8 +9,8 @@ import org.usfirst.frc.team2910.robot.motion.Path;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.util.Side;
 
-public class ScoreSwitchSideFromStart extends CommandGroup {
-    public ScoreSwitchSideFromStart(Robot robot, Side startSide, Side switchSide) {
+public class ScoreSwitchSideFromStartForward extends CommandGroup {
+    public ScoreSwitchSideFromStartForward(Robot robot, Side startSide, Side switchSide) {
         Path pathToSwitch;
         Path pathToSwitchSide = switchSide == Side.LEFT ? AutonomousPaths.LEFT_SWITCH_TO_LEFT_SWITCH_SIDE
                 : AutonomousPaths.RIGHT_SWITCH_TO_RIGHT_SWITCH_SIDE;

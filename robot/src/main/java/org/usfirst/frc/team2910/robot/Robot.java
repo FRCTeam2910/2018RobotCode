@@ -28,7 +28,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	public static final boolean PRACTICE_BOT = true;
 
-	private static OI mOI; 
+	public static final double FIELD_INFO_TIMEOUT = 1;
+
+	private static OI mOI;
 	private static SwerveDriveSubsystem swerveDriveSubsystem;
 	private static ElevatorSubsystem elevatorSubsystem;
 	private static GathererSubsystem gathererSubsystem;
@@ -47,7 +49,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		mOI = new OI(this);
-		
+
 		gathererSubsystem = new GathererSubsystem();
 		swerveDriveSubsystem = new SwerveDriveSubsystem();
 		elevatorSubsystem = new ElevatorSubsystem();
@@ -107,42 +109,34 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-        // Sometimes the FMS doesn't give the game string right away.
-        // Wait 1 second maximum for the game string to be given.
-        // If no game string is recieved, go to the auto line.
-        
-//        Timer waitTimer = new Timer();
-//        waitTimer.start();
-//        while (DriverStation.getInstance().getGameSpecificMessage().isEmpty()
-//                && !waitTimer.hasPeriodPassed(1)) {
-//            Scheduler.getInstance().run();
-//        }
-//
-//        swerveDriveSubsystem.setFieldOriented(true);
-//
-//        if (waitTimer.hasPeriodPassed(1))
-//            autoCommand = new DriveForTimeCommand(swerveDriveSubsystem, 2.5, 0.5, 0);
-//        else
-//		    autoCommand = autoChooser.getCommand(this);
+		// Sometimes the FMS doesn't give the game string right away.
+		// Wait a little bit for the game string to be given.
+		// If no game string is received, go to the auto line.
 
-        getDrivetrain().setAdjustmentAngle(getDrivetrain().getRawGyroAngle());
+        System.out.println("[INFO]: Waiting for field info");
+		Timer waitTimer = new Timer();
+		waitTimer.start();
+		while (DriverStation.getInstance().getGameSpecificMessage().isEmpty()
+				&& !waitTimer.hasPeriodPassed(FIELD_INFO_TIMEOUT)) {
+			Scheduler.getInstance().run();
+		}
 
-        Side scaleSide = Side.RIGHT;
-        Side switchSide = Side.LEFT;
+		swerveDriveSubsystem.setFieldOriented(true);
 
-        CommandGroup group = new CommandGroup();
-        group.addSequential(new ScoreScaleFrontFromStartForward(this, Side.LEFT, scaleSide));
-		group.addSequential(new ScaleFromScaleFront(this, scaleSide));
-//		group.addSequential(new GrabCubeFromScale(this, scaleSide));
-		group.addSequential(new ScoreSwitchBackFromScale(this, switchSide, scaleSide));
+		if (waitTimer.hasPeriodPassed(FIELD_INFO_TIMEOUT)) {
+		    System.err.printf("[ERROR]: Could not get field info in time (%.3f sec), running auto line%n", FIELD_INFO_TIMEOUT);
 
-//		group.addSequential(new ScoreSwitchSideFromStart(this, Side.LEFT, switchSide));
+			autoCommand = new DriveForTimeCommand(swerveDriveSubsystem, 2.5, 0.5, 0);
+		} else {
+			String fieldString = DriverStation.getInstance().getGameSpecificMessage();
 
-//		group.addSequential(new ScoreSwitchFromStart(this, StartingPosition.CENTER, switchSide, StartingOrientation.FORWARDS));
-//		group.addSequential(new ScoreSwitchFrontFromSwitchFront(this, switchSide));
+			System.out.printf("[INFO]: Got field info: '%s'%n", fieldString);
 
-        autoCommand = group;
+			Side switchSide = fieldString.charAt(0) == 'L' ? Side.LEFT : Side.RIGHT;
+			Side scaleSide = fieldString.charAt(1) == 'L' ? Side.LEFT : Side.RIGHT;
 
+			autoCommand = autoChooser.getCommand(this, switchSide, scaleSide);
+		}
         autoCommand.start();
 	}
 
