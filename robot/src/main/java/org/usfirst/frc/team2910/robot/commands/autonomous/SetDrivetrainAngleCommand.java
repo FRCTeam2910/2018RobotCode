@@ -2,8 +2,7 @@ package org.usfirst.frc.team2910.robot.commands.autonomous;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveModule;
+import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
 public class SetDrivetrainAngleCommand extends Command {
@@ -38,9 +37,15 @@ public class SetDrivetrainAngleCommand extends Command {
                 return drivetrain.getGyroAngle();
             }
         }, output -> {
+            if (!Robot.PRACTICE_BOT)
+                output = -output;
+
             for (int i = 0; i < 4; i++)
-                drivetrain.getSwerveModule(i).setTargetSpeed(-output);
+                drivetrain.getSwerveModule(i).setTargetSpeed(output);
         });
+        if (Robot.PRACTICE_BOT)
+            angleController.setP(0.025);
+
         angleController.setInputRange(0, 360);
         angleController.setOutputRange(-0.5, 0.5);
         angleController.setContinuous(true);

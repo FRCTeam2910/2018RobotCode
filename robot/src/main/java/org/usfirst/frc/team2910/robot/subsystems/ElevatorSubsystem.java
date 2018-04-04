@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.RobotMap;
 import org.usfirst.frc.team2910.robot.commands.ManualElevatorControlCommand;
 
@@ -159,6 +160,9 @@ public class ElevatorSubsystem extends Subsystem {
     }
 
     public double getCurrentHeight() {
+        if (Robot.PRACTICE_BOT)
+            return targetHeight;
+
         double encPos = getEncoderValue();
 
         return encPos * INCH_PER_ENCODER_TICK;

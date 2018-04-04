@@ -77,7 +77,7 @@ public class FollowPathCommand extends Command {
 		double[] angles = drivetrain.calculateSwerveModuleAngles(
 				Math.cos(Math.toRadians(pathDirection)),
 				Math.sin(Math.toRadians(pathDirection)),
-				0
+				angleCorrection
 		);
 
 		for (int i = 0; i < angles.length; i++) {

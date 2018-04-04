@@ -2,6 +2,7 @@ package org.usfirst.frc.team2910.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 
 public class SetElevatorPositionCommand extends Command {

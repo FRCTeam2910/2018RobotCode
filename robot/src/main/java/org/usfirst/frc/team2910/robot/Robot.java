@@ -72,7 +72,6 @@ public class Robot extends IterativeRobot {
 
 		SmartDashboard.putNumber("Elevator encoder", elevatorSubsystem.getEncoderValue());
 		SmartDashboard.putNumber("Elevator height", elevatorSubsystem.getCurrentHeight());
-		SmartDashboard.putNumber("Elevator target height", elevatorSubsystem.getTargetHeight());
 		SmartDashboard.putNumber("Elevator speed", elevatorSubsystem.getMotors()[0].getSelectedSensorVelocity(0));
 
 		SmartDashboard.putNumber("Drivetrain Angle", swerveDriveSubsystem.getGyroAngle());
@@ -128,9 +127,19 @@ public class Robot extends IterativeRobot {
 
         getDrivetrain().setAdjustmentAngle(getDrivetrain().getRawGyroAngle());
 
+        Side scaleSide = Side.RIGHT;
+        Side switchSide = Side.LEFT;
+
         CommandGroup group = new CommandGroup();
-        group.addSequential(new ScoreSwitchFromStart(this, StartingPosition.CENTER, Side.RIGHT, StartingOrientation.FORWARDS));
-        group.addSequential(new ScoreSwitchFrontFromSwitchFront(this, Side.RIGHT));
+        group.addSequential(new ScoreScaleFrontFromStartForward(this, Side.LEFT, scaleSide));
+		group.addSequential(new ScaleFromScaleFront(this, scaleSide));
+//		group.addSequential(new GrabCubeFromScale(this, scaleSide));
+		group.addSequential(new ScoreSwitchBackFromScale(this, switchSide, scaleSide));
+
+//		group.addSequential(new ScoreSwitchSideFromStart(this, Side.LEFT, switchSide));
+
+//		group.addSequential(new ScoreSwitchFromStart(this, StartingPosition.CENTER, switchSide, StartingOrientation.FORWARDS));
+//		group.addSequential(new ScoreSwitchFrontFromSwitchFront(this, switchSide));
 
         autoCommand = group;
 
