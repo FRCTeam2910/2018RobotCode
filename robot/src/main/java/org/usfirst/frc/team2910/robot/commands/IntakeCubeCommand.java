@@ -42,6 +42,7 @@ public class IntakeCubeCommand extends Command {
 
     @Override
     protected void end() {
+        System.out.println("[INFO]: Done intaking cube");
         timer.stop();
         timer.reset();
         gatherer.activateGatherer(0, 0);

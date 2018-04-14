@@ -26,9 +26,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	public static final boolean PRACTICE_BOT = true;
+	public static final boolean PRACTICE_BOT = false;
 
-	public static final double FIELD_INFO_TIMEOUT = 1;
+	public static final double FIELD_INFO_TIMEOUT = 5;
 
 	private static OI mOI;
 	private static SwerveDriveSubsystem swerveDriveSubsystem;
@@ -109,6 +109,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		if (autoCommand != null)
+			autoCommand.cancel();
+//		gathererSubsystem.setRightArm(GathererSubsystem.Position.IN);
+//		gathererSubsystem.setLeftArm(GathererSubsystem.Position.IN);
+
 		// Sometimes the FMS doesn't give the game string right away.
 		// Wait a little bit for the game string to be given.
 		// If no game string is received, go to the auto line.

@@ -3,12 +3,18 @@ package org.usfirst.frc.team2910.robot.commands.autonomous;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2910.robot.Robot;
+import org.usfirst.frc.team2910.robot.commands.AdjustFieldOrientedAngleCommand;
+import org.usfirst.frc.team2910.robot.commands.SetElevatorPositionCommand;
+import org.usfirst.frc.team2910.robot.commands.SetFieldOrientedAngleCommand;
+import org.usfirst.frc.team2910.robot.commands.SetGathererArmsStateCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.*;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.Stage2SameSideSwitchCommand;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
+import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
 import org.usfirst.frc.team2910.robot.util.Side;
 
 import java.util.ArrayList;
@@ -196,7 +202,20 @@ public class AutonomousChooser {
         robot.getElevator().setElevatorPosition(robot.getElevator().getCurrentHeight());
 
         CommandGroup autoGroup = new CommandGroup();
-        autoGroup.addSequential(new SetDrivetrainAngleCommand(robot.getDrivetrain(), robot.getDrivetrain().getRawGyroAngle()));
+        autoGroup.addSequential(new SetFieldOrientedAngleCommand(robot.getDrivetrain(), robot.getDrivetrain().getRawGyroAngle()));
+
+//        {
+//            CommandGroup intakeArmGroup = new CommandGroup();
+//            intakeArmGroup.addSequential(new WaitCommand(5));
+//            intakeArmGroup.addSequential(new SetGathererArmsStateCommand(robot.getGatherer(), GathererSubsystem.Position.OUT));
+//
+//            autoGroup.addParallel(intakeArmGroup);
+//        }
+
+        System.out.printf("[INFO] Starting in position: %s%n", startPos);
+        // Print out the selected choices because logging
+        for (int i = 0; i < CHOICE_COUNT; i++)
+            System.out.printf("[INFO]: Selected choice %d: %s%n", i, priorityChoices.get(i).getSelected());
 
         boolean atScale = false;
         int stageNumber = 1;
@@ -218,7 +237,7 @@ public class AutonomousChooser {
                     case NONE:
                         return autoGroup;
                     case AUTOLINE:
-                        autoGroup.addSequential(new AutoLineCommand(robot, startPos));
+                        autoGroup.addSequential(new DriveForDistanceCommand(robot.getDrivetrain(), 0, 120));
                         return autoGroup;
                     case SAME_SIDE_SCALE:
                     case OPPOSITE_SIDE_SCALE:
@@ -244,9 +263,12 @@ public class AutonomousChooser {
                         return autoGroup;
                     case SAME_SIDE_SCALE:
                     case OPPOSITE_SIDE_SCALE:
-                        if (atScale)
+                        if (atScale) {
+                            autoGroup.addSequential(new GrabCubeFromScale(robot, scaleSide));
                             autoGroup.addSequential(new ScoreScaleFrontFromScale(robot, scaleSide));
-                        else
+                            autoGroup.addSequential(new ScaleFromScaleFront(robot, scaleSide));
+                            autoGroup.addSequential(new SetElevatorPositionCommand(robot.getElevator(), 0));
+                        } else
                             System.err.println("[WARNING]: I don't know how to score in the scale when I'm not at the scale!");
                         atScale = true;
                         break;

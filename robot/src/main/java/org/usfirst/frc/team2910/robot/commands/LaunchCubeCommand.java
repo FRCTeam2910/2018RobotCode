@@ -25,6 +25,7 @@ public class LaunchCubeCommand extends Command {
 
     @Override
     protected void initialize() {
+        System.out.println("[INFO]: Launching cube");
         timer.reset();
         timer.start();
     }

@@ -10,7 +10,7 @@ import org.usfirst.frc.team2910.robot.motion.Trajectory;
 import org.usfirst.frc.team2910.robot.util.Side;
 
 public class GrabCubeFromScale extends CommandGroup {
-    private static final double INTAKE_TIME = 0.5;
+    private static final double INTAKE_TIME = 2.5;
 
     public GrabCubeFromScale(Robot robot, Side scaleSide) {
         Path pathToCube;
@@ -28,7 +28,7 @@ public class GrabCubeFromScale extends CommandGroup {
 
         CommandGroup intakeGroup = new CommandGroup();
         intakeGroup.addSequential(new WaitCommand(Math.max(0, trajectoryToCube.getDuration() - INTAKE_TIME)));
-        intakeGroup.addSequential(new IntakeCubeCommand(robot.getGatherer(), 1));
+        intakeGroup.addSequential(new IntakeCubeCommand(robot.getGatherer(), INTAKE_TIME));
 
         addParallel(intakeGroup);
         addSequential(new FollowPathCommand(robot.getDrivetrain(), pathToCube));

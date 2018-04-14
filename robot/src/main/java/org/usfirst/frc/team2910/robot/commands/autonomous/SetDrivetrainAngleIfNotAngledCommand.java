@@ -1,12 +1,15 @@
 package org.usfirst.frc.team2910.robot.commands.autonomous;
 
-import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
 
-public class SetDrivetrainAngleCommand extends Command {
+public class SetDrivetrainAngleIfNotAngledCommand extends Command {
+    private static final double NOT_ANGLED_TOLERANCE = 20;
     private static final double ANGLE_CHECK_TIME = 0.1;
     private static final double TARGET_ANGLE_BUFFER = 5.0;
 
@@ -15,8 +18,9 @@ public class SetDrivetrainAngleCommand extends Command {
     private final PIDController angleController;
     private final Timer finishTimer = new Timer();
     private boolean isTimerStarted = false;
+    private boolean withinTolerance = false;
 
-    public SetDrivetrainAngleCommand(SwerveDriveSubsystem drivetrain, double targetAngle) {
+    public SetDrivetrainAngleIfNotAngledCommand(SwerveDriveSubsystem drivetrain, double targetAngle) {
         this.drivetrain = drivetrain;
 
         if (targetAngle < 0)
@@ -58,6 +62,9 @@ public class SetDrivetrainAngleCommand extends Command {
 
     @Override
     protected void initialize() {
+        withinTolerance = Math.abs(drivetrain.getGyroAngle() - targetAngle) < NOT_ANGLED_TOLERANCE;
+        if (withinTolerance) return;
+
         finishTimer.stop();
         finishTimer.reset();
         isTimerStarted = false;
@@ -85,6 +92,8 @@ public class SetDrivetrainAngleCommand extends Command {
 
     @Override
     protected boolean isFinished() {
+        if (withinTolerance) return true;
+
         double currentAngle = drivetrain.getGyroAngle();
         double currentError = currentAngle - targetAngle;
 

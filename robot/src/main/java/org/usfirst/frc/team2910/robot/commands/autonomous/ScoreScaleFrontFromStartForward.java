@@ -16,7 +16,7 @@ public class ScoreScaleFrontFromStartForward extends CommandGroup {
 	/**
 	 * Time from the end of the path that the elevator's position is set
 	 */
-	private static final double ELEVATOR_TIME = 3;
+	private static final double ELEVATOR_TIME = 2;
 
 	/**
 	 * Time from the end of the path that the cube is launched
@@ -24,17 +24,27 @@ public class ScoreScaleFrontFromStartForward extends CommandGroup {
 	private static final double LAUNCH_TIME = 0.5;
 
 	public ScoreScaleFrontFromStartForward(Robot robot, Side startSide, Side scaleSide) {
+		double launchSpeed;
+		double elevatorHeight;
 		Path pathToScale;
 		if (startSide == Side.LEFT) {
 			if (scaleSide == Side.LEFT) {
+				launchSpeed = 0.7;
+				elevatorHeight = ElevatorSubsystem.SCORE_SCALE_POSITION;
 				pathToScale = AutonomousPaths.LEFT_START_FORWARD_TO_LEFT_SCALE_FRONT;
 			} else {
+				launchSpeed = 0.8;
+				elevatorHeight = ElevatorSubsystem.SCORE_SCALE_POSITION + 10;
 				pathToScale = AutonomousPaths.LEFT_START_FORWARD_TO_RIGHT_SCALE_FRONT;
 			}
 		} else {
 			if (scaleSide == Side.LEFT) {
+				launchSpeed = 0.8;
+				elevatorHeight = ElevatorSubsystem.SCORE_SCALE_POSITION + 10;
 				pathToScale = AutonomousPaths.RIGHT_START_FORWARD_TO_LEFT_SCALE_FRONT;
 			} else {
+				launchSpeed = 0.7;
+				elevatorHeight = ElevatorSubsystem.SCORE_SCALE_POSITION;
 				pathToScale = AutonomousPaths.RIGHT_START_FORWARD_TO_RIGHT_SCALE_FRONT;
 			}
 		}
@@ -44,12 +54,13 @@ public class ScoreScaleFrontFromStartForward extends CommandGroup {
 		// Wait until x seconds are left in the path to set the elevator position
 		CommandGroup elevatorPositionGroup = new CommandGroup();
 		elevatorPositionGroup.addSequential(new WaitCommand(Math.max(0, trajectoryToScale.getDuration() - ELEVATOR_TIME)));
-		elevatorPositionGroup.addSequential(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.TOP_POSITION));
+		elevatorPositionGroup.addSequential(new SetElevatorPositionCommand(robot.getElevator(), elevatorHeight));
 
 		// Wait until x seconds are left in the path to launch the cube.
 		CommandGroup launchCubeGroup = new CommandGroup();
 		launchCubeGroup.addSequential(new WaitCommand(Math.max(0, trajectoryToScale.getDuration() - LAUNCH_TIME)));
-		launchCubeGroup.addSequential(new LaunchCubeCommand(robot.getGatherer(), 0.5));
+		launchCubeGroup.addSequential(new WaitForElevatorPositionCommand(robot.getElevator(), elevatorHeight));
+		launchCubeGroup.addSequential(new LaunchCubeCommand(robot.getGatherer(), 0.5, launchSpeed));
 
 		addParallel(elevatorPositionGroup);
 		addParallel(launchCubeGroup);

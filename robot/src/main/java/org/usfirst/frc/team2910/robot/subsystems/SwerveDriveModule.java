@@ -221,8 +221,6 @@ public class SwerveDriveModule extends Subsystem {
 //        distance *= driveGearRatio; // to encoder rotations
 //        distance *= 80; // to encoder ticks
 
-        System.out.println(distance);
-
         distance = inchesToEncoderTicks(distance);
 
         SmartDashboard.putNumber("Module Ticks " + moduleNumber, distance);

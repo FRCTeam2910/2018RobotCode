@@ -28,6 +28,7 @@ public class SetElevatorPositionCommand extends Command {
 
     @Override
     protected void initialize() {
+        System.out.printf("[INFO]: Setting elevator position to %.3f%n", height);
         waitTimer.reset();
         waitTimer.start();
     }
@@ -47,6 +48,7 @@ public class SetElevatorPositionCommand extends Command {
 
     @Override
     protected void end() {
+        System.out.println("Done position");
         waitTimer.stop();
         waitTimer.reset();
     }

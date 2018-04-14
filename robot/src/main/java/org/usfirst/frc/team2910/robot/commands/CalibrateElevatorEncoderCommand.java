@@ -21,6 +21,12 @@ public class CalibrateElevatorEncoderCommand extends Command {
 
     @Override
     protected void initialize() {
+        System.out.println("Start calibrate");
+        elevator.setElevatorSpeed(ELEVATOR_SPEED);
+    }
+
+    @Override
+    protected void execute() {
         elevator.setElevatorSpeed(ELEVATOR_SPEED);
     }
 
@@ -29,6 +35,7 @@ public class CalibrateElevatorEncoderCommand extends Command {
         elevator.setElevatorSpeed(0.0);
         elevator.setElevatorPosition(0);
         elevator.zeroElevatorEncoder();
+        System.out.println("Done calibrate");
     }
 
     @Override
