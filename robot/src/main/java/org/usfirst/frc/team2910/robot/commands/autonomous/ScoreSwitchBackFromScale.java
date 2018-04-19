@@ -14,43 +14,29 @@ public class ScoreSwitchBackFromScale extends CommandGroup {
 	private static final double INTAKE_TIME = 2.5;
 
 	public ScoreSwitchBackFromScale(Robot robot, Side switchSide, Side scaleSide) {
-		{
-			CommandGroup zeroGroup = new CommandGroup();
-			zeroGroup.addSequential(new SetElevatorPositionCommand(robot.getElevator(),
-					ElevatorSubsystem.GROUND_POSITION + 5));
-			zeroGroup.addSequential(new CalibrateElevatorEncoderCommand(robot.getElevator()));
-			addParallel(zeroGroup);
-		}
-		// Face towards driverstation
-		addSequential(new SetDrivetrainAngleCommand(robot.getDrivetrain(), 180));
+        if (switchSide == Side.LEFT && scaleSide == Side.RIGHT) {
+            addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.RIGHT_SCALE_TO_LEFT_SCALE));
+        } else if (switchSide == Side.RIGHT && scaleSide == Side.LEFT){
+            addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.LEFT_SCALE_TO_RIGHT_SCALE));
+        }
 
-		Path pathToCube;
-		if (scaleSide == Side.LEFT) {
-			if (switchSide == Side.LEFT) {
-				pathToCube = AutonomousPaths.LEFT_SCALE_TO_LEFT_SWITCH_BACK;
-			} else {
-				pathToCube = AutonomousPaths.LEFT_SCALE_TO_RIGHT_SWITCH_BACK;
-			}
-		} else {
-			if (switchSide == Side.LEFT) {
-				pathToCube = AutonomousPaths.RIGHT_SCALE_TO_LEFT_SWITCH_BACK;
-			} else {
-				pathToCube = AutonomousPaths.RIGHT_SCALE_TO_RIGHT_SWITCH_BACK;
-			}
-		}
-		Trajectory trajectoryToCube = new Trajectory(pathToCube, robot.getDrivetrain().getMaxAcceleration(), robot.getDrivetrain().getMaxVelocity());
+	    Path pathToCube;
+        if (scaleSide == Side.LEFT) {
+            pathToCube = AutonomousPaths.LEFT_SCALE_TO_LEFT_CUBE;
+        } else {
+            pathToCube = AutonomousPaths.RIGHT_SCALE_TO_RIGHT_CUBE;
+        }
 
-		CommandGroup intakeGroup = new CommandGroup();
-		intakeGroup.addSequential(new WaitCommand(Math.max(0, trajectoryToCube.getDuration() - INTAKE_TIME)));
-		intakeGroup.addSequential(new IntakeCubeCommand(robot.getGatherer(), INTAKE_TIME));
+        Trajectory trajectoryToCube = new Trajectory(pathToCube, robot.getDrivetrain().getMaxAcceleration(), robot.getDrivetrain().getMaxVelocity());
 
-		CommandGroup launchGroup = new CommandGroup();
-		launchGroup.addSequential(new WaitForElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
-		launchGroup.addSequential(new LaunchCubeCommand(robot.getGatherer(), 0.75));
+        CommandGroup intakeGroup = new CommandGroup();
+        intakeGroup.addSequential(new WaitCommand(Math.max(0, trajectoryToCube.getDuration() - INTAKE_TIME)));
+        intakeGroup.addSequential(new IntakeCubeCommand(robot.getGatherer(), INTAKE_TIME));
 
-		addParallel(intakeGroup);
-		addSequential(new FollowPathCommand(robot.getDrivetrain(), pathToCube));
-		addSequential(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
-		addSequential(launchGroup);
+        addSequential(new VisionLineUpWithCubeCommand(robot));
+        addParallel(intakeGroup);
+        addSequential(new FollowPathCommand(robot.getDrivetrain(), pathToCube));
+        addSequential(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
+        addSequential(new LaunchCubeCommand(robot.getGatherer(), 1, 0.8));
 	}
 }

@@ -30,6 +30,7 @@ public class GrabCubeFromScale extends CommandGroup {
         intakeGroup.addSequential(new WaitCommand(Math.max(0, trajectoryToCube.getDuration() - INTAKE_TIME)));
         intakeGroup.addSequential(new IntakeCubeCommand(robot.getGatherer(), INTAKE_TIME));
 
+        addSequential(new VisionLineUpWithCubeCommand(robot));
         addParallel(intakeGroup);
         addSequential(new FollowPathCommand(robot.getDrivetrain(), pathToCube));
         addSequential(new FollowPathCommand(robot.getDrivetrain(), pathToScale));

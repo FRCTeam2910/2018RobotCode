@@ -5,6 +5,7 @@ import org.usfirst.frc.team2910.robot.commands.ResetMotorsCommand;
 import org.usfirst.frc.team2910.robot.commands.autonomous.*;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage1.StartingPosition;
 import org.usfirst.frc.team2910.robot.commands.autonomous.stage2.VisionTargetingCubeCommand;
+import org.usfirst.frc.team2910.robot.motion.AutonomousPaths;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.GathererSubsystem;
 import org.usfirst.frc.team2910.robot.subsystems.SwerveDriveSubsystem;
@@ -38,6 +39,8 @@ public class Robot extends IterativeRobot {
 	private final AutonomousChooser autoChooser = new AutonomousChooser();
 	private Command autoCommand;
 
+	private Timer autoTimer;
+
 	public static OI getOI() {
 		return mOI;
 	}
@@ -55,8 +58,6 @@ public class Robot extends IterativeRobot {
 		elevatorSubsystem = new ElevatorSubsystem();
 
 		mOI.registerControls();
-		NetworkTableInstance instance = NetworkTableInstance.getDefault();
-		instance.getTable("limelight").getEntry("ledMode").setNumber(1.0);
 
 		SmartDashboard.putData("Reset Motors", new ResetMotorsCommand(swerveDriveSubsystem));
 }
@@ -109,6 +110,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		autoTimer = new Timer();
+
 		if (autoCommand != null)
 			autoCommand.cancel();
 //		gathererSubsystem.setRightArm(GathererSubsystem.Position.IN);
@@ -142,7 +145,12 @@ public class Robot extends IterativeRobot {
 
 			autoCommand = autoChooser.getCommand(this, switchSide, scaleSide);
 		}
-        autoCommand.start();
+
+		autoTimer.start();
+
+		autoCommand = new FollowPathCommand(getDrivetrain(), AutonomousPaths.LEFT_START_FORWARD_TO_LEFT_SCALE_FRONT);
+
+		autoCommand.start();
 	}
 
 	/**
@@ -185,5 +193,9 @@ public class Robot extends IterativeRobot {
 
 	public GathererSubsystem getGatherer() {
 		return gathererSubsystem;
+	}
+
+	public Timer getAutoTimer() {
+		return autoTimer;
 	}
 }

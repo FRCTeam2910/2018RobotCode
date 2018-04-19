@@ -39,9 +39,13 @@ public class FollowPathCommand extends Command {
 	private double angleCorrection;
 
 	public FollowPathCommand(SwerveDriveSubsystem drivetrain, Path path) {
+		this(drivetrain, path, drivetrain.getMaxAcceleration(), drivetrain.getMaxVelocity());
+	}
+
+	public FollowPathCommand(SwerveDriveSubsystem drivetrain, Path path, double maxAcceleration, double maxVelocity) {
 		this.drivetrain = drivetrain;
 		this.path = path;
-		this.trajectory = new Trajectory(path, drivetrain.getMaxAcceleration(), drivetrain.getMaxVelocity());
+		this.trajectory = new Trajectory(path, maxAcceleration, maxVelocity);
 
 		angleCorrectionController.setInputRange(0, 360);
 		angleCorrectionController.setOutputRange(-0.5, 0.5);
@@ -58,6 +62,8 @@ public class FollowPathCommand extends Command {
 		System.out.println("Start following");
 		System.out.printf("[INFO]: Driving path with length %.3f%n", path.getLength());
 		for (SwerveDriveModule module : drivetrain.getSwerveModules()) {
+			module.setMotionConstraints(trajectory.getMaxAcceleration(),
+					trajectory.getMaxVelocity());
 			module.zeroDistance();
 			module.setTargetDistance(path.getLength());
 		}

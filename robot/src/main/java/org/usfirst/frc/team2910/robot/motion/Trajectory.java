@@ -28,4 +28,12 @@ public class Trajectory {
 			return Math.sqrt(path.getLength() / maxAcceleration);
 		}
 	}
+
+	public double getMaxAcceleration() {
+		return maxAcceleration / 12;
+	}
+
+	public double getMaxVelocity() {
+		return maxVelocity / 12;
+	}
 }

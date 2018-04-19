@@ -26,10 +26,10 @@ public class AutonomousPaths {
      * Drive from the right starting position to the left scale scoring position.
      */
     public static final Path RIGHT_START_FORWARD_TO_LEFT_SCALE_FRONT = new Path(
-            -3.95,
-            new Segment.Line(172.32),
-            new Segment.Arc(84.61, 96.95),
-            new Segment.Line(131.85),
+            -5.2938,
+            new Segment.Line(159.81),
+            new Segment.Arc(102.93, 98.2938),
+            new Segment.Line(118.31),
             new Segment.Arc(75.14, -123)
     );
 
@@ -40,46 +40,73 @@ public class AutonomousPaths {
     //</editor-fold>
 
     //<editor-fold desc="Start to same scale side">
-    public static final Path RIGHT_START_TO_RIGHT_SCALE_SIDE = new Path(0); // TODO: Get path
+    public static final Path RIGHT_START_TO_RIGHT_SCALE_SIDE_STEP_1 = new Path(2.5,
+            new Segment.Line(308.48));
+    public static final Path RIGHT_START_TO_RIGHT_SCALE_SIDE_STEP_2 = new Path(90,
+            new Segment.Line(23.19));
+    public static final Path RIGHT_START_TO_RIGHT_SCALE_SIDE_STEP_3 = new Path(-90,
+            new Segment.Line(49.95));
 
-    public static final Path LEFT_START_TO_LEFT_SCALE_SIDE = RIGHT_START_TO_RIGHT_SCALE_SIDE.flip();
+    public static final Path LEFT_START_TO_LEFT_SCALE_SIDE_STEP_1 = RIGHT_START_TO_RIGHT_SCALE_SIDE_STEP_1.flip();
+    public static final Path LEFT_START_TO_LEFT_SCALE_SIDE_STEP_2 = RIGHT_START_TO_RIGHT_SCALE_SIDE_STEP_2.flip();
+    public static final Path LEFT_START_TO_LEFT_SCALE_SIDE_STEP_3 = RIGHT_START_TO_RIGHT_SCALE_SIDE_STEP_3.flip();
     //</editor-fold>
 
     //<editor-fold desc="Start to opposite scale side">
-    public static final Path RIGHT_START_TO_LEFT_SCALE_SIDE_STEP_1 = new Path(0); // TODO: Get path
-    public static final Path RIGHT_START_TO_LEFT_SCALE_SIDE_STEP_2 = new Path(0); // TODO: Get path
+    public static final Path RIGHT_START_TO_LEFT_SCALE_SIDE_STEP_1 = new Path(0,
+            new Segment.Line(11));
+    public static final Path RIGHT_START_TO_LEFT_SCALE_SIDE_STEP_2 = new Path(91,
+            new Segment.Line(167.83),
+            new Segment.Arc(111.26, -85),
+            new Segment.Line(234.25));
+    public static final Path RIGHT_START_TO_LEFT_SCALE_SIDE_STEP_3 = new Path(-90,
+            new Segment.Line(42.95));
+    public static final Path RIGHT_START_TO_LEFT_SCALE_SIDE_STEP_4 = new Path(90,
+            new Segment.Line(50.95));
 
     public static final Path LEFT_START_TO_RIGHT_SCALE_SIDE_STEP_1 = RIGHT_START_TO_LEFT_SCALE_SIDE_STEP_1.flip();
     public static final Path LEFT_START_TO_RIGHT_SCALE_SIDE_STEP_2 = RIGHT_START_TO_LEFT_SCALE_SIDE_STEP_2.flip();
+    public static final Path LEFT_START_TO_RIGHT_SCALE_SIDE_STEP_3 = RIGHT_START_TO_LEFT_SCALE_SIDE_STEP_3.flip();
+    public static final Path LEFT_START_TO_RIGHT_SCALE_SIDE_STEP_4 = RIGHT_START_TO_LEFT_SCALE_SIDE_STEP_4.flip();
     //</editor-fold>
 
     //<editor-fold desc="Start to switch front">
     public static final Path CENTER_START_TO_RIGHT_SWITCH = new Path(
-            -19.81,
-            new Segment.Line(113.06)
+            -43.36,
+            new Segment.Arc(106.23, 43.36),
+            new Segment.Line(18)
     );
 
     public static final Path CENTER_START_TO_LEFT_SWITCH = new Path(
-            54.09,
-            new Segment.Arc(140.73, -40.32)
+            74.94,
+            new Segment.Arc(135.96, -74.94),
+            new Segment.Line(14)
     );
     //</editor-fold>
 
     //<editor-fold desc="Switch front second cube">
     public static final Path RIGHT_SWITCH_FRONT_SECOND_CUBE_STEP_1 = new Path(
             180,
-            new Segment.Line(34),
+            new Segment.Line(41),
             new Segment.Arc(90.52, -180),
-            new Segment.Line(30)
+            new Segment.Line(35)
     );
     public static final Path RIGHT_SWITCH_FRONT_SECOND_CUBE_STEP_2 = new Path(
-            -90,
-            new Segment.Line(25.18),
-            new Segment.Arc(57.87, 100.48)
+            -107.35,
+            new Segment.Line(26.37),
+            new Segment.Arc(46.84, 107.35),
+            new Segment.Line(20)
+    );
+    public static final Path RIGHT_SWITCH_FRONT_SECOND_CUBE_STEP_3 = new Path(
+            -100,
+            new Segment.Line(33.33),
+            new Segment.Arc(47.12, 90),
+            new Segment.Line(43.11)
     );
 
     public static final Path LEFT_SWITCH_FRONT_SECOND_CUBE_STEP_1 = RIGHT_SWITCH_FRONT_SECOND_CUBE_STEP_1.flip();
     public static final Path LEFT_SWITCH_FRONT_SECOND_CUBE_STEP_2 = RIGHT_SWITCH_FRONT_SECOND_CUBE_STEP_2.flip();
+    public static final Path LEFT_SWITCH_FRONT_SECOND_CUBE_STEP_3 = RIGHT_SWITCH_FRONT_SECOND_CUBE_STEP_3.flip();
     //</editor-fold>
 
     //<editor-fold desc="Scale front to scale">
@@ -90,18 +117,23 @@ public class AutonomousPaths {
     //</editor-fold>
 
     //<editor-fold desc="Grab 2nd cube from scale">
-    public static final Path RIGHT_SCALE_TO_RIGHT_CUBE = new Path(122.12,
-            new Segment.Arc(28.43, 57.88),
-            new Segment.Line(19));
-    public static final Path RIGHT_SCALE_TO_LEFT_CUBE = new Path(0); // TODO: Get path
+    public static final Path RIGHT_SCALE_TO_RIGHT_CUBE = new Path(180,
+            new Segment.Line(42));
+    public static final Path RIGHT_SCALE_TO_LEFT_SCALE = new Path(132.37,
+            new Segment.Arc(22.19, -42.37),
+            new Segment.Line(126.46)); // TODO: Get path
 
-    public static final Path LEFT_SCALE_TO_RIGHT_CUBE = RIGHT_SCALE_TO_LEFT_CUBE.flip();
+    public static final Path LEFT_SCALE_TO_RIGHT_SCALE = RIGHT_SCALE_TO_LEFT_SCALE.flip();
     public static final Path LEFT_SCALE_TO_LEFT_CUBE = RIGHT_SCALE_TO_RIGHT_CUBE.flip();
     //</editor-fold>
 
     //<editor-fold desc="2nd cube to scale">
-    public static final Path RIGHT_CUBE_TO_RIGHT_SCALE = new Path(-16.74,
-            new Segment.Line(35.34));
+    public static final Path RIGHT_CUBE_TO_RIGHT_SCALE = new Path(-33.69,
+            new Segment.Line(43.27));
+    public static final Path RIGHT_SCALE_SECOND_CUBE_STEP_3 = new Path(
+            9.48,
+            new Segment.Line(35.32)
+    );
 
     public static final Path LEFT_CUBE_TO_LEFT_SCALE = RIGHT_CUBE_TO_RIGHT_SCALE.flip();
     //</editor-fold>

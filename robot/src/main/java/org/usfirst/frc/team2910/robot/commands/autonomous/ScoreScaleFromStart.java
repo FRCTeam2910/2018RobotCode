@@ -20,7 +20,7 @@ public class ScoreScaleFromStart extends CommandGroup {
 				if (orientation == StartingOrientation.FORWARDS) {
 					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.LEFT_START_FORWARD_TO_LEFT_SCALE_FRONT));
 				} else {
-					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.LEFT_START_TO_LEFT_SCALE_SIDE));
+					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.LEFT_START_TO_LEFT_SCALE_SIDE_STEP_1));
 				}
 			} else {
 				// Opposite side
@@ -52,7 +52,7 @@ public class ScoreScaleFromStart extends CommandGroup {
 				if (orientation == StartingOrientation.FORWARDS) {
 					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.RIGHT_START_FORWARD_TO_RIGHT_SCALE_FRONT));
 				} else {
-					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.RIGHT_START_TO_RIGHT_SCALE_SIDE));
+					addSequential(new FollowPathCommand(robot.getDrivetrain(), AutonomousPaths.RIGHT_START_TO_RIGHT_SCALE_SIDE_STEP_1));
 				}
 			}
 		}

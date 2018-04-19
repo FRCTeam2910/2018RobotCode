@@ -25,6 +25,8 @@ public class AutonomousChooser {
     private final SendableChooser<StartingPosition> startPosChooser = new SendableChooser<>();
     private List<SendableChooser<AutonomousStageChoice>> priorityChoices = new ArrayList<>();
 
+    private final String OPPOSITE_SPECIAL_WAIT_TIME_NAME = "Opposite Special Wait Time";
+
     public AutonomousChooser() {
         startPosChooser.addDefault("Left", StartingPosition.LEFT);
         startPosChooser.addObject("Center", StartingPosition.CENTER);
@@ -38,14 +40,19 @@ public class AutonomousChooser {
             chooser.addDefault(String.format("None (%d)", i), AutonomousStageChoice.NONE);
             chooser.addObject(String.format("Auto line (%d)", i), AutonomousStageChoice.AUTOLINE);
             chooser.addObject(String.format("Same Side Scale (%d)", i), AutonomousStageChoice.SAME_SIDE_SCALE);
+            chooser.addObject(String.format("Same Side Scale Special (%d)", i), AutonomousStageChoice.SAME_SIDE_SCALE_SPECIAL);
             chooser.addObject(String.format("Same Side Switch (%d)", i), AutonomousStageChoice.SAME_SIDE_SWITCH);
             chooser.addObject(String.format("Opposite Side Scale (%d)", i), AutonomousStageChoice.OPPOSITE_SIDE_SCALE);
+            chooser.addObject(String.format("Opposite Side Scale Special (%d)", i), AutonomousStageChoice.OPPOSITE_SIDE_SCALE_SPECIAL);
             chooser.addObject(String.format("Opposite Side Switch (%d)", i), AutonomousStageChoice.OPPOSITE_SIDE_SWITCH);
 
             priorityChoices.add(chooser);
 
             SmartDashboard.putData("Auto Preference " + i, chooser);
+
         }
+
+        SmartDashboard.putNumber(OPPOSITE_SPECIAL_WAIT_TIME_NAME, 0);
     }
 
     private boolean isChoiceGood(AutonomousStageChoice choice, String fieldConf, StartingPosition startPos) {
@@ -84,12 +91,14 @@ public class AutonomousChooser {
             case AUTOLINE:
                 return true;
             case SAME_SIDE_SCALE:
+            case SAME_SIDE_SCALE_SPECIAL:
                 return (startPos == StartingPosition.LEFT && scaleSide == Side.LEFT) ||
                         (startPos == StartingPosition.RIGHT && scaleSide == Side.RIGHT);
             case SAME_SIDE_SWITCH:
                 return (startPos == StartingPosition.LEFT && switchSide == Side.LEFT) ||
                         (startPos == StartingPosition.RIGHT && switchSide == Side.RIGHT);
             case OPPOSITE_SIDE_SCALE:
+            case OPPOSITE_SIDE_SCALE_SPECIAL:
                 return (startPos == StartingPosition.RIGHT && scaleSide == Side.LEFT) ||
                         (startPos == StartingPosition.LEFT && scaleSide == Side.RIGHT);
             case OPPOSITE_SIDE_SWITCH:
@@ -253,6 +262,11 @@ public class AutonomousChooser {
                             autoGroup.addSequential(new ScoreSwitchSideFromStartForward(robot, startSide, switchSide));
                         atScale = false;
                         break;
+                    case SAME_SIDE_SCALE_SPECIAL:
+                    case OPPOSITE_SIDE_SCALE_SPECIAL:
+                        double waitTime = SmartDashboard.getNumber(OPPOSITE_SPECIAL_WAIT_TIME_NAME, 0);
+                        autoGroup.addSequential(new ScoreScaleSideFromStartSide(robot, startSide, scaleSide, waitTime));
+                        return autoGroup;
                 }
             } else {
                 switch (choice) {

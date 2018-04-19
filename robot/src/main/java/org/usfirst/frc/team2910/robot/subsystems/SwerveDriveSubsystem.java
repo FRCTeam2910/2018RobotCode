@@ -110,14 +110,14 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     }
 
     @Override
-    public void holonomicDrive(double forward, double strafe, double rotation) {
+    public void holonomicDrive(double forward, double strafe, double rotation, boolean fieldOriented) {
         forward *= getSpeedMultiplier();
         strafe *= getSpeedMultiplier();
         if (!Robot.PRACTICE_BOT) {
             rotation = -rotation;
         }
 
-        if (isFieldOriented()) {
+        if (fieldOriented) {
             double angleRad = Math.toRadians(getGyroAngle());
             double temp = forward * Math.cos(angleRad) +
                     strafe * Math.sin(angleRad);
@@ -188,6 +188,6 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 
     @Override
     public double getMaxVelocity() {
-        return 10;
+        return 10 / 15.;
     }
 }

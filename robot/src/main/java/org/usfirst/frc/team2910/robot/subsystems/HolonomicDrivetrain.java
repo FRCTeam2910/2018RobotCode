@@ -20,7 +20,11 @@ public abstract class HolonomicDrivetrain extends Drivetrain {
 
 	public abstract double getRawGyroAngle();
 
-	public abstract void holonomicDrive(double forward, double strafe, double rotation);
+	public void holonomicDrive(double forward, double strafe, double rotation) {
+		holonomicDrive(forward, strafe, rotation, isFieldOriented());
+	}
+
+	public abstract void holonomicDrive(double forward, double strafe, double rotation, boolean fieldOriented);
 
 	@Override
 	protected void initDefaultCommand() {

@@ -11,7 +11,6 @@ import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team2910.robot.util.Side;
 
 public class ScaleFromScaleFront extends CommandGroup {
-	public static final double ELEVATOR_WAIT = 1;
 
 	public ScaleFromScaleFront(Robot robot, Side scaleSide) {
 		Path pathToScale = null;
@@ -22,7 +21,6 @@ public class ScaleFromScaleFront extends CommandGroup {
 
 
 		CommandGroup zeroElevatorGroup = new CommandGroup();
-		zeroElevatorGroup.addSequential(new WaitCommand(ELEVATOR_WAIT));
 		zeroElevatorGroup.addSequential(new SetElevatorPositionCommand(robot.getElevator(),
 				ElevatorSubsystem.GROUND_POSITION + 15));
 		zeroElevatorGroup.addSequential(new WaitForElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.GROUND_POSITION + 15));
