@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AutonomousChooser {
-    public static final int CHOICE_COUNT = 4;
+    public static final int CHOICE_COUNT = 6;
     private final SendableChooser<StartingPosition> startPosChooser = new SendableChooser<>();
     private List<SendableChooser<AutonomousStageChoice>> priorityChoices = new ArrayList<>();
 

@@ -140,7 +140,7 @@ public class AutonomousPaths {
 
     //<editor-fold desc="Scale to scale front">
     public static final Path RIGHT_SCALE_TO_RIGHT_SCALE_FRONT = new Path(15.52,
-            new Segment.Line(37.36));
+            new Segment.Line(44.36));
 
     public static final Path LEFT_SCALE_TO_LEFT_SCALE_FRONT = RIGHT_SCALE_TO_RIGHT_SCALE_FRONT.flip();
     //</editor-fold>

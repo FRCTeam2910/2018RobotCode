@@ -188,6 +188,6 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
 
     @Override
     public double getMaxVelocity() {
-        return 10 / 15.;
+        return 10;
     }
 }

@@ -147,9 +147,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		autoTimer.start();
-
-		autoCommand = new FollowPathCommand(getDrivetrain(), AutonomousPaths.LEFT_START_FORWARD_TO_LEFT_SCALE_FRONT);
-
+		
 		autoCommand.start();
 	}
 

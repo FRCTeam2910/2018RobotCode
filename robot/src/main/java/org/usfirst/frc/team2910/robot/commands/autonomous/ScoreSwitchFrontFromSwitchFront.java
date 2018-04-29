@@ -1,6 +1,5 @@
 package org.usfirst.frc.team2910.robot.commands.autonomous;
 
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import org.usfirst.frc.team2910.robot.Robot;
@@ -47,9 +46,13 @@ public class ScoreSwitchFrontFromSwitchFront extends CommandGroup {
         elevatorGroup.addSequential(new SetElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
 
         addParallel(intakeGroup);
-        addSequential(new FollowPathCommand(robot.getDrivetrain(), pathToCube));
+        addSequential(new FollowPathCommand(robot.getDrivetrain(), pathToCube,
+                robot.getDrivetrain().getMaxAcceleration() * 0.6,
+                robot.getDrivetrain().getMaxVelocity() * 0.6));
         addParallel(elevatorGroup);
-        addSequential(new FollowPathCommand(robot.getDrivetrain(), pathToSwitch));
+        addSequential(new FollowPathCommand(robot.getDrivetrain(), pathToSwitch,
+                robot.getDrivetrain().getMaxAcceleration() * 0.6,
+                robot.getDrivetrain().getMaxVelocity() * 0.6));
         addParallel(scoreGroup);
         addSequential(new SetDrivetrainAngleIfNotAngledCommand(robot.getDrivetrain(), 0));
         addSequential(new WaitForElevatorPositionCommand(robot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));

@@ -29,6 +29,6 @@ public class ScoreScaleFrontFromScale extends CommandGroup {
         addSequential(new SetDrivetrainAngleCommand(robot.getDrivetrain(),
                 (scaleSide == Side.LEFT ? 330 : 30)));
         addSequential(new FollowPathCommand(robot.getDrivetrain(), pathToScaleFront));
-        addSequential(new LaunchCubeCommand(robot.getGatherer(), LAUNCH_TIME, 0.8));
+        addSequential(new LaunchCubeCommand(robot.getGatherer(), LAUNCH_TIME, 0.9));
     }
 }

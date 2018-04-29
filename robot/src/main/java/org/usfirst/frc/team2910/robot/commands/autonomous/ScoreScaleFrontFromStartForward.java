@@ -29,22 +29,22 @@ public class ScoreScaleFrontFromStartForward extends CommandGroup {
 		Path pathToScale;
 		if (startSide == Side.LEFT) {
 			if (scaleSide == Side.LEFT) {
-				launchSpeed = 0.7;
-				elevatorHeight = ElevatorSubsystem.SCORE_SCALE_POSITION;
+				launchSpeed = 0.8;
+				elevatorHeight = ElevatorSubsystem.SCORE_SCALE_POSITION + 6;
 				pathToScale = AutonomousPaths.LEFT_START_FORWARD_TO_LEFT_SCALE_FRONT;
 			} else {
-				launchSpeed = 0.8;
+				launchSpeed = 0.9;
 				elevatorHeight = ElevatorSubsystem.SCORE_SCALE_POSITION + 10;
 				pathToScale = AutonomousPaths.LEFT_START_FORWARD_TO_RIGHT_SCALE_FRONT;
 			}
 		} else {
 			if (scaleSide == Side.LEFT) {
-				launchSpeed = 0.8;
+				launchSpeed = 0.9;
 				elevatorHeight = ElevatorSubsystem.SCORE_SCALE_POSITION + 10;
 				pathToScale = AutonomousPaths.RIGHT_START_FORWARD_TO_LEFT_SCALE_FRONT;
 			} else {
-				launchSpeed = 0.7;
-				elevatorHeight = ElevatorSubsystem.SCORE_SCALE_POSITION;
+				launchSpeed = 0.8;
+				elevatorHeight = ElevatorSubsystem.SCORE_SCALE_POSITION + 6;
 				pathToScale = AutonomousPaths.RIGHT_START_FORWARD_TO_RIGHT_SCALE_FRONT;
 			}
 		}
