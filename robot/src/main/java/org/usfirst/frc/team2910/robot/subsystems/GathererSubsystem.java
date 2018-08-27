@@ -13,17 +13,19 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
+import static org.usfirst.frc.team2910.robot.RobotMap.*;
+
 public class GathererSubsystem  extends Subsystem {
 	public static enum Position {
 		IN,
 		OUT
 	};
 	
-	private WPI_TalonSRX leftMotor = new WPI_TalonSRX(RobotMap.GATHERER_LEFT_MOTOR);
-	private WPI_TalonSRX rightMotor = new WPI_TalonSRX(RobotMap.GATHERER_RIGHT_MOTOR);
+	private WPI_TalonSRX leftMotor = new WPI_TalonSRX(GATHERER_LEFT_MOTOR);
+	private WPI_TalonSRX rightMotor = new WPI_TalonSRX(GATHERER_RIGHT_MOTOR);
 	
-	private TalonSRX leftCarriage = new TalonSRX(22);
-	private TalonSRX rightCarriage = new TalonSRX(21);
+	private TalonSRX leftCarriage = new TalonSRX(CARRIAGE_LEFT_MOTOR);
+	private TalonSRX rightCarriage = new TalonSRX(CARRIAGE_RIGHT_MOTOR);
 	
 	private Solenoid leftSolenoid = new Solenoid(RobotMap.GATHERER_LEFT_SOLENOID);
 	private Solenoid rightSolenoid = new Solenoid(RobotMap.GATHERER_RIGHT_SOLENOID);
@@ -33,7 +35,12 @@ public class GathererSubsystem  extends Subsystem {
 	public GathererSubsystem() {
 		setLeftArm(Position.OUT);
 		setRightArm(Position.IN);
-		
+
+		leftCarriage.setInverted(true);
+		rightCarriage.setInverted(true);
+		leftMotor.setInverted(true);
+		rightMotor.setInverted(true);
+
 		leftCarriage.follow(leftMotor);
 		rightCarriage.follow(rightMotor);
 

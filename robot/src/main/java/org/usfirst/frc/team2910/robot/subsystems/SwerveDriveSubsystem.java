@@ -5,6 +5,8 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import org.usfirst.frc.team2910.robot.Robot;
 
+import static org.usfirst.frc.team2910.robot.RobotMap.*;
+
 public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     public static final double WHEELBASE = 14.5;  // Swerve bot: 14.5 Comp bot: 20.5
     public static final double TRACKWIDTH = 13.5; // Swerve bot: 13.5 Comp bot: 25.5
@@ -38,10 +40,22 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
             mSwerveModules[3].setDriveInverted(true);
         } else {
             mSwerveModules = new SwerveDriveModule[] {
-                    new SwerveDriveModule(0, new TalonSRX(33), new TalonSRX(30), 321.328),
-                    new SwerveDriveModule(1, new TalonSRX(23), new TalonSRX(26), 245.742),
-                    new SwerveDriveModule(2, new TalonSRX(24), new TalonSRX(25), 88.242),
-                    new SwerveDriveModule(3, new TalonSRX(34), new TalonSRX(32), 234.492),
+                    new SwerveDriveModule(0,
+                            new TalonSRX(DRIVETRAIN_FRONT_LEFT_ANGLE_MOTOR),
+                            new TalonSRX(DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR),
+                            321.328),
+                    new SwerveDriveModule(1,
+                            new TalonSRX(DRIVETRAIN_FRONT_RIGHT_ANGLE_MOTOR),
+                            new TalonSRX(DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR),
+                            245.742),
+                    new SwerveDriveModule(2,
+                            new TalonSRX(DRIVETRAIn_BACK_LEFT_ANGLE_MOTOR),
+                            new TalonSRX(DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR),
+                            88.242),
+                    new SwerveDriveModule(3,
+                            new TalonSRX(DRIVETRAIN_BACK_RIGHT_ANGLE_MOTOR),
+                            new TalonSRX(DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR),
+                            234.492 + 90),
             };
 
             mSwerveModules[1].setDriveInverted(true);

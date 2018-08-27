@@ -9,6 +9,9 @@ import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.RobotMap;
 import org.usfirst.frc.team2910.robot.commands.ManualElevatorControlCommand;
 
+import static org.usfirst.frc.team2910.robot.RobotMap.ELEVATOR_MASTER_MOTOR;
+import static org.usfirst.frc.team2910.robot.RobotMap.ELEVATOR_SLAVE_MOTOR;
+
 public class ElevatorSubsystem extends Subsystem {
     public enum Gear {
         HIGH,
@@ -31,8 +34,8 @@ public class ElevatorSubsystem extends Subsystem {
     private static final double ENCODER_TICKS_PER_INCH = 1 / INCH_PER_ENCODER_TICK;
 
     private final TalonSRX[] motors = {
-            new TalonSRX(RobotMap.ELEVATOR_MOTORS[0]),
-            new TalonSRX(RobotMap.ELEVATOR_MOTORS[1])
+            new TalonSRX(ELEVATOR_MASTER_MOTOR),
+            new TalonSRX(ELEVATOR_SLAVE_MOTOR)
     };
 
     private final Solenoid shiftingSolenoid = new Solenoid(RobotMap.ELEVATOR_SHIFTER);
@@ -107,9 +110,9 @@ public class ElevatorSubsystem extends Subsystem {
 
     public void setGear(Gear gear) {
         if (gear == Gear.LOW) {
-            shiftingSolenoid.set(true);
-        } else {
             shiftingSolenoid.set(false);
+        } else {
+            shiftingSolenoid.set(true);
         }
     }
 
