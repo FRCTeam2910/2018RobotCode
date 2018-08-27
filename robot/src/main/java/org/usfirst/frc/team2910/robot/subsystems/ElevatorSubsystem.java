@@ -2,7 +2,6 @@ package org.usfirst.frc.team2910.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team2910.robot.Robot;
@@ -41,8 +40,6 @@ public class ElevatorSubsystem extends Subsystem {
     private final Solenoid shiftingSolenoid = new Solenoid(RobotMap.ELEVATOR_SHIFTER);
 
     private final Solenoid lockingSolenoid = new Solenoid(RobotMap.ELEVATOR_LOCKER);
-
-    private final DigitalInput shiftingSwitch = new DigitalInput(RobotMap.ELEVATOR_SHIFTING_SWITCH);
 
     private double targetHeight = 0;
     private Mode currentMode = Mode.REGULAR;
@@ -177,10 +174,6 @@ public class ElevatorSubsystem extends Subsystem {
 
     public TalonSRX[] getMotors() {
         return motors;
-    }
-
-    public boolean isShiftingSwitchActivated() {
-        return shiftingSwitch.get();
     }
 
     public void setEncoderPosition(int position) {
