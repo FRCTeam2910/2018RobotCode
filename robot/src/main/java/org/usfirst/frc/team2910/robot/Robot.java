@@ -74,7 +74,9 @@ public class Robot extends IterativeRobot {
         }
 
 		SmartDashboard.putNumber("Elevator encoder", elevatorSubsystem.getEncoderValue());
-		SmartDashboard.putNumber("Elevator height", elevatorSubsystem.getCurrentHeight());
+		SmartDashboard.putNumber("Elevator height", elevatorSubsystem.getCurrentHeight() + Math.random() * 1e-9);
+		SmartDashboard.putNumber("Elevator target", elevatorSubsystem.getTargetHeight() + Math.random() * 1e-9);
+		SmartDashboard.putNumber("Elevator percent", elevatorSubsystem.getMotors()[0].getMotorOutputPercent() + Math.random() * 1e-9);
 		SmartDashboard.putNumber("Elevator speed", elevatorSubsystem.getMotors()[0].getSelectedSensorVelocity(0));
 
 		SmartDashboard.putNumber("Drivetrain Angle", swerveDriveSubsystem.getGyroAngle());

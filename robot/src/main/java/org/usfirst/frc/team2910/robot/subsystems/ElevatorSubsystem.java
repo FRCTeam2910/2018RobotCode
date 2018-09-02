@@ -46,10 +46,10 @@ public class ElevatorSubsystem extends Subsystem {
 
     public ElevatorSubsystem() {
         motors[0].configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 0);
-        motors[0].config_kP(0, 2, 0);
-        motors[0].config_kI(0, 0.005, 0);
-        motors[0].config_kD(0, 0, 0);
-        motors[0].config_IntegralZone(0, 500, 0);
+        motors[0].config_kP(0, 2.5, 0);
+        motors[0].config_kI(0, 0.001, 0);
+        motors[0].config_kD(0, 150.0, 0);
+        motors[0].config_IntegralZone(0, (int) (3.0 * ENCODER_TICKS_PER_INCH), 0);
 
         motors[0].configAllowableClosedloopError(0, (int) ((1 / 8) * ENCODER_TICKS_PER_INCH), 0);
 
@@ -107,9 +107,9 @@ public class ElevatorSubsystem extends Subsystem {
 
     public void setGear(Gear gear) {
         if (gear == Gear.LOW) {
-            shiftingSolenoid.set(false);
-        } else {
             shiftingSolenoid.set(true);
+        } else {
+            shiftingSolenoid.set(false);
         }
     }
 

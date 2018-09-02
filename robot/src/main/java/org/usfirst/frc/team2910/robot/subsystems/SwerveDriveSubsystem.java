@@ -43,23 +43,23 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
                     new SwerveDriveModule(0,
                             new TalonSRX(DRIVETRAIN_FRONT_LEFT_ANGLE_MOTOR),
                             new TalonSRX(DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR),
-                            321.328),
+                            87.890),
                     new SwerveDriveModule(1,
                             new TalonSRX(DRIVETRAIN_FRONT_RIGHT_ANGLE_MOTOR),
                             new TalonSRX(DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR),
-                            245.742),
+                            235.195),
                     new SwerveDriveModule(2,
-                            new TalonSRX(DRIVETRAIn_BACK_LEFT_ANGLE_MOTOR),
-                            new TalonSRX(DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR),
-                            88.242),
-                    new SwerveDriveModule(3,
                             new TalonSRX(DRIVETRAIN_BACK_RIGHT_ANGLE_MOTOR),
                             new TalonSRX(DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR),
-                            234.492 + 90),
+                            320.976),
+                    new SwerveDriveModule(3,
+                            new TalonSRX(DRIVETRAIn_BACK_LEFT_ANGLE_MOTOR),
+                            new TalonSRX(DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR),
+                            245.742),
             };
 
-            mSwerveModules[1].setDriveInverted(true);
-            mSwerveModules[2].setDriveInverted(true);
+            mSwerveModules[0].setDriveInverted(true);
+            mSwerveModules[3].setDriveInverted(true);
         }
 
         for (SwerveDriveModule module : mSwerveModules) {
@@ -127,9 +127,6 @@ public class SwerveDriveSubsystem extends HolonomicDrivetrain {
     public void holonomicDrive(double forward, double strafe, double rotation, boolean fieldOriented) {
         forward *= getSpeedMultiplier();
         strafe *= getSpeedMultiplier();
-        if (!Robot.PRACTICE_BOT) {
-            rotation = -rotation;
-        }
 
         if (fieldOriented) {
             double angleRad = Math.toRadians(getGyroAngle());
