@@ -5,10 +5,13 @@ import org.usfirst.frc.team2910.robot.Robot;
 import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
 
 public class ManualElevatorControlCommand extends Command {
+    public static final double SNAP_TO_BOTTOM_DISTANCE = 10.0;
+    private static final double ALLOWABLE_PID_VELOCITY = 2.5;
 
     private final ElevatorSubsystem elevator;
 
     private boolean shouldSetPosition = false;
+    private boolean hasSecondPidSet = false;
 
     public ManualElevatorControlCommand(ElevatorSubsystem elevator) {
         this.elevator = elevator;
@@ -27,22 +30,30 @@ public class ManualElevatorControlCommand extends Command {
             secondaryInput = Math.min(0, secondaryInput);
         }
 
+        double input = 0.0;
         if (Math.abs(primaryInput) > 0.05) {
-            primaryInput *= Math.abs(primaryInput);
-            elevator.setElevatorSpeed(primaryInput);
-            shouldSetPosition = true;
+            input = Math.copySign(primaryInput * primaryInput, primaryInput);
         } else if (Math.abs(secondaryInput) > 0.05) {
-            secondaryInput *= Math.abs(secondaryInput);
-            elevator.setElevatorSpeed(secondaryInput);
+            input = Math.copySign(secondaryInput * secondaryInput, secondaryInput);
+        }
+
+        if (Math.abs(input) > 0.05) {
+            if (input < 0 && elevator.getCurrentHeight() < SNAP_TO_BOTTOM_DISTANCE) {
+                elevator.setElevatorPosition(0.0);
+            } else {
+                elevator.setElevatorSpeed(input);
+            }
+
             shouldSetPosition = true;
         } else if (shouldSetPosition) {
-            if (elevator.getCurrentMode() == ElevatorSubsystem.Mode.CLIMBING) {
-                elevator.setElevatorSpeed(0);
-            } else {
-                elevator.getMotors()[0].setIntegralAccumulator(0, 0, 0);
-                elevator.setElevatorPosition(elevator.getCurrentHeight());
-                shouldSetPosition = false;
-            }
+            double velocity = elevator.getCurrentVelocity();
+
+            double distance = (velocity * velocity) / (2 * ElevatorSubsystem.MAX_ABS_ACCELERATION);
+
+            elevator.getMotors()[0].setIntegralAccumulator(0, 0, 0);
+            elevator.setElevatorPosition(elevator.getCurrentHeight() + Math.copySign(distance, velocity));
+            shouldSetPosition = false;
+            hasSecondPidSet = true;
         }
     }
 

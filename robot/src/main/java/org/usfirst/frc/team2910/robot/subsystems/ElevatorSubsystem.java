@@ -21,13 +21,17 @@ public class ElevatorSubsystem extends Subsystem {
         REGULAR,
         CLIMBING
     }
-
     public static final int STARTING_ENCODER_TICKS = 6527;
 
     public static final double TOP_POSITION = 80.00;
     public static final double SCORE_SCALE_POSITION = 6 * 12;
     public static final double SCORE_SWITCH_POISITON = 3 * 12;
     public static final double GROUND_POSITION = 0;
+
+    /**
+     * Max acceleration of the elevator in in*s^-2
+     */
+    public static final double MAX_ABS_ACCELERATION = 950.0;
 
     private static final double INCH_PER_ENCODER_TICK = 150 / 26009.6;
     private static final double ENCODER_TICKS_PER_INCH = 1 / INCH_PER_ENCODER_TICK;
@@ -42,8 +46,8 @@ public class ElevatorSubsystem extends Subsystem {
     private final Solenoid lockingSolenoid = new Solenoid(RobotMap.ELEVATOR_LOCKER);
 
     private double targetHeight = 0;
-    private Mode currentMode = Mode.REGULAR;
 
+    private Mode currentMode = Mode.REGULAR;
     public ElevatorSubsystem() {
         motors[0].configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 0);
         motors[0].config_kP(0, 2.5, 0);
@@ -159,6 +163,10 @@ public class ElevatorSubsystem extends Subsystem {
         return motors[0].getSelectedSensorPosition(0);
     }
 
+    public double getEncoderVelocity() {
+        return motors[0].getSelectedSensorVelocity(0);
+    }
+
     public double getCurrentHeight() {
         if (Robot.PRACTICE_BOT)
             return targetHeight;
@@ -166,6 +174,12 @@ public class ElevatorSubsystem extends Subsystem {
         double encPos = getEncoderValue();
 
         return encPos * INCH_PER_ENCODER_TICK;
+    }
+
+    public double getCurrentVelocity() {
+        double encVel = getEncoderVelocity();
+
+        return encVel * INCH_PER_ENCODER_TICK * (1000.0 / 100.0);
     }
 
     public double getTargetHeight() {
