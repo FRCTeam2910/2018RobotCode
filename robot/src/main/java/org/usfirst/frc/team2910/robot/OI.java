@@ -11,6 +11,9 @@ import org.usfirst.frc.team2910.robot.subsystems.ElevatorSubsystem;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+    private static final double SOFT_PLACEMENT_VELOCITY = 2.0;
+    private static final double SOFT_PLACEMENT_ACCELERATION = 0.5;
+
     private IGamepad primaryController = new XboxGamepad(0);
     private IGamepad secondaryController = new XboxGamepad(1);
 
@@ -26,7 +29,7 @@ public class OI {
         primaryController.getLeftBumperButton().whenReleased(new SetFieldOrientedCommand(mRobot.getDrivetrain(), true));
         primaryController.getStartButton().whenPressed(new ZeroDrivetrainGyroCommand(mRobot.getDrivetrain()));
 
-//        primaryController.getAButton().whenPressed(); // TODO: Precise cube placement
+        primaryController.getAButton().whileHeld(new SoftCubePlaceCommand(mRobot.getDrivetrain(), mRobot.getGatherer(), SOFT_PLACEMENT_VELOCITY, SOFT_PLACEMENT_ACCELERATION));
         primaryController.getBButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1, 0.5));
         primaryController.getXButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1, 0.75));
         primaryController.getYButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1, 1));
