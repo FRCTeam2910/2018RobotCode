@@ -21,39 +21,30 @@ public class OI {
     }
 
     public void registerControls() {
-        primaryController.getRightBumperButton().whenPressed(new SetFieldOrientedCommand(mRobot.getDrivetrain(), true));
+        primaryController.getRightJoystickButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
         primaryController.getLeftBumperButton().whenPressed(new SetFieldOrientedCommand(mRobot.getDrivetrain(), false));
+        primaryController.getLeftBumperButton().whenReleased(new SetFieldOrientedCommand(mRobot.getDrivetrain(), true));
         primaryController.getStartButton().whenPressed(new ZeroDrivetrainGyroCommand(mRobot.getDrivetrain()));
 
-        // TODO: PrimaryController: A launches cube out of carriage for x seconds
-        primaryController.getAButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1, 0.75));
-        primaryController.getBButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1, 1));
-        primaryController.getXButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.TOP_POSITION));
-        primaryController.getYButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
+//        primaryController.getAButton().whenPressed(); // TODO: Precise cube placement
+        primaryController.getBButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1, 0.5));
+        primaryController.getXButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1, 0.75));
+        primaryController.getYButton().whenPressed(new LaunchCubeCommand(mRobot.getGatherer(), 1, 1));
 
-        // TODO: PrimaryController: DPad snaps to angle and doesn't interfere with joystick drive
+        secondaryController.getLeftJoystickButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.CLIMBING));
+        secondaryController.getRightJoystickButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.REGULAR));
 
-        // TODO: PrimaryController: Triggers make micro-adjustments on elevator height (include trigger value)
+        secondaryController.getLeftBumperButton().whileHeld(new IntakeCubeNoRequireCommand(mRobot.getGatherer(), -0.45, 0, Double.MAX_VALUE));
+        secondaryController.getRightBumperButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
 
-        secondaryController.getDPadButton(DPadButton.Direction.UP).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SCALE_POSITION));
-        secondaryController.getDPadButton(DPadButton.Direction.RIGHT).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.SCORE_SWITCH_POISITON));
-        secondaryController.getDPadButton(DPadButton.Direction.DOWN).whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.GROUND_POSITION));
-
-        // TODO: Secondary Controller: Toggles elevator climbing mode (low gear, fast right joystick Y adjustments, lock when no input)
-        secondaryController.getLeftBumperButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.CLIMBING));
-        secondaryController.getRightBumperButton().whenPressed(new ChangeElevatorModeCommand(mRobot.getElevator(), ElevatorSubsystem.Mode.REGULAR));
-        secondaryController.getDPadButton(DPadButton.Direction.LEFT).toggleWhenPressed(new ToggleElevatorModeCommand(mRobot.getElevator()));
-
-        secondaryController.getAButton().whileHeld(new IntakeCubeNoRequireCommand(mRobot.getGatherer(), -0.45, 0, Double.MAX_VALUE));
-        secondaryController.getXButton().whenPressed(new SetElevatorLockCommand(mRobot.getElevator(), true));
+        secondaryController.getStartButton().whenPressed(new SetElevatorLockCommand(mRobot.getElevator(), true));
         secondaryController.getYButton().whenPressed(new SetElevatorLockCommand(mRobot.getElevator(), false));
 
-        secondaryController.getBackButton().whenPressed(new CalibrateElevatorEncoderCommand(mRobot.getElevator()));
-        secondaryController.getStartButton().whenPressed(new DisableLimitSwitchCommand(mRobot.getElevator()));
+        secondaryController.getBButton().whenPressed(new SetElevatorPositionCommand(mRobot.getElevator(), ElevatorSubsystem.CLIMB_POSITION));
+        secondaryController.getAButton().whenPressed(new CalibrateElevatorEncoderCommand(mRobot.getElevator()));
+
         secondaryController.getLeftTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.getGatherer(), true));
         secondaryController.getRightTriggerButton().whileHeld(new ActuateGathererCommand(mRobot.getGatherer(), false));
-
-        // TODO: Secondary Controller: Right Joystick Y makes micro-adjustments on elevator height
     }
 
     public IGamepad getPrimaryController() {

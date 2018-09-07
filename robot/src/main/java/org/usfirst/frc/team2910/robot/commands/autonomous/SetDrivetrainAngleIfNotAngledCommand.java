@@ -42,9 +42,6 @@ public class SetDrivetrainAngleIfNotAngledCommand extends Command {
                 return drivetrain.getGyroAngle();
             }
         }, output -> {
-            if (!Robot.PRACTICE_BOT)
-                output = -output;
-
             for (int i = 0; i < 4; i++)
                 drivetrain.getSwerveModule(i).setTargetSpeed(output);
         });

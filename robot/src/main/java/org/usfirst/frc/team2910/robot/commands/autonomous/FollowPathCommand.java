@@ -34,7 +34,7 @@ public class FollowPathCommand extends Command {
 		public double pidGet() {
 			return drivetrain.getGyroAngle();
 		}
-	}, output -> angleCorrection = -output);
+	}, output -> angleCorrection = output);
 
 	private double angleCorrection;
 

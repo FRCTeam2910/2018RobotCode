@@ -12,6 +12,7 @@ import static org.usfirst.frc.team2910.robot.RobotMap.ELEVATOR_MASTER_MOTOR;
 import static org.usfirst.frc.team2910.robot.RobotMap.ELEVATOR_SLAVE_MOTOR;
 
 public class ElevatorSubsystem extends Subsystem {
+
     public enum Gear {
         HIGH,
         LOW
@@ -26,6 +27,7 @@ public class ElevatorSubsystem extends Subsystem {
     public static final double TOP_POSITION = 80.00;
     public static final double SCORE_SCALE_POSITION = 6 * 12;
     public static final double SCORE_SWITCH_POISITON = 3 * 12;
+    public static final double CLIMB_POSITION = 71;
     public static final double GROUND_POSITION = 0;
 
     /**

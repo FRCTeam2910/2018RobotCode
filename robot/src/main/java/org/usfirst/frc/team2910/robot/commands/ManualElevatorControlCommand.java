@@ -21,8 +21,8 @@ public class ManualElevatorControlCommand extends Command {
 
     @Override
     protected void execute() {
-        double primaryInput = Robot.getOI().getPrimaryController().getRightTriggerValue() -
-                Robot.getOI().getPrimaryController().getLeftTriggerValue();
+        double primaryInput = Robot.getOI().getPrimaryController().getLeftTriggerValue() -
+                Robot.getOI().getPrimaryController().getRightTriggerValue();
         double secondaryInput = Robot.getOI().getSecondaryController().getRightYValue();
 
         if (elevator.getCurrentHeight() > ElevatorSubsystem.TOP_POSITION) {
